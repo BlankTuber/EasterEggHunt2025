@@ -7,49 +7,49 @@ _Settings: Stability 0.30, Clarity 0.75_
 
 ### 1. Summoning the Champions
 
-```txt
+```ssml
 We must summon the five champions. <break time="800ms"/> Only they possess the unique talents to recover the fragments before the <emphasis>equinox sun</emphasis> reaches its zenith.
 ```
 
 ### 2. First Challenge Instructions
 
-```txt
+```ssml
 Your first challenge requires <emphasis>perfect coordination</emphasis>. <break time="700ms"/> Each of you controls one piece of the puzzle. <break time="500ms"/> You must guide your pieces to their designated sanctuaries without collision. <break time="600ms"/> Only by working together, moving in sequence and yielding to one another, can you succeed.
 ```
 
 ### 3. Begin the Sequence
 
-```txt
+```ssml
 <emphasis>Begin the sequence</emphasis>. <break time="1s"/> Show us that five can truly act as one.
 ```
 
 ### 4. Digital Labyrinth Challenge
 
-```txt
+```ssml
 Escape this digital labyrinth <emphasis>together</emphasis>. <break time="800ms"/> Each chamber requires different talents, <break time="300ms"/> the Navigator's calculation, <break time="300ms"/> the Sage's wisdom, <break time="300ms"/> the Chronicler's observation, <break time="300ms"/> the Craftsman's building, <break time="300ms"/> and the Apprentice's speed. <break time="700ms"/> Only by combining your strengths can you find the exit.
 ```
 
 ### 5. Final Challenge
 
-```txt
+```ssml
 Your final challenge requires <emphasis>perfect harmony</emphasis>. <break time="700ms"/> Each of you has discovered a piece of a greater code during your journey. <break time="600ms"/> Only by combining these codes in the correct sequence can you unlock the power of the Egg of Creation.
 ```
 
 ### 6. Combine the Codes
 
-```txt
+```ssml
 <emphasis>Combine these codes as one</emphasis>.
 ```
 
 ### 7. Champions of Neerbye
 
-```txt
+```ssml
 Champions of Neerbye, <break time="700ms"/> you have proven yourselves worthy guardians of our realm. <break time="800ms"/> But one final test remains. <break time="900ms"/> The true Egg of Creation exists in your own world, hidden where only those who have completed this journey would think to look.
 ```
 
 ### 8. Cross the Boundary
 
-```txt
+```ssml
 <emphasis>Cross the boundary between worlds</emphasis>. <break time="1s"/> Find the physical manifestation of what you have seen in vision.
 ```
 
@@ -60,55 +60,55 @@ _Settings: Stability 0.60, Clarity 0.75_
 
 ### 1. Welcome Navigator
 
-```txt
+```ssml
 Greetings, Navigator. <break time="500ms"/> Your analytical mind and love for exploration make you the <emphasis>ideal champion</emphasis> to recover the fragment hidden in Metrica.
 ```
 
 ### 2. Pong Game
 
-```txt
+```ssml
 Master this ancient game of <emphasis>Pong</emphasis>.
 ```
 
 ### 3. Mathematics Challenge
 
-```txt
+```ssml
 The universal language of mathematics speaks here. <break time="600ms"/> Find the pattern, <break time="300ms"/> complete the sequence, <break time="300ms"/> and the forest will yield its secrets.
 ```
 
 ### 4. Different Perspectives
 
-```txt
+```ssml
 Some journeys require different perspectives. <break time="600ms"/> These coordinates you've discovered in the stars will guide your steps, <break time="400ms"/> while the Craftsman's descriptive knowledge will identify what you seek.
 ```
 
 ### 5. Time's Flow
 
-```txt
+```ssml
 Time's flow has been disrupted. <break time="700ms"/> Restore the proper sequence of innovation, <break time="400ms"/> from earliest discovery to latest invention.
 ```
 
 ### 6. 8-bit Music
 
-```txt
+```ssml
 Identify each tune and match it to the video game from which it originated.
 ```
 
 ### 7. Memory Cards
 
-```txt
+```ssml
 Memory is a navigator's most precious tool. <break time="600ms"/> Remember what lies beneath each card to find the matching pairs.
 ```
 
 ### 8. Date Patterns
 
-```txt
+```ssml
 Time itself contains patterns. <break time="600ms"/> The special date that emerges when all birthdays are combined.
 ```
 
 ### 9. Technology Bridges
 
-```txt
+```ssml
 Knowledge of technology bridges realms. <break time="600ms"/> Join with the Craftsman to answer questions about the tools and innovations that shape both your provinces.
 ```
 
@@ -119,55 +119,55 @@ _Settings: Stability 0.30, Clarity 0.60 for ethereal quality_
 
 ### 1. Welcome Sage
 
-```txt
+```ssml
 Welcome, Sage. <break time="500ms"/> Your wisdom and patience make you the guardian worthy of recovering the fragment hidden in Lexica.
 ```
 
 ### 2. Crossword Puzzle
 
-```txt
+```ssml
 Knowledge connects in unexpected ways. <break time="700ms"/> Complete this crossword to reveal the hidden pathways of wisdom.
 ```
 
 ### 3. Cipher Challenge
 
-```txt
+```ssml
 Not all knowledge is freely given. <break time="700ms"/> Some wisdom must be earned through careful decryption.
 ```
 
 ### 4. Diverse Perspectives
 
-```txt
+```ssml
 Some challenges require diverse perspectives. <break time="700ms"/> Join with the Chronicler and Apprentice to answer questions that span the breadth of collective wisdom.
 ```
 
 ### 5. Restore What's Divided
 
-```txt
+```ssml
 Restore what has been divided. <break time="700ms"/> This image exists both in this realm and in your own, a bridge between worlds.
 ```
 
 ### 6. Colors Speak
 
-```txt
+```ssml
 Colors speak their own language. <break time="700ms"/> Observe and reproduce the sequence to unlock the spectrum of ancient wisdom.
 ```
 
 ### 7. Riddles
 
-```txt
+```ssml
 Some places can only be found through riddles.
 ```
 
 ### 8. Word Search
 
-```txt
+```ssml
 Words hide within the chaos of letters. <break time="700ms"/> Find the hidden terms of power concealed in this word search.
 ```
 
 ### 9. Advanced Trivia
 
-```txt
+```ssml
 This advanced trivia challenge requires specialized expertise. <break time="700ms"/> Join with the Chronicler and Apprentice to tackle questions that delve into more obscure knowledge.
 ```
 
@@ -178,55 +178,55 @@ _Settings: Stability 0.45, Clarity 0.70_
 
 ### 1. Welcome Chronicler
 
-```txt
+```ssml
 Chronicler, <break time="300ms"/> your observant eyes and quick mind make you ideal to recover the fragment hidden in Reflectia.
 ```
 
 ### 2. Culture Timeline
 
-```txt
+```ssml
 The flow of culture tells its own story. <break time="600ms"/> Arrange these trends in their proper sequence to restore the narrative thread.
 ```
 
 ### 3. Exercise Movements
 
-```txt
+```ssml
 The body's movements can spell out messages. <break time="600ms"/> Arrange these exercises in the correct sequence to reveal the hidden word.
 ```
 
 ### 4. Trivia Challenge
 
-```txt
+```ssml
 This trivia challenge requires diverse perspectives. <break time="600ms"/> Join with the Sage and Apprentice to answer questions spanning different domains of knowledge.
 ```
 
 ### 5. Emoji Decoder
 
-```txt
+```ssml
 These emotional hieroglyphs contain a coded message. <break time="600ms"/> Decode their meaning to find your next direction.
 ```
 
 ### 6. Brand Logos
 
-```txt
+```ssml
 Symbols contain power even in shadow. <break time="600ms"/> Identify each brand by its distinctive outline.
 ```
 
 ### 7. Sliding Puzzle
 
-```txt
+```ssml
 Sometimes we must rearrange reality to see the truth. <break time="600ms"/> Restore this sliding puzzle to reveal the complete picture.
 ```
 
 ### 8. Specialized Knowledge
 
-```txt
+```ssml
 This advanced trivia challenge requires specialized knowledge. <break time="600ms"/> Join with the Sage and Apprentice to answer questions that delve into more obscure subjects.
 ```
 
 ### 9. Color Mixer
 
-```txt
+```ssml
 Creation often requires combining fundamental elements. <break time="600ms"/> Mix these primary colors to create the specific hues needed to complete your fragment.
 ```
 
@@ -237,55 +237,55 @@ _Settings: Stability 0.50, Clarity 0.65_
 
 ### 1. Welcome Craftsman
 
-```txt
+```ssml
 Craftsman, <break time="400ms"/> your hands can create what others can only imagine. <break time="600ms"/> In Constructia, you must build to advance.
 ```
 
 ### 2. Team Emblems
 
-```txt
+```ssml
 A true builder recognizes forms even in shadow. <break time="600ms"/> Identify each team from their emblematic outline.
 ```
 
 ### 3. Geocaching Description
 
-```txt
+```ssml
 Your knowledge of places and descriptions will guide another's path. <break time="600ms"/> The Navigator knows where to look through coordinates, <break time="400ms"/> while you know what to seek through description.
 ```
 
 ### 4. Morse Code
 
-```txt
+```ssml
 Communication takes many forms. <break time="600ms"/> This Morse code contains critical instructions for your journey.
 ```
 
 ### 5. Cross Device Puzzle
 
-```txt
+```ssml
 Some mechanisms span across realms. <break time="600ms"/> Work with the Apprentice to synchronize your actions and complete what neither could finish alone.
 ```
 
 ### 6. Word Scramble
 
-```txt
+```ssml
 A builder must sometimes reassemble what is scattered. <break time="600ms"/> Unscramble these letters to form words.
 ```
 
 ### 7. Location Hunt
 
-```txt
+```ssml
 Some treasures hide in plain sight. <break time="600ms"/> Find this location based on the description to discover what awaits you there.
 ```
 
 ### 8. Hangman Game
 
-```txt
+```ssml
 Some knowledge is revealed one letter at a time. <break time="600ms"/> Guess this hanging phrase by suggesting letters that might compose it.
 ```
 
 ### 9. Tech Trivia
 
-```txt
+```ssml
 Some challenges require both practical and technical knowledge. <break time="600ms"/> Join with the Navigator to answer questions that bridge your realms of expertise.
 ```
 
@@ -296,55 +296,55 @@ _Settings: Stability 0.35, Clarity 0.80_
 
 ### 1. Welcome Apprentice
 
-```txt
+```ssml
 Young Apprentice, <break time="300ms"/> your adaptability and quick learning make you uniquely suited to navigate Dynamica.
 ```
 
 ### 2. Game Characters
 
-```txt
+```ssml
 A true player knows the heroes of every story. <break time="500ms"/> Name each character from their silhouette to unlock their powers for your journey.
 ```
 
 ### 3. Trivia Challenge
 
-```txt
+```ssml
 This trivia challenge requires diverse knowledge. <break time="500ms"/> Join with the Sage and Chronicler to answer questions spanning different domains.
 ```
 
 ### 4. Game Timeline
 
-```txt
+```ssml
 The evolution of play tells its own story. <break time="500ms"/> Arrange these games in their correct timeline, from earliest to latest, to restore the proper flow of innovation.
 ```
 
 ### 5. Synchronized Effort
 
-```txt
+```ssml
 Some mechanisms require synchronized effort. <break time="500ms"/> Work with the Craftsman to coordinate your actions across realms.
 ```
 
 ### 6. Roblox Realm
 
-```txt
+```ssml
 Navigate this Roblox realm. <break time="500ms"/> The physics and rules of this world differ from the others you've encountered.
 ```
 
 ### 7. Test Reflexes
 
-```txt
+```ssml
 Test your reflexes.
 ```
 
 ### 8. Super Specialized Knowledge
 
-```txt
+```ssml
 This advanced trivia challenge requires specialized knowledge. <break time="500ms"/> Join with the Sage and Chronicler to tackle questions that delve into more obscure subjects.
 ```
 
 ### 9. Word Ladder
 
-```txt
+```ssml
 Find the word with one change at a time.
 ```
 
@@ -354,7 +354,7 @@ Find the word with one change at a time.
 
 -   _Voice: "Adam" or "Antoni"_
 
-```txt
+```ssml
 We have been tested individually and in smaller groups.
 ```
 
@@ -362,7 +362,7 @@ We have been tested individually and in smaller groups.
 
 -   _Voice: "Serena" or "Emily"_
 
-```txt
+```ssml
 Now we must be tested as one.
 ```
 

@@ -3,9 +3,11 @@
 ## Individual Challenges (Prioritized)
 
 ### Level 1 Challenges (Simple Web-Based Games)
+
 These are quick to implement with JavaScript/HTML5 and should be prioritized first:
 
 #### Navigator Challenges
+
 1. **Pong Game**
    - HTML5 Canvas implementation with basic physics
    - Difficulty increases over time (ball speed)
@@ -17,6 +19,7 @@ These are quick to implement with JavaScript/HTML5 and should be prioritized fir
    - Hint system after failed attempts
 
 #### Sage Challenges
+
 1. **Crossword Puzzle**
    - Grid-based implementation with clue display
    - Client-side validation for letter correctness
@@ -28,6 +31,7 @@ These are quick to implement with JavaScript/HTML5 and should be prioritized fir
    - Progressive hints if stuck
 
 #### Chronicler Challenges
+
 1. **Emoji Decoder**
    - Display sequence of emojis to interpret
    - Multiple choice or text input for solutions
@@ -39,6 +43,7 @@ These are quick to implement with JavaScript/HTML5 and should be prioritized fir
    - Timeline visualization after completion
 
 #### Craftsman Challenges
+
 1. **Football Team Guesser**
    - Shadow emblems displayed as images
    - Text input for team names with auto-completion
@@ -50,6 +55,7 @@ These are quick to implement with JavaScript/HTML5 and should be prioritized fir
    - Text input field for translation
 
 #### Apprentice Challenges
+
 1. **Video Game Character Identifier**
    - Silhouette images of game characters
    - Multiple choice or text input for character names
@@ -61,9 +67,11 @@ These are quick to implement with JavaScript/HTML5 and should be prioritized fir
    - Info cards about each game upon completion
 
 ### Level 2 Challenges (More Complex Interactions)
+
 Implement these after completing Level 1 challenges:
 
 #### All Roles
+
 1. **Memory Card Games / Sliding Puzzles**
    - Grid-based card flipping with match detection
    - Image scrambling with move counter
@@ -82,6 +90,7 @@ Implement these after completing Level 1 challenges:
 ## Convergence Challenges
 
 ### Pair Challenges
+
 Implement these mid-project once individual challenges are working:
 
 1. **Navigator + Craftsman: Geocaching**
@@ -97,6 +106,7 @@ Implement these mid-project once individual challenges are working:
    - Success only when both sides complete correctly
 
 ### Trivia Group Challenges
+
 Build a reusable trivia engine that can be adapted for different groups:
 
 1. **Trivia System**
@@ -111,6 +121,7 @@ Build a reusable trivia engine that can be adapted for different groups:
    - Group C (Navigator + Craftsman): Tech-related questions
 
 ### All-Player Convergence
+
 These are the most complex and should be scheduled later in the project:
 
 1. **Cross Device Puzzle (Sequence)**

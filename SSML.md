@@ -352,7 +352,7 @@ Find the word with one change at a time.
 
 ### 1. Navigator's Observation
 
--   _Voice: "Adam" or "Antoni"_
+- _Voice: "Adam" or "Antoni"_
 
 ```ssml
 We have been tested individually and in smaller groups.
@@ -360,7 +360,7 @@ We have been tested individually and in smaller groups.
 
 ### 2. Sage's Response
 
--   _Voice: "Serena" or "Emily"_
+- _Voice: "Serena" or "Emily"_
 
 ```ssml
 Now we must be tested as one.

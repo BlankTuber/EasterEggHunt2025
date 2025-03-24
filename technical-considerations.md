@@ -3,6 +3,7 @@
 ## Key Technical Decisions
 
 ### Frontend Development
+
 - **Vanilla JS Approach**: Given the 4-week timeline, focus on vanilla JavaScript, HTML5, and CSS rather than frameworks
 - **Canvas vs. DOM**: Use HTML5 Canvas for games (Pong, Sliding Puzzles), DOM manipulation for simpler puzzles (Crosswords, Word Games)
 - **Progressive Enhancement**: Build mobile-friendly but optimize for desktop/tablet where multiplayer is more practical
@@ -10,6 +11,7 @@
 - **State Management**: Use browser localStorage for individual challenges, server-side state for multiplayer
 
 ### Backend Development
+
 - **PHP API**: Simple RESTful endpoints for:
   - Player registration and session management
   - Challenge unlocking and progress tracking
@@ -22,6 +24,7 @@
   - Teams table (team ID, members, active convergence challenges)
 
 ### WebSocket Implementation
+
 - **Node.js Server**: Run on your Proxmox server
 - **Socket.IO**: For easy fallback to long polling if WebSocket fails
 - **Message Structure**: Standardize on:

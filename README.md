@@ -4,7 +4,6 @@
 [Implementation Timeline](https://github.com/BlankTuber/EasterEggHunt2025/blob/main/implementation-timeline.md)
 [Technical Considerations](https://github.com/BlankTuber/EasterEggHunt2025/blob/main/technical-considerations.md)
 
-
 ## Core Architecture (Focus Week 1)
 
 1. **Central Progress System**

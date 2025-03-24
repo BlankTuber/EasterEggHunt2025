@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Grid Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .game-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 60px);
+            grid-template-rows: repeat(5, 60px);
+            gap: 2px;
+            margin: 20px 0;
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            position: relative;
+        }
+        .goal {
+            border: 3px dashed;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        .player {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3e8e41;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #clear-btn {
+            background-color: #f44336;
+        }
+        #clear-btn:hover {
+            background-color: #d32f2f;
+        }
+        #ready-btn {
+            background-color: #ff9800;
+        }
+        #ready-btn:hover {
+            background-color: #f57c00;
+        }
+        #ready-btn.active {
+            background-color: #388e3c;
+        }
+        #reset-btn {
+            background-color: #9e9e9e;
+        }
+        #reset-btn:hover {
+            background-color: #757575;
+        }
+        .game-status {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .instruction-panel {
+            width: 100%;
+            max-width: 300px;
+            height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .success-message {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            border-left: 5px solid #4CAF50;
+        }
+        .error-message {
+            color: #f44336;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 5px;
+            border-left: 5px solid #f44336;
+        }
+        .player-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .player-item {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
+        .player-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .connecting-message {
+            margin: 20px;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Multiplayer Grid Game</h1>
+    
+    <div id="connecting-message" class="connecting-message">Connecting to server...</div>
+    
+    <div id="game-container" class="game-container" style="display: none;">
+        <div class="player-list" id="player-list"></div>
+        
+        <div class="game-status" id="game-status">
+            Waiting for players to join...
+        </div>
+        
+        <div class="grid" id="game-grid"></div>
+        
+        <div class="controls">
+            <button id="up-btn">Up</button>
+            <button id="down-btn">Down</button>
+            <button id="left-btn">Left</button>
+            <button id="right-btn">Right</button>
+            <button id="clear-btn">Clear</button>
+            <button id="ready-btn">Ready</button>
+            <button id="reset-btn">Reset Game</button>
+        </div>
+        
+        <h3>Your Instructions:</h3>
+        <div class="instruction-panel" id="instructions"></div>
+        
+        <div class="success-message" id="success-message">Congratulations! You reached the goal!</div>
+        <div class="error-message" id="error-message"></div>
+    </div>
+    
+    <script>
+        // Game variables
+        let playerId = null;
+        let gameState = null;
+        let socket = null;
+        let isExecuting = false;
+        let isReady = false;
+        
+        // DOM elements
+        const connectingMessage = document.getElementById('connecting-message');
+        const gameContainer = document.getElementById('game-container');
+        const gameGrid = document.getElementById('game-grid');
+        const playerList = document.getElementById('player-list');
+        const instructionsPanel = document.getElementById('instructions');
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+        const gameStatus = document.getElementById('game-status');
+        const readyBtn = document.getElementById('ready-btn');
+        
+        // Initialize WebSocket connection
+        function initWebSocket() {
+            // Get WebSocket URL (adapts to secure connections)
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}`;
+            
+            // For local development
+            // const wsUrl = 'ws://localhost:3000';
+            
+            socket = new WebSocket(wsUrl);
+            
+            socket.onopen = () => {
+                console.log('Connected to server');
+            };
+            
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                
+                switch (message.type) {
+                    case 'init':
+                        playerId = message.playerId;
+                        connectingMessage.style.display = 'none';
+                        gameContainer.style.display = 'block';
+                        break;
+                        
+                    case 'gameState':
+                        gameState = message.data;
+                        updateGrid();
+                        updatePlayerList();
+                        updateInstructionsPanel();
+                        updateExecutionState();
+                        break;
+                        
+                    case 'error':
+                        showError(message.message);
+                        break;
+                }
+            };
+            
+            socket.onclose = () => {
+                console.log('Disconnected from server');
+                connectingMessage.textContent = 'Disconnected from server. Reload to reconnect.';
+                connectingMessage.style.display = 'block';
+                gameContainer.style.display = 'none';
+            };
+            
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                showError('Connection error. Please reload the page.');
+            };
+        }
+        
+        // Initialize the grid
+        function initGrid() {
+            gameGrid.innerHTML = '';
+            
+            const gridSize = 5;
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `cell-${x}-${y}`;
+                    gameGrid.appendChild(cell);
+                }
+            }
+        }
+        
+        // Update the grid with player positions
+        function updateGrid() {
+            // Initialize grid if not already done
+            if (gameGrid.children.length === 0) {
+                initGrid();
+            }
+            
+            // Clear all player markers and goals
+            document.querySelectorAll('.player').forEach(el => el.remove());
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.remove('goal');
+                cell.style.borderColor = '';
+                cell.textContent = '';
+            });
+            
+            // Add goal markers
+            if (gameState && gameState.goalPositions) {
+                gameState.goalPositions.forEach(goal => {
+                    const cell = document.getElementById(`cell-${goal.x}-${goal.y}`);
+                    if (cell) {
+                        cell.classList.add('goal');
+                        
+                        // Find the player with this goal
+                        const player = gameState.players.find(p => p.id === goal.playerId);
+                        if (player) {
+                            cell.style.borderColor = player.color;
+                            
+                            // Add flag emoji or player number to goal
+                            cell.textContent = `🏁${player.id}`;
+                        }
+                    }
+                });
+            }
+            
+            // Add players to the grid
+            if (gameState && gameState.players) {
+                gameState.players.forEach(player => {
+                    const cell = document.getElementById(`cell-${player.x}-${player.y}`);
+                    if (cell) {
+                        const playerMarker = document.createElement('div');
+                        playerMarker.className = 'player';
+                        playerMarker.style.backgroundColor = player.color;
+                        
+                        // Show crown for winners
+                        if (gameState.winners && gameState.winners.includes(player.id)) {
+                            playerMarker.textContent = '👑';
+                        } else {
+                            playerMarker.textContent = player.id;
+                        }
+                        
+                        cell.appendChild(playerMarker);
+                    }
+                });
+            }
+            
+            // Update success message
+            if (gameState && gameState.winners) {
+                const isWinner = gameState.winners.includes(playerId);
+                if (isWinner) {
+                    successMessage.textContent = 'Congratulations! You reached your goal!';
+                    successMessage.style.display = 'block';
+                } else if (gameState.winners.length > 0) {
+                    const winnerIds = gameState.winners.join(', ');
+                    successMessage.textContent = `Player(s) ${winnerIds} reached their goal!`;
+                    successMessage.style.display = 'block';
+                } else {
+                    successMessage.style.display = 'none';
+                }
+            } else {
+                successMessage.style.display = 'none';
+            }
+        }
+        
+        // Update the player list
+        function updatePlayerList() {
+            playerList.innerHTML = '';
+            
+            if (gameState && gameState.players) {
+                gameState.players.forEach(player => {
+                    const playerItem = document.createElement('div');
+                    playerItem.className = 'player-item';
+                    playerItem.style.backgroundColor = player.color;
+                    
+                    const playerMarker = document.createElement('div');
+                    playerMarker.className = 'player-marker';
+                    playerMarker.style.backgroundColor = 'white';
+                    
+                    const playerText = document.createElement('span');
+                    let playerStatus = player.isReady ? ' ✓ READY' : '';
+                    playerText.textContent = player.id === playerId 
+                        ? `Player ${player.id} (You)${playerStatus}` 
+                        : `Player ${player.id}${playerStatus}`;
+                    
+                    playerItem.appendChild(playerMarker);
+                    playerItem.appendChild(playerText);
+                    playerList.appendChild(playerItem);
+                });
+            }
+            
+            // Update game status
+            updateGameStatus();
+        }
+        
+        // Update game status message
+        function updateGameStatus() {
+            if (!gameState) return;
+            
+            if (gameState.gameInProgress) {
+                gameStatus.textContent = 'Game in progress! Watch the moves...';
+                gameStatus.style.borderLeftColor = '#ff9800';
+                gameStatus.style.backgroundColor = '#fff3e0';
+            } else if (gameState.winners && gameState.winners.length > 0) {
+                const winnerIds = gameState.winners.join(', ');
+                gameStatus.textContent = `Game finished! Player(s) ${winnerIds} reached their goal!`;
+                gameStatus.style.borderLeftColor = '#4caf50';
+                gameStatus.style.backgroundColor = '#e8f5e9';
+            } else if (gameState.players && gameState.players.length < 2) {
+                gameStatus.textContent = 'Waiting for more players to join...';
+                gameStatus.style.borderLeftColor = '#9e9e9e';
+                gameStatus.style.backgroundColor = '#f5f5f5';
+            } else if (gameState.readyCount === gameState.totalPlayers) {
+                gameStatus.textContent = 'All players ready! Game starting...';
+                gameStatus.style.borderLeftColor = '#4caf50';
+                gameStatus.style.backgroundColor = '#e8f5e9';
+            } else {
+                gameStatus.textContent = `Waiting for players to get ready: ${gameState.readyCount}/${gameState.totalPlayers} ready`;
+                gameStatus.style.borderLeftColor = '#2196f3';
+                gameStatus.style.backgroundColor = '#e3f2fd';
+            }
+        }
+        
+        // Update the instructions panel
+        function updateInstructionsPanel() {
+            if (!gameState || !playerId) return;
+            
+            const currentPlayer = gameState.players.find(p => p.id === playerId);
+            if (!currentPlayer) return;
+            
+            instructionsPanel.innerHTML = '';
+            
+            currentPlayer.instructions.forEach((direction, index) => {
+                const instruction = document.createElement('div');
+                instruction.textContent = `${index + 1}. Move ${direction}`;
+                instructionsPanel.appendChild(instruction);
+            });
+        }
+        
+        // Update execution state
+        function updateExecutionState() {
+            if (!gameState || !playerId) return;
+            
+            const currentPlayer = gameState.players.find(p => p.id === playerId);
+            if (!currentPlayer) return;
+            
+            isExecuting = currentPlayer.isExecuting || gameState.gameInProgress;
+            isReady = currentPlayer.isReady;
+            
+            // Update button states
+            document.getElementById('up-btn').disabled = isExecuting || isReady;
+            document.getElementById('down-btn').disabled = isExecuting || isReady;
+            document.getElementById('left-btn').disabled = isExecuting || isReady;
+            document.getElementById('right-btn').disabled = isExecuting || isReady;
+            document.getElementById('clear-btn').disabled = isExecuting || isReady;
+            document.getElementById('ready-btn').disabled = isExecuting;
+            document.getElementById('reset-btn').disabled = isExecuting;
+            
+            // Update ready button appearance
+            if (isReady) {
+                readyBtn.classList.add('active');
+                readyBtn.textContent = 'Not Ready';
+            } else {
+                readyBtn.classList.remove('active');
+                readyBtn.textContent = 'Ready';
+            }
+        }
+        
+        // Add an instruction
+        function addInstruction(direction) {
+            if (!socket || !playerId || isExecuting) return;
+            
+            socket.send(JSON.stringify({
+                type: 'addInstruction',
+                playerId,
+                direction
+            }));
+        }
+        
+        // Clear instructions
+        function clearInstructions() {
+            if (!socket || !playerId || isExecuting) return;
+            
+            socket.send(JSON.stringify({
+                type: 'clearInstructions',
+                playerId
+            }));
+        }
+        
+        // Toggle ready state
+        function toggleReady() {
+            if (!socket || !playerId || isExecuting) return;
+            
+            socket.send(JSON.stringify({
+                type: 'setReady',
+                playerId
+            }));
+        }
+        
+        // Reset game
+        function resetGame() {
+            if (!socket || !playerId || isExecuting) return;
+            
+            socket.send(JSON.stringify({
+                type: 'resetGame',
+                playerId
+            }));
+        }
+        
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Event listeners
+        document.getElementById('up-btn').addEventListener('click', () => addInstruction('up'));
+        document.getElementById('down-btn').addEventListener('click', () => addInstruction('down'));
+        document.getElementById('left-btn').addEventListener('click', () => addInstruction('left'));
+        document.getElementById('right-btn').addEventListener('click', () => addInstruction('right'));
+        document.getElementById('clear-btn').addEventListener('click', clearInstructions);
+        document.getElementById('ready-btn').addEventListener('click', toggleReady);
+        document.getElementById('reset-btn').addEventListener('click', resetGame);
+        
+        // Initialize the game
+        initWebSocket();
+    </script>
+</body>
+</html>

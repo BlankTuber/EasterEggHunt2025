@@ -1,4 +1,4 @@
-# The kingdom's hunt
+# The Kingdom's Hunt
 
 ## Prologue: The Call to Adventure
 

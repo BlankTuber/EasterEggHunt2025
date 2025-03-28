@@ -1,0 +1,198 @@
+/* Simple, clean styling for the timeline game */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 900px;
+}
+
+#game-description {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Timeline section */
+.timeline {
+    position: relative;
+    margin: 30px 0;
+}
+
+.timeline-track {
+    height: 4px;
+    background: linear-gradient(to right, #8b5e34, #c9a86b);
+    margin: 0 20px;
+    border-radius: 2px;
+}
+
+#drop-zone {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 20px;
+}
+
+.drop-slot {
+    width: 100px;
+    height: 120px;
+    border: 2px dashed #8b5e34;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(26, 26, 46, 0.5);
+}
+
+.drop-slot.highlight {
+    background: rgba(139, 94, 52, 0.2);
+    box-shadow: 0 0 10px rgba(139, 94, 52, 0.5);
+}
+
+.drop-slot.correct {
+    border-color: #6da832;
+    box-shadow: 0 0 10px #6da832;
+}
+
+.drop-slot.incorrect {
+    border-color: #e77d7d;
+    box-shadow: 0 0 10px #e77d7d;
+}
+
+/* Items section */
+#items-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px;
+    min-height: 120px;
+}
+
+.item {
+    width: 100px;
+    height: 120px;
+    background: linear-gradient(145deg, #2a2a4a, #1a1a3e);
+    border: 2px solid #8b5e34;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
+    user-select: none;
+    padding: 5px;
+}
+
+.item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.item .name {
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.item .year {
+    font-size: 0.7rem;
+    color: #e8d4a9;
+    visibility: hidden;
+}
+
+.show-years .item .year {
+    visibility: visible;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background: #1a1a2e;
+    border: 4px solid #8b5e34;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    margin: 15% auto;
+    padding: 20px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .drop-slot,
+    .item {
+        width: 85px;
+        height: 110px;
+    }
+
+    .item img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .item .name {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .drop-slot,
+    .item {
+        width: 70px;
+        height: 100px;
+    }
+
+    .item img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .item .name {
+        font-size: 0.6rem;
+    }
+
+    #drop-zone {
+        gap: 5px;
+        margin: 20px 10px;
+    }
+}

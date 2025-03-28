@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Arcane Number Sequence Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="game-container fantasy-container">
+            <div class="fantasy-header">Arcane Number Sequence</div>
+
+            <div class="game-content">
+                <div class="level-indicator">
+                    <span class="level-text"
+                        >Arcane Level:
+                        <span class="current-level">1</span>/8</span
+                    >
+                    <div class="progress-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+
+                <div class="sequence-display">
+                    <div class="sequence-numbers" id="sequenceDisplay">
+                        <!-- Sequence numbers will be inserted here -->
+                    </div>
+
+                    <div class="sequence-question">?</div>
+                </div>
+
+                <div class="input-section">
+                    <input
+                        type="number"
+                        id="userAnswer"
+                        class="answer-input"
+                        placeholder="Enter your answer..."
+                    />
+                    <button id="submitBtn" class="fantasy-button">
+                        Reveal
+                    </button>
+                </div>
+
+                <div class="hint-section">
+                    <p class="hint-text">
+                        Discover the pattern in the magical sequence...
+                    </p>
+                    <button id="hintBtn" class="fantasy-button hint-button">
+                        Request a Hint <span class="hint-count">(3)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control buttons for mobile -->
+        <div class="control-buttons sequence-controls">
+            <div class="number-pad">
+                <div class="num-button" data-value="1">1</div>
+                <div class="num-button" data-value="2">2</div>
+                <div class="num-button" data-value="3">3</div>
+                <div class="num-button" data-value="4">4</div>
+                <div class="num-button" data-value="5">5</div>
+                <div class="num-button" data-value="6">6</div>
+                <div class="num-button" data-value="7">7</div>
+                <div class="num-button" data-value="8">8</div>
+                <div class="num-button" data-value="9">9</div>
+                <div class="num-button" data-value="0">0</div>
+                <div class="num-button delete-button" data-value="delete">
+                    ⌫
+                </div>
+                <div class="num-button submit-button" data-value="submit">
+                    ✓
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="game.js"></script>
+    </body>
+</html>

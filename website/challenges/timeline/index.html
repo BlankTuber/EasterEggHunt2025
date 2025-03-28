@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Timeline Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="game-container fantasy-container">
+            <div class="fantasy-header">
+                <h1 id="game-title">Timeline Challenge</h1>
+            </div>
+
+            <div class="game-content">
+                <p id="game-description">
+                    Arrange the items in chronological order from earliest to
+                    latest.
+                </p>
+
+                <div class="timeline">
+                    <div class="timeline-track"></div>
+                    <div id="drop-zone"></div>
+                </div>
+
+                <div id="items-container"></div>
+
+                <div class="controls">
+                    <button id="check-btn" class="fantasy-button">
+                        Check Order
+                    </button>
+                    <button id="reset-btn" class="fantasy-button">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2 id="modal-title"></h2>
+                <p id="modal-text"></p>
+                <div class="modal-buttons">
+                    <button
+                        id="modal-primary-btn"
+                        class="fantasy-button"
+                    ></button>
+                </div>
+            </div>
+        </div>
+
+        <script src="game.js"></script>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+{
+    "title": "Video Games Timeline",
+    "description": "Arrange these iconic video games in chronological order of their release.",
+    "items": [
+        {
+            "id": "pong",
+            "name": "Pong",
+            "year": 1972,
+            "image": "images/games/pong.jpg"
+        },
+        {
+            "id": "pacman",
+            "name": "Pac-Man",
+            "year": 1980,
+            "image": "images/games/pacman.jpg"
+        },
+        {
+            "id": "super-mario",
+            "name": "Super Mario Bros",
+            "year": 1985,
+            "image": "images/games/mario.jpg"
+        },
+        {
+            "id": "sonic",
+            "name": "Sonic the Hedgehog",
+            "year": 1991,
+            "image": "images/games/sonic.jpg"
+        },
+        {
+            "id": "doom",
+            "name": "DOOM",
+            "year": 1993,
+            "image": "images/games/doom.jpg"
+        },
+        {
+            "id": "wow",
+            "name": "World of Warcraft",
+            "year": 2004,
+            "image": "images/games/wow.jpg"
+        },
+        {
+            "id": "minecraft",
+            "name": "Minecraft",
+            "year": 2011,
+            "image": "images/games/minecraft.jpg"
+        }
+    ]
+}

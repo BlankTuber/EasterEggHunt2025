@@ -1,0 +1,182 @@
+/**
+ * Challenge-specific Styles
+ */
+
+/* Sequence Puzzle Styles */
+.board-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.board {
+    display: grid;
+    gap: 2px;
+    background-color: #ccc;
+    padding: 2px;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.cell {
+    aspect-ratio: 1/1;
+    background-color: #fff;
+    border-radius: 2px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease;
+}
+
+.cell:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.player-marker {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.goal-indicator {
+    width: 90%;
+    height: 90%;
+    border: 2px dashed;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 1;
+}
+
+.obstacle {
+    background-color: #333;
+}
+
+/* Cross Device Puzzle Styles */
+.puzzle-playground {
+    position: relative;
+    min-height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.component-card {
+    transition: all 0.3s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.highlight-update {
+    animation: highlight-pulse 1s ease;
+}
+
+@keyframes highlight-pulse {
+    0% { background-color: #fff; }
+    50% { background-color: #e3f2fd; }
+    100% { background-color: #fff; }
+}
+
+.component-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* Trivia Styles */
+.trivia-container {
+    position: relative;
+}
+
+.option-letter {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.timer-container {
+    margin-bottom: 15px;
+}
+
+/* Animation for timer */
+@keyframes countdown {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+.countdown-timer {
+    animation: countdown linear forwards;
+}
+
+/* Geocaching Styles */
+.locations-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Combine Codes Styles */
+.code-input {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
+/* Interactive element for intro challenge */
+.interactive-box {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px dashed #ddd;
+}
+
+.interactive-box:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    transform: scale(1.05);
+}
+
+/* Status message styling */
+.status-message {
+    padding: 2px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* General challenge animations */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Challenge completion animation */
+@keyframes success-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.challenge-completed {
+    animation: success-pulse 1s ease;
+}

@@ -1,0 +1,103 @@
+/* website/challenges/pong/styles.css */
+/* Game specific styles - reuses global.css for common elements */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    position: relative;
+    width: 800px;
+    max-width: 95vw;
+    margin: 0 auto;
+}
+
+.score-board {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    background: linear-gradient(to bottom, #3b2d1f, #2a1f16);
+    border-bottom: 3px solid #8b5e34;
+    font-size: 28px;
+}
+
+#pongCanvas {
+    display: block;
+    background: #1a1a2e;
+    background-image: radial-gradient(
+            circle,
+            rgba(61, 90, 128, 0.2) 1px,
+            transparent 1px
+        ),
+        radial-gradient(circle, rgba(61, 90, 128, 0.15) 2px, transparent 2px);
+    background-size: 30px 30px, 90px 90px;
+    background-position: 0 0, 15px 15px;
+    width: 100%;
+    height: 500px;
+    touch-action: none; /* Prevents default touch actions on mobile */
+}
+
+/* Add some mystical runes around the border */
+.game-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid rgba(232, 212, 169, 0.1);
+    border-radius: 8px;
+    pointer-events: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" opacity="0.1"><text x="0" y="20" font-family="serif" font-size="20" fill="white">ᚠ</text></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" opacity="0.1"><text x="0" y="20" font-family="serif" font-size="20" fill="white">ᚹ</text></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" opacity="0.1"><text x="0" y="20" font-family="serif" font-size="20" fill="white">ᛒ</text></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" opacity="0.1"><text x="0" y="20" font-family="serif" font-size="20" fill="white">ᛉ</text></svg>');
+    background-position: top left, top right, bottom left, bottom right;
+    background-repeat: no-repeat;
+}
+
+/* Add a subtle glow effect to the score */
+.player-score,
+.computer-score {
+    text-shadow: 0 0 10px rgba(232, 212, 169, 0.5);
+}
+
+/* Tablet and mobile styles */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .score-board {
+        font-size: 24px;
+        padding: 8px 20px;
+    }
+
+    #pongCanvas {
+        height: 400px;
+    }
+}
+
+/* Small mobile styles */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .score-board {
+        font-size: 20px;
+        padding: 6px 15px;
+    }
+
+    #pongCanvas {
+        height: 300px;
+    }
+
+    /* Make space at the bottom for control buttons */
+    body {
+        padding-bottom: 100px;
+    }
+}

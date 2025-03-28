@@ -1,13 +1,13 @@
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_USER', 'neerbye_user');
-define('DB_PASS', 'your_secure_password'); // Change this to a secure password
+define('DB_USER', 'root'); // default XAMPP user
+define('DB_PASS', ''); // default XAMPP has no password
 define('DB_NAME', 'neerbye_kingdom_hunt');
 
 // Application settings
-define('APP_URL', 'https://neerbye.com');
-define('SOCKETIO_URL', 'https://socketio.neerbye.com');
+define('APP_URL', 'http://localhost');
+define('SOCKETIO_URL', 'http://localhost:3000');
 define('SESSION_LIFETIME', 86400); // 24 hours in seconds
 define('SECURE_COOKIE', true); // Set to true for HTTPS
 define('DEBUG_MODE', false);

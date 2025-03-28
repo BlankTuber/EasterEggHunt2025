@@ -56,6 +56,7 @@ const challengeHandlers = {
   
   // Two-player convergence challenges
   'cross_device_puzzle': require('./challenges/crossDevicePuzzle'),
+  'geocaching': require('./challenges/geocaching'),
   
   // Final convergence challenge
   'combine_codes': require('./challenges/combineCodes'),

@@ -2,80 +2,118 @@
 /**
  * Main entry point for Kingdom Hunt
  * 
- * This file handles initial routing and will eventually
- * include the frontend interface.
+ * This file handles routing and renders the appropriate frontend page.
  */
 
-// Load configuration and required files
+// Load backend initialization
 require_once 'includes/init.php';
+
+// Load frontend initialization
+require_once 'frontend/init.php';
 
 // Get requested page
 $page = $_GET['page'] ?? 'home';
 
-// Check for introduction link
-if ($page === 'intro') {
-    $user_id = $_GET['who'] ?? null;
-    
-    if (empty($user_id)) {
-        // Redirect to home if no user ID provided
-        header('Location: /');
-        exit;
-    }
-    
-    // Currently just serving a placeholder response
-    // This will be replaced with your actual frontend
-    header('Content-Type: application/json');
-    echo json_encode([
-        'status' => 'ok',
-        'message' => 'Introduction page for user: ' . $user_id,
-        'note' => 'This is a placeholder. The actual frontend will be implemented separately.'
-    ]);
-    exit;
+// Add current user ID to page metadata if authenticated
+$metaTags = '';
+if (isset($userData) && isset($userData['user_id'])) {
+    $metaTags .= '<meta name="user-id" content="' . htmlspecialchars($userData['user_id']) . '">';
 }
 
-// For now, just display a simple message
-// This will be replaced with your actual frontend
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kingdom Hunt</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
-            text-align: center;
+// Set extra scripts based on page
+$extraScripts = [];
+
+// Handle challenges that need specific scripts
+if ($page === 'challenge') {
+    $challengeId = $_GET['id'] ?? null;
+    
+    if ($challengeId) {
+        // Get challenge details to determine the correct script
+        $challenge = null;
+        
+        try {
+            $db = Database::getInstance();
+            $challenge = $db->query("SELECT * FROM challenges WHERE id = :id")
+                          ->bind(':id', $challengeId)
+                          ->single();
+        } catch (Exception $e) {
+            // Error getting challenge details
         }
-        .container {
-            max-width: 800px;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        if ($challenge) {
+            // Add challenge loader script
+            $extraScripts[] = '/frontend/assets/js/challenge-loader.js';
         }
-        h1 {
-            color: #2c3e50;
+    }
+}
+
+// Handle different pages
+switch ($page) {
+    case 'intro':
+        // Introduction page (entry point for new users)
+        renderPage('intro', [
+            'extraScripts' => $extraScripts,
+            'metaTags' => $metaTags
+        ]);
+        break;
+        
+    case 'dashboard':
+        // Main dashboard (requires authentication)
+        requireAuth();
+        renderPage('dashboard', [
+            'extraScripts' => $extraScripts,
+            'metaTags' => $metaTags
+        ]);
+        break;
+        
+    case 'challenge':
+        // Challenge page (requires authentication)
+        requireAuth();
+        
+        // Set Socket.io flag if it's a challenge page
+        $useSocketIO = true;
+        
+        renderPage('challenge', [
+            'extraScripts' => $extraScripts,
+            'useSocketIO' => $useSocketIO,
+            'metaTags' => $metaTags
+        ]);
+        break;
+        
+    case 'story':
+        // Story page (requires authentication)
+        requireAuth();
+        renderPage('story', [
+            'extraScripts' => $extraScripts,
+            'metaTags' => $metaTags
+        ]);
+        break;
+        
+    case 'convergence':
+        // Convergence page (requires authentication)
+        requireAuth();
+        
+        // Set Socket.io flag for convergence
+        $useSocketIO = true;
+        
+        renderPage('convergence', [
+            'extraScripts' => $extraScripts,
+            'useSocketIO' => $useSocketIO,
+            'metaTags' => $metaTags
+        ]);
+        break;
+        
+    case 'home':
+    default:
+        // Home page - redirect to dashboard if logged in, otherwise show intro
+        if (isset($userData)) {
+            header('Location: /?page=dashboard');
+            exit;
+        } else {
+            renderPage('intro', [
+                'extraScripts' => $extraScripts,
+                'metaTags' => $metaTags
+            ]);
         }
-        p {
-            color: #34495e;
-            line-height: 1.6;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Kingdom Hunt</h1>
-        <p>The backend API is ready. This page will be replaced with the game's frontend interface.</p>
-        <p>To access the admin panel, go to <a href="/admin/">Admin Panel</a>.</p>
-        <p>For initial setup, visit <a href="/setup.php">Setup Script</a>.</p>
-    </div>
-</body>
-</html>
+        break;
+}

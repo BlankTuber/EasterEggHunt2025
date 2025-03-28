@@ -1,0 +1,83 @@
+{
+    "title": "Video Game Character Identifier",
+    "description": "Can you identify these iconic video game characters from their silhouettes?",
+    "items": [
+        {
+            "id": "mario",
+            "name": "Mario",
+            "image": "images/games/mario.jpg",
+            "answers": ["mario", "super mario"],
+            "hints": [
+                "This character is a plumber",
+                "He rescues a princess",
+                "He was created by Nintendo"
+            ]
+        },
+        {
+            "id": "sonic",
+            "name": "Sonic the Hedgehog",
+            "image": "images/games/sonic.jpg",
+            "answers": ["sonic", "sonic the hedgehog"],
+            "hints": [
+                "This character is known for speed",
+                "He's a blue hedgehog",
+                "He collects rings"
+            ]
+        },
+        {
+            "id": "link",
+            "name": "Link",
+            "image": "images/games/link.jpg",
+            "answers": ["link"],
+            "hints": [
+                "This character wields a sword and shield",
+                "He rescues Princess Zelda",
+                "He's the main character in 'The Legend of Zelda' series"
+            ]
+        },
+        {
+            "id": "pikachu",
+            "name": "Pikachu",
+            "image": "images/games/pikachu.jpg",
+            "answers": ["pikachu"],
+            "hints": [
+                "This character is an electric type",
+                "It's a yellow creature",
+                "It's the mascot of Pokemon"
+            ]
+        },
+        {
+            "id": "master-chief",
+            "name": "Master Chief",
+            "image": "images/games/master-chief.jpg",
+            "answers": ["master chief", "john-117", "john 117", "spartan 117"],
+            "hints": [
+                "This character wears power armor",
+                "He's the main character in the Halo series",
+                "His real name is John-117"
+            ]
+        },
+        {
+            "id": "lara-croft",
+            "name": "Lara Croft",
+            "image": "images/games/lara-croft.jpg",
+            "answers": ["lara croft", "lara"],
+            "hints": [
+                "This character is an archaeologist",
+                "She's the main character in Tomb Raider",
+                "She uses dual pistols"
+            ]
+        },
+        {
+            "id": "kratos",
+            "name": "Kratos",
+            "image": "images/games/kratos.jpg",
+            "answers": ["kratos"],
+            "hints": [
+                "This character was once a Spartan warrior",
+                "He's known for his rage",
+                "He's the protagonist of God of War"
+            ]
+        }
+    ]
+}

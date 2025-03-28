@@ -1,0 +1,94 @@
+{
+    "title": "Brand Logo Guesser",
+    "description": "Can you identify these famous brand logos from their silhouettes?",
+    "items": [
+        {
+            "id": "apple",
+            "name": "Apple",
+            "image": "images/brands/apple.jpg",
+            "answers": ["apple"],
+            "hints": [
+                "This company makes iPhones",
+                "Their logo is a fruit with a bite taken out of it",
+                "Steve Jobs was one of the founders"
+            ]
+        },
+        {
+            "id": "nike",
+            "name": "Nike",
+            "image": "images/brands/nike.jpg",
+            "answers": ["nike"],
+            "hints": [
+                "Their slogan is 'Just Do It'",
+                "They make athletic footwear and apparel",
+                "Their logo is called the 'Swoosh'"
+            ]
+        },
+        {
+            "id": "mcdonalds",
+            "name": "McDonald's",
+            "image": "images/brands/mcdonalds.jpg",
+            "answers": ["mcdonalds", "mcdonald's", "mcds"],
+            "hints": [
+                "Fast food restaurant chain",
+                "Golden arches logo",
+                "Home of the Big Mac"
+            ]
+        },
+        {
+            "id": "starbucks",
+            "name": "Starbucks",
+            "image": "images/brands/starbucks.jpg",
+            "answers": ["starbucks"],
+            "hints": [
+                "Coffee chain",
+                "Logo features a twin-tailed siren/mermaid",
+                "Founded in Seattle"
+            ]
+        },
+        {
+            "id": "mercedes",
+            "name": "Mercedes-Benz",
+            "image": "images/brands/mercedes.jpg",
+            "answers": ["mercedes", "mercedes-benz", "mercedes benz"],
+            "hints": [
+                "Luxury car manufacturer",
+                "Logo is a three-pointed star",
+                "German automotive brand"
+            ]
+        },
+        {
+            "id": "twitter",
+            "name": "Twitter",
+            "image": "images/brands/twitter.jpg",
+            "answers": ["twitter", "x"],
+            "hints": [
+                "Social media platform",
+                "Bird logo (originally)",
+                "Known for short messages"
+            ]
+        },
+        {
+            "id": "adidas",
+            "name": "Adidas",
+            "image": "images/brands/adidas.jpg",
+            "answers": ["adidas"],
+            "hints": [
+                "Sportswear manufacturer",
+                "Logo features three stripes",
+                "German company founded by Adolf Dassler"
+            ]
+        },
+        {
+            "id": "pepsi",
+            "name": "Pepsi",
+            "image": "images/brands/pepsi.jpg",
+            "answers": ["pepsi", "pepsi cola"],
+            "hints": [
+                "Carbonated soft drink",
+                "Main competitor to Coca-Cola",
+                "Logo has red, white, and blue circular design"
+            ]
+        }
+    ]
+}

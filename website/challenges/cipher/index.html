@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ancient Cipher Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="game-container fantasy-container">
+            <div class="fantasy-header">
+                <h1>Ancient Cipher Challenge</h1>
+            </div>
+
+            <div class="game-content">
+                <div class="instruction">
+                    <p>
+                        Decipher the ancient messages by shifting the letters.
+                        Use the controls to adjust the shift value.
+                    </p>
+                </div>
+
+                <div class="message-container">
+                    <div class="message-label">Encrypted Message:</div>
+                    <div id="encrypted-message" class="message encrypted"></div>
+                </div>
+
+                <div class="controls">
+                    <button
+                        id="decrease-btn"
+                        class="fantasy-button control-btn"
+                    >
+                        −
+                    </button>
+                    <div class="shift-display">
+                        <span>Shift: </span>
+                        <span id="shift-value">0</span>
+                    </div>
+                    <button
+                        id="increase-btn"
+                        class="fantasy-button control-btn"
+                    >
+                        +
+                    </button>
+                </div>
+
+                <div class="message-container">
+                    <div class="message-label">Decrypted Message:</div>
+                    <div id="decrypted-message" class="message decrypted"></div>
+                </div>
+
+                <div class="input-container">
+                    <input
+                        type="text"
+                        id="answer-input"
+                        placeholder="Enter the secret word or phrase"
+                        class="answer-input"
+                    />
+                    <button id="submit-btn" class="fantasy-button">
+                        Submit Answer
+                    </button>
+                </div>
+
+                <div class="hints">
+                    <p>
+                        Hint:
+                        <span id="hint-text"
+                            >Look for common words in English.</span
+                        >
+                    </p>
+                    <button id="hint-btn" class="fantasy-button">
+                        Get Hint
+                    </button>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-label">
+                        Progress: <span id="progress-value">1/5</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div
+                            id="progress-bar"
+                            class="progress-bar"
+                            style="width: 20%"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="game.js"></script>
+    </body>
+</html>

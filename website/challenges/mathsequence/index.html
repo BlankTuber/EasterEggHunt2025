@@ -8,73 +8,149 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div class="game-container fantasy-container">
-            <div class="fantasy-header">Arcane Number Sequence</div>
+        <div id="game-container"></div>
 
-            <div class="game-content">
-                <div class="level-indicator">
-                    <span class="level-text"
-                        >Arcane Level:
-                        <span class="current-level">1</span>/8</span
-                    >
-                    <div class="progress-container">
-                        <div class="progress-bar"></div>
-                    </div>
-                </div>
+        <script type="module">
+            import PuzzleGame from "../util/games/puzzle.js";
 
-                <div class="sequence-display">
-                    <div class="sequence-numbers" id="sequenceDisplay">
-                        <!-- Sequence numbers will be inserted here -->
-                    </div>
+            // Convert the existing sequence data to the new format
+            const sequenceLevels = [
+                {
+                    numbers: [3, 5, 7, 9, 11],
+                    nextNumber: 13,
+                    answer: "13",
+                    hints: [
+                        "Look at the difference between consecutive numbers.",
+                        "Each number increases by a constant value.",
+                        "The pattern is +2 each time.",
+                    ],
+                    explanation:
+                        "Each number increases by 2 from the previous number.",
+                    difficulty: "Easy",
+                },
+                {
+                    numbers: [2, 4, 8, 16, 32],
+                    nextNumber: 64,
+                    answer: "64",
+                    hints: [
+                        "Try dividing each number by the previous one.",
+                        "The ratio between consecutive terms is constant.",
+                        "Each number is multiplied by 2 from the previous number.",
+                    ],
+                    explanation:
+                        "Each number is multiplied by 2 from the previous number.",
+                    difficulty: "Easy",
+                },
+                {
+                    numbers: [5, 8, 10, 13, 15],
+                    nextNumber: 18,
+                    answer: "18",
+                    hints: [
+                        "The pattern of differences repeats every two steps.",
+                        "Try adding 3, then 2, then 3, then 2...",
+                        "The next step is to add 3 to 15.",
+                    ],
+                    explanation:
+                        "The sequence alternates between adding 3 and adding 2.",
+                    difficulty: "Medium",
+                },
+                {
+                    numbers: [1, 4, 9, 16, 25],
+                    nextNumber: 36,
+                    answer: "36",
+                    hints: [
+                        "Try finding a formula based on the position number.",
+                        "These are perfect squares of something.",
+                        "The next value is 6².",
+                    ],
+                    explanation:
+                        "These are square numbers: 1², 2², 3², 4², 5², and next is 6².",
+                    difficulty: "Medium",
+                },
+                {
+                    numbers: [2, 3, 5, 8, 13],
+                    nextNumber: 21,
+                    answer: "21",
+                    hints: [
+                        "Add the last two numbers together.",
+                        "This famous sequence is named after an Italian mathematician.",
+                        "The pattern is: each number equals the sum of the two previous numbers.",
+                    ],
+                    explanation:
+                        "Each number is the sum of the two previous numbers (Fibonacci-like sequence).",
+                    difficulty: "Medium",
+                },
+                {
+                    numbers: [1, 3, 9, 27, 81],
+                    nextNumber: 243,
+                    answer: "243",
+                    hints: [
+                        "The ratio between consecutive terms is constant.",
+                        "Try dividing each number by the previous one.",
+                        "Each term is 3 times the previous term.",
+                    ],
+                    explanation:
+                        "Each number is multiplied by 3 from the previous one: 3⁰, 3¹, 3², 3³, 3⁴, and next is 3⁵.",
+                    difficulty: "Medium",
+                },
+                {
+                    numbers: [1, 3, 6, 10, 15],
+                    nextNumber: 21,
+                    answer: "21",
+                    hints: [
+                        "Each number adds an increasing amount to the previous number.",
+                        "The differences between consecutive terms form their own sequence: 2, 3, 4, 5...",
+                        "Add 6 to the previous term (15) to get the next term.",
+                    ],
+                    explanation:
+                        "These are triangular numbers: sum of first n integers.",
+                    difficulty: "Hard",
+                },
+                {
+                    numbers: [4, 7, 12, 19, 28],
+                    nextNumber: 39,
+                    answer: "39",
+                    hints: [
+                        "Try finding a formula based on n².",
+                        "Look at the differences between consecutive terms, and then differences between those differences.",
+                        "The formula is n² + 3, where n starts at 1.",
+                    ],
+                    explanation:
+                        "The sequence follows the formula n² + 3, where n starts at 1.",
+                    difficulty: "Hard",
+                },
+            ];
 
-                    <div class="sequence-question">?</div>
-                </div>
+            // Define how-to-play pages
+            const howToPlayPages = [
+                {
+                    title: "How to Play",
+                    description:
+                        "This is a number sequence challenge. Each level shows a sequence of numbers following a mathematical pattern. Your task is to identify the pattern and enter the next number in the sequence.",
+                    image: "images/tutorial/sequence-1.jpg",
+                },
+                {
+                    title: "Finding Patterns",
+                    description:
+                        "Look for mathematical relationships between the numbers. Common patterns include: addition, multiplication, squares, powers, or alternating operations.",
+                    image: "images/tutorial/sequence-2.jpg",
+                },
+                {
+                    title: "Using Hints",
+                    description:
+                        "If you get stuck, you can use hints. Each level offers up to 3 hints that progressively reveal more about the pattern.",
+                    image: "images/tutorial/sequence-3.jpg",
+                },
+            ];
 
-                <div class="input-section">
-                    <input
-                        type="number"
-                        id="userAnswer"
-                        class="answer-input"
-                        placeholder="Enter your answer..."
-                    />
-                    <button id="submitBtn" class="fantasy-button">
-                        Reveal
-                    </button>
-                </div>
-
-                <div class="hint-section">
-                    <p class="hint-text">
-                        Discover the pattern in the magical sequence...
-                    </p>
-                    <button id="hintBtn" class="fantasy-button hint-button">
-                        Request a Hint <span class="hint-count">(3)</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Control buttons for mobile -->
-        <div class="control-buttons sequence-controls">
-            <div class="number-pad">
-                <div class="num-button" data-value="1">1</div>
-                <div class="num-button" data-value="2">2</div>
-                <div class="num-button" data-value="3">3</div>
-                <div class="num-button" data-value="4">4</div>
-                <div class="num-button" data-value="5">5</div>
-                <div class="num-button" data-value="6">6</div>
-                <div class="num-button" data-value="7">7</div>
-                <div class="num-button" data-value="8">8</div>
-                <div class="num-button" data-value="9">9</div>
-                <div class="num-button" data-value="0">0</div>
-                <div class="num-button delete-button" data-value="delete">
-                    ⌫
-                </div>
-                <div class="num-button submit-button" data-value="submit">
-                    ✓
-                </div>
-            </div>
-        </div>
-
-        <script type="module" src="game.js"></script>
+            // Initialize the game
+            const game = new PuzzleGame({
+                containerId: "game-container",
+                type: "sequence",
+                levels: sequenceLevels,
+                maxHints: 3,
+                howToPlayPages: howToPlayPages,
+            });
+        </script>
     </body>
 </html>

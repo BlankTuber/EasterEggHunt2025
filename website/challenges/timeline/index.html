@@ -8,47 +8,67 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div class="game-container fantasy-container">
-            <div class="fantasy-header">
-                <h1 id="game-title">Timeline Challenge</h1>
-            </div>
+        <div id="game-container"></div>
 
-            <div class="game-content">
-                <p id="game-description">
-                    Arrange the items in chronological order from earliest to
-                    latest.
-                </p>
+        <script type="module">
+            import TimelineGame from "../util/games/timeline.js";
 
-                <div class="timeline">
-                    <div class="timeline-track"></div>
-                    <div id="drop-zone"></div>
-                </div>
+            // Game data (can also be loaded from a JSON file)
+            const gameData = {
+                title: "Tech Timeline Challenge",
+                description:
+                    "Arrange these technological artifacts in chronological order of their invention.",
+                items: [
+                    {
+                        id: "abacus",
+                        name: "Abacus",
+                        year: -2700,
+                        image: "images/tech/abacus.jpg",
+                    },
+                    {
+                        id: "printing-press",
+                        name: "Printing Press",
+                        year: 1440,
+                        image: "images/tech/printing-press.jpg",
+                    },
+                    {
+                        id: "telephone",
+                        name: "Telephone",
+                        year: 1876,
+                        image: "images/tech/telephone.jpg",
+                    },
+                    {
+                        id: "television",
+                        name: "Television",
+                        year: 1927,
+                        image: "images/tech/television.jpg",
+                    },
+                    {
+                        id: "microprocessor",
+                        name: "Microprocessor",
+                        year: 1971,
+                        image: "images/tech/microprocessor.jpg",
+                    },
+                    {
+                        id: "world-wide-web",
+                        name: "World Wide Web",
+                        year: 1989,
+                        image: "images/tech/www.jpg",
+                    },
+                    {
+                        id: "smartphone",
+                        name: "Smartphone",
+                        year: 2007,
+                        image: "images/tech/smartphone.jpg",
+                    },
+                ],
+            };
 
-                <div id="items-container"></div>
-
-                <div class="controls">
-                    <button id="check-btn" class="fantasy-button">
-                        Check Order
-                    </button>
-                    <button id="reset-btn" class="fantasy-button">Reset</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2 id="modal-title"></h2>
-                <p id="modal-text"></p>
-                <div class="modal-buttons">
-                    <button
-                        id="modal-primary-btn"
-                        class="fantasy-button"
-                    ></button>
-                </div>
-            </div>
-        </div>
-
-        <script src="game.js"></script>
+            // Initialize the game
+            const game = new TimelineGame({
+                containerId: "game-container",
+                dataSource: gameData,
+            });
+        </script>
     </body>
 </html>

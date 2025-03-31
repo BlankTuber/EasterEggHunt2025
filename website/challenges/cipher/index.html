@@ -5,90 +5,99 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ancient Cipher Challenge</title>
         <link rel="stylesheet" href="../util/global.css" />
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div class="game-container fantasy-container">
-            <div class="fantasy-header">
-                <h1>Ancient Cipher Challenge</h1>
-            </div>
+        <div id="game-container"></div>
 
-            <div class="game-content">
-                <div class="instruction">
-                    <p>
-                        Decipher the ancient messages by shifting the letters.
-                        Use the controls to adjust the shift value.
-                    </p>
-                </div>
+        <script type="module">
+            import PuzzleGame from "../util/games/puzzle.js";
 
-                <div class="message-container">
-                    <div class="message-label">Encrypted Message:</div>
-                    <div id="encrypted-message" class="message encrypted"></div>
-                </div>
+            // Game levels data
+            const cipherLevels = [
+                {
+                    original:
+                        "THERE IS A SECRET WORD AT THE END OF THIS MESSAGE THE WORD IS KNOWLEDGE",
+                    encrypted:
+                        "QEBOB FP X PBZOBQ TLOA XQ QEB BKA LC QEFP JBPPXDB QEB TLOA FP HKLTIBADB",
+                    shift: 23,
+                    answer: "KNOWLEDGE",
+                    hints: [
+                        "Try shifting the alphabet by 1 position",
+                        "Look for common words like 'THE' and 'IS'",
+                        "The secret word is at the end of the message",
+                    ],
+                    successMessage:
+                        "Excellent decryption! You've found the first secret word.",
+                },
+                {
+                    original:
+                        "CIPHER IS A MYSTICAL MESSAGE IN THE CHALLENGE THE ANSWER WORD IS HIDDEN",
+                    encrypted:
+                        "NTASPC TD L XJDETNLW XPDDLRP TY ESP NSLWWPYRP ESP LYDHPC HZCO TD STOOPY",
+                    shift: 11,
+                    answer: "HIDDEN",
+                    hints: [
+                        "Try looking for common patterns like 'THE' and 'IS'",
+                        "This message uses a larger shift value",
+                        "The answer is a word related to secrets",
+                    ],
+                    successMessage:
+                        "Well done! You've uncovered the hidden word.",
+                },
+                {
+                    original:
+                        "PLEASE CONSIDER ANSWERING WITH THE WORD CRYPTOGRAPHY",
+                    encrypted:
+                        "XTMIAM KWVAQLMZ IVAEMZQVO EQBP BPM EWZL KZGXBWOZIXPG",
+                    shift: 8,
+                    answer: "CRYPTOGRAPHY",
+                    hints: [
+                        "The shift value is small",
+                        "Look for common words like 'WITH' and 'THE'",
+                        "The answer is the study of secure communications",
+                    ],
+                    successMessage:
+                        "Impressive! You've mastered the art of cryptography.",
+                },
+                {
+                    original:
+                        "THERE ARE MANY TYPES OF CIPHERS THIS IS A CAESAR CIPHER WITH THE SECRET WORD DECODED",
+                    encrypted:
+                        "MAXKX TKX FTGR MRIXL HY VBIAXKL MABL BL T VTXLTK VBIAXK PBMA MAX LXVKXM PHKW WXVHWXW",
+                    shift: 19,
+                    answer: "DECODED",
+                    hints: [
+                        "Try to identify the word 'CIPHER' in the encrypted text",
+                        "This is named after a famous Roman emperor",
+                        "The secret word describes what you've successfully done",
+                    ],
+                    successMessage:
+                        "Magnificent! You have decoded all the secrets.",
+                },
+                {
+                    original:
+                        "CONGRATULATIONS YOU HAVE COMPLETED ALL CIPHERS THE FINAL WORD IS MASTERY",
+                    encrypted:
+                        "DPOHSBUVMBUJPOT ZPV IBWF DPNQMFUFE BMM DJQIFST UIF GJOBM XPSE JT NBTUFSZ",
+                    shift: 1,
+                    answer: "MASTERY",
+                    hints: [
+                        "It's similar to the first cipher's shift",
+                        "The first word should be 'CONGRATULATIONS'",
+                        "The final word describes expertise in a skill",
+                    ],
+                    successMessage:
+                        "Congratulations! You have achieved mastery of ancient ciphers!",
+                },
+            ];
 
-                <div class="controls">
-                    <button
-                        id="decrease-btn"
-                        class="fantasy-button control-btn"
-                    >
-                        −
-                    </button>
-                    <div class="shift-display">
-                        <span>Shift: </span>
-                        <span id="shift-value">0</span>
-                    </div>
-                    <button
-                        id="increase-btn"
-                        class="fantasy-button control-btn"
-                    >
-                        +
-                    </button>
-                </div>
-
-                <div class="message-container">
-                    <div class="message-label">Decrypted Message:</div>
-                    <div id="decrypted-message" class="message decrypted"></div>
-                </div>
-
-                <div class="input-container">
-                    <input
-                        type="text"
-                        id="answer-input"
-                        placeholder="Enter the secret word or phrase"
-                        class="answer-input"
-                    />
-                    <button id="submit-btn" class="fantasy-button">
-                        Submit Answer
-                    </button>
-                </div>
-
-                <div class="hints">
-                    <p>
-                        Hint:
-                        <span id="hint-text"
-                            >Look for common words in English.</span
-                        >
-                    </p>
-                    <button id="hint-btn" class="fantasy-button">
-                        Get Hint
-                    </button>
-                </div>
-
-                <div class="progress">
-                    <div class="progress-label">
-                        Progress: <span id="progress-value">1/5</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div
-                            id="progress-bar"
-                            class="progress-bar"
-                            style="width: 20%"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script type="module" src="game.js"></script>
+            // Initialize the game
+            const game = new PuzzleGame({
+                containerId: "game-container",
+                type: "cipher",
+                levels: cipherLevels,
+            });
+        </script>
     </body>
 </html>

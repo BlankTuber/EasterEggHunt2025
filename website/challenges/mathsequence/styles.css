@@ -1,64 +1,16 @@
-/* website/challenges/mathsequence/styles.css */
+@import "../util/theme.css";
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    min-height: 100vh;
-}
-
-.game-container {
-    width: 600px;
-    max-width: 95vw;
-    margin: 0 auto;
-    padding-bottom: 20px;
-}
-
-.game-content {
-    padding: 20px;
-}
-
-/* Level indicator */
-.level-indicator {
-    margin-bottom: 20px;
-}
-
-.level-text {
-    display: block;
-    text-align: center;
-    margin-bottom: 8px;
-    font-size: 1.2rem;
-    text-shadow: 0 0 5px rgba(232, 212, 169, 0.5);
-}
-
-.progress-container {
-    height: 15px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #8b5e34;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(to right, #62a0ea, #a367dc);
-    width: 10%; /* Will be updated via JS */
-    border-radius: 10px;
-    transition: width 0.5s ease;
-}
-
-/* Sequence display */
 .sequence-display {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 30px 0;
+    margin: var(--spacing-xl) 0;
     background: rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid rgba(139, 94, 52, 0.6);
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    border: var(--border-width) solid var(--color-secondary);
+    box-shadow: var(--shadow-inner);
+    flex-wrap: wrap;
 }
 
 .sequence-numbers {
@@ -66,7 +18,7 @@ body {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: var(--spacing-md);
 }
 
 .sequence-number {
@@ -76,18 +28,18 @@ body {
     align-items: center;
     justify-content: center;
     background: linear-gradient(145deg, #2a2a4a, #1a1a3e);
-    border: 2px solid #8b5e34;
-    border-radius: 10px;
-    font-size: 1.5rem;
+    border: var(--border-width) solid var(--color-secondary);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-xl);
     font-weight: bold;
-    color: #e8d4a9;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    color: var(--color-text);
+    box-shadow: var(--shadow-md);
     text-shadow: 0 0 5px rgba(232, 212, 169, 0.5);
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
 }
 
 .sequence-number.highlight {
-    border-color: #a367dc;
+    border-color: var(--color-accent);
     box-shadow: 0 0 15px rgba(163, 103, 220, 0.6);
     transform: scale(1.1);
 }
@@ -99,71 +51,69 @@ body {
     align-items: center;
     justify-content: center;
     background: linear-gradient(145deg, #4a2a4a, #3e1a3e);
-    border: 2px solid #a367dc;
-    border-radius: 10px;
-    font-size: 2rem;
+    border: var(--border-width) solid var(--color-accent);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-xxl);
     font-weight: bold;
-    color: #e8d4a9;
-    margin-left: 15px;
+    color: var(--color-text);
+    margin-left: var(--spacing-md);
     box-shadow: 0 0 20px rgba(163, 103, 220, 0.5);
     text-shadow: 0 0 8px rgba(232, 212, 169, 0.7);
     animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* Input section */
 .input-section {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-lg) 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 768px) {
+    .input-section {
+        flex-direction: row;
+    }
 }
 
 .answer-input {
     flex: 1;
-    padding: 12px 15px;
-    font-size: 1.1rem;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-lg);
     background: rgba(232, 212, 169, 0.1);
-    color: #e8d4a9;
-    border: 2px solid #8b5e34;
-    border-radius: 6px;
+    color: var(--color-text);
+    border: var(--border-width) solid var(--color-secondary);
+    border-radius: var(--border-radius-md);
     outline: none;
-    font-family: "MedievalSharp", cursive;
+    font-family: var(--font-primary);
 }
 
 .answer-input:focus {
-    border-color: #a367dc;
-    box-shadow: 0 0 10px rgba(163, 103, 220, 0.4);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
 }
 
 .answer-input::placeholder {
     color: rgba(232, 212, 169, 0.5);
 }
 
-/* Hint section */
 .hint-section {
     text-align: center;
+    margin: var(--spacing-lg) 0;
 }
 
 .hint-text {
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-md);
     font-style: italic;
     opacity: 0.8;
+    padding: 0 var(--spacing-md);
 }
 
 .hint-button {
     background: linear-gradient(to bottom, #3a1a4a, #2a0a3a);
-    color: #e8d4a9;
+    color: var(--color-text);
 }
 
 .hint-button:hover {
@@ -172,28 +122,52 @@ body {
 
 .hint-count {
     opacity: 0.8;
-    font-size: 0.9rem;
+    font-size: var(--font-size-sm);
 }
 
-/* Number pad for mobile */
+.difficulty-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    margin-left: var(--spacing-sm);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.difficulty-easy {
+    background: rgba(109, 168, 50, 0.2);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+}
+
+.difficulty-medium {
+    background: rgba(231, 199, 125, 0.2);
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning);
+}
+
+.difficulty-hard {
+    background: rgba(231, 125, 125, 0.2);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
+
 .sequence-controls {
-    position: fixed;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    display: none; /* Hidden by default, shown on mobile */
+    display: none;
+    margin-top: var(--spacing-lg);
 }
 
 .number-pad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: var(--spacing-sm);
     max-width: 320px;
     margin: 0 auto;
     background: rgba(26, 26, 46, 0.8);
-    padding: 15px;
-    border-radius: 15px;
-    border: 2px solid #8b5e34;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    border: var(--border-width) solid var(--color-secondary);
 }
 
 .num-button {
@@ -203,13 +177,13 @@ body {
     align-items: center;
     justify-content: center;
     background: linear-gradient(145deg, #2a2a4a, #1a1a3e);
-    border: 2px solid #8b5e34;
-    border-radius: 10px;
-    font-size: 1.5rem;
-    color: #e8d4a9;
+    border: var(--border-width) solid var(--color-secondary);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
     cursor: pointer;
     user-select: none;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .num-button:active {
@@ -218,16 +192,15 @@ body {
 }
 
 .delete-button {
-    color: #e77d7d;
+    color: var(--color-error);
 }
 
 .submit-button {
     background: linear-gradient(145deg, #2a4a2a, #1a3e1a);
-    border-color: #6da832;
+    border-color: var(--color-success);
     color: #d4e8a9;
 }
 
-/* Correct/Incorrect answer animations */
 .correct-answer {
     animation: correctGlow 1s;
 }
@@ -263,17 +236,17 @@ body {
     }
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
     .sequence-number {
         width: 50px;
         height: 50px;
-        font-size: 1.3rem;
+        font-size: var(--font-size-lg);
     }
 
     .sequence-question {
         width: 50px;
         height: 50px;
+        font-size: var(--font-size-xl);
     }
 
     .sequence-controls {
@@ -283,19 +256,24 @@ body {
     body {
         padding-bottom: 140px;
     }
+
+    .num-button {
+        width: 50px;
+        height: 50px;
+    }
 }
 
 @media (max-width: 480px) {
     .sequence-number {
         width: 40px;
         height: 40px;
-        font-size: 1.1rem;
+        font-size: var(--font-size-md);
     }
 
     .sequence-question {
         width: 40px;
         height: 40px;
-        font-size: 1.6rem;
+        font-size: var(--font-size-lg);
     }
 
     .game-content {
@@ -303,7 +281,8 @@ body {
     }
 
     .num-button {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
+        font-size: var(--font-size-lg);
     }
 }

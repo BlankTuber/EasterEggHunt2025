@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ancient Morse Code Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="game-container"></div>
+
+        <script type="module">
+            import MorseCodeGame from "./morse-code.js";
+
+            // Initialize the game
+            const game = new MorseCodeGame({
+                containerId: "game-container",
+                message: "THE SECRET LIES BENEATH THE ANCIENT OAK",
+                title: "Ancient Morse Code",
+                description:
+                    "Decode the blinking message to uncover hidden instructions for your journey.",
+            });
+        </script>
+    </body>
+</html>

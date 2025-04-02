@@ -1,0 +1,186 @@
+@import "../util/theme.css";
+
+/* Stats Container */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(to bottom, #3b2d1f, #2a1f16);
+    border: var(--border-width) solid var(--color-secondary);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.stat-display {
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+    text-shadow: 0 0 8px rgba(232, 212, 169, 0.4);
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.stat-display span {
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+/* Memory Grid */
+.memory-grid {
+    display: grid;
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto var(--spacing-lg);
+    perspective: 1000px; /* For 3D flip effect */
+}
+
+.memory-card {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Square aspect ratio */
+    perspective: 1000px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transition: transform 0.6s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xxl);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    user-select: none;
+}
+
+.card-front {
+    background: linear-gradient(135deg, #3a1a4a, #2a0a3a);
+    border: var(--border-width) solid var(--color-accent);
+    transform: rotateY(180deg);
+}
+
+.card-back {
+    background: linear-gradient(135deg, #3b2d1f, #2a1f16);
+    border: var(--border-width) solid var(--color-secondary);
+    font-family: var(--font-primary);
+}
+
+.memory-card.flipped .card-front {
+    transform: rotateY(0);
+}
+
+.memory-card.flipped .card-back {
+    transform: rotateY(-180deg);
+}
+
+.memory-card.matched .card-front {
+    background: linear-gradient(135deg, #214a21, #0a3a0a);
+    border-color: var(--color-success);
+    animation: matched 0.5s;
+}
+
+.memory-card:not(.flipped):not(.matched):hover .card-back {
+    box-shadow: 0 0 15px rgba(232, 212, 169, 0.5);
+    transform: translateY(-2px) rotateY(0);
+}
+
+/* Reset Button */
+.reset-button {
+    display: block;
+    margin: 0 auto var(--spacing-xl);
+    min-width: 150px;
+}
+
+/* Animations */
+@keyframes matched {
+    0%,
+    100% {
+        transform: rotateY(0) scale(1);
+    }
+    50% {
+        transform: rotateY(0) scale(1.1);
+    }
+}
+
+/* Ambient Card Glow */
+.memory-card:nth-child(3n) .card-back {
+    animation: subtle-glow-1 3s infinite alternate;
+}
+
+.memory-card:nth-child(3n + 1) .card-back {
+    animation: subtle-glow-2 4s infinite alternate;
+}
+
+.memory-card:nth-child(3n + 2) .card-back {
+    animation: subtle-glow-3 5s infinite alternate;
+}
+
+@keyframes subtle-glow-1 {
+    0% {
+        box-shadow: 0 0 5px rgba(163, 103, 220, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 12px rgba(163, 103, 220, 0.5);
+    }
+}
+
+@keyframes subtle-glow-2 {
+    0% {
+        box-shadow: 0 0 5px rgba(139, 94, 52, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 12px rgba(139, 94, 52, 0.5);
+    }
+}
+
+@keyframes subtle-glow-3 {
+    0% {
+        box-shadow: 0 0 5px rgba(232, 212, 169, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 12px rgba(232, 212, 169, 0.5);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .memory-grid {
+        gap: var(--spacing-sm);
+    }
+
+    .card-front,
+    .card-back {
+        font-size: var(--font-size-xl);
+    }
+
+    .stat-display {
+        font-size: var(--font-size-md);
+        padding: var(--spacing-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .memory-grid {
+        gap: var(--spacing-xs);
+    }
+
+    .card-front,
+    .card-back {
+        font-size: var(--font-size-lg);
+    }
+
+    .stat-display {
+        font-size: var(--font-size-sm);
+        margin: var(--spacing-xs) 0;
+        text-align: center;
+        width: 100%;
+    }
+}

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Color Sequence Puzzle</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="game-container"></div>
+
+        <script type="module">
+            import UI from "../util/ui.js";
+            import GameComponents from "../util/components.js";
+            import GameModal from "../util/modal.js";
+
+            class ColorSequenceGame {
+                constructor(options = {}) {
+                    this.options = {
+                        containerId: "game-container",
+                        maxLevel: 8,
+                        initialSequenceLength: 2,
+                        sequenceSpeed: 800, // ms between color flashes
+                        ...options,
+                    };
+
+                    this.container = document.getElementById(
+                        this.options.containerId,
+                    );
+                    if (!this.container) {
+                        console.error("Game container not found");
+                        return;
+                    }
+
+                    // Game state
+                    this.currentLevel = 1;
+                    this.sequence = [];
+                    this.playerSequence = [];
+                    this.gameActive = false;
+                    this.isPlayingSequence = false;
+                    this.gameWon = false;
+                    this.colors = [
+                        { id: "red", name: "Red", color: "#e77d7d" },
+                        { id: "blue", name: "Blue", color: "#62a0ea" },
+                        { id: "green", name: "Green", color: "#6da832" },
+                        { id: "yellow", name: "Yellow", color: "#e7c77d" },
+                        { id: "purple", name: "Purple", color: "#a367dc" },
+                    ];
+
+                    // Initialize the game
+                    this.init();
+                }
+
+                init() {
+                    // Create game layout
+                    this.createGameLayout();
+
+                    // Show introduction modal
+                    this.showIntroModal();
+                }
+
+                createGameLayout() {
+                    // Clear container
+                    this.container.innerHTML = "";
+
+                    // Create game layout
+                    const layout = GameComponents.createGameLayout(
+                        "Color Sequence Puzzle",
+                        "Observe and reproduce the sequences of colored lights",
+                    );
+
+                    this.container.appendChild(layout.container);
+                    this.gameContent = layout.content;
+
+                    // Create how to play button
+                    const howToPlayPages = [
+                        {
+                            title: "How to Play",
+                            description:
+                                "Watch as the colored lights illuminate in a specific sequence, then repeat that sequence by clicking on the lights in the same order.",
+                            image: "images/tutorial/sequence-1.jpg",
+                        },
+                        {
+                            title: "Game Progression",
+                            description:
+                                "Each level adds one more step to the sequence. Pay close attention as the sequence gets longer!",
+                            image: "images/tutorial/sequence-2.jpg",
+                        },
+                        {
+                            title: "Winning",
+                            description:
+                                "Complete all 8 levels to master the challenge. If you make a mistake, the correct sequence will replay.",
+                            image: "images/tutorial/sequence-3.jpg",
+                        },
+                    ];
+
+                    GameComponents.addHowToPlay(
+                        layout.container,
+                        howToPlayPages,
+                    );
+
+                    // Create game status display
+                    this.createStatusDisplay();
+
+                    // Create color lights grid
+                    this.createColorGrid();
+
+                    // Create control buttons
+                    this.createControlButtons();
+                }
+
+                createStatusDisplay() {
+                    // Create status container
+                    const statusContainer = document.createElement("div");
+                    statusContainer.className = "status-container";
+
+                    // Create level display
+                    this.levelDisplay = document.createElement("div");
+                    this.levelDisplay.className = "level-display";
+                    this.levelDisplay.innerHTML = `Level: <span>1</span>/${this.options.maxLevel}`;
+
+                    // Create sequence length display
+                    this.sequenceDisplay = document.createElement("div");
+                    this.sequenceDisplay.className = "sequence-display";
+                    this.sequenceDisplay.innerHTML = `Sequence Length: <span>${this.options.initialSequenceLength}</span>`;
+
+                    // Create status message
+                    this.statusMessage = document.createElement("div");
+                    this.statusMessage.className = "status-message";
+                    this.statusMessage.textContent = "Watch the sequence";
+
+                    statusContainer.appendChild(this.levelDisplay);
+                    statusContainer.appendChild(this.sequenceDisplay);
+                    statusContainer.appendChild(this.statusMessage);
+
+                    this.gameContent.appendChild(statusContainer);
+                }
+
+                createColorGrid() {
+                    // Create grid container
+                    this.colorGrid = document.createElement("div");
+                    this.colorGrid.className = "color-grid";
+
+                    // Create color buttons
+                    this.colorButtons = {};
+                    this.colors.forEach((color) => {
+                        const button = document.createElement("div");
+                        button.className = "color-button";
+                        button.dataset.color = color.id;
+                        button.style.backgroundColor = color.color;
+
+                        // Add color name for accessibility
+                        const colorName = document.createElement("span");
+                        colorName.className = "color-name";
+                        colorName.textContent = color.name;
+                        button.appendChild(colorName);
+
+                        // Add click event
+                        button.addEventListener("click", () =>
+                            this.handleColorClick(color.id),
+                        );
+
+                        this.colorGrid.appendChild(button);
+                        this.colorButtons[color.id] = button;
+                    });
+
+                    this.gameContent.appendChild(this.colorGrid);
+                }
+
+                createControlButtons() {
+                    // Create controls container
+                    const controlsContainer = document.createElement("div");
+                    controlsContainer.className = "controls-container";
+
+                    // Create play sequence button
+                    this.playButton = UI.createButton(
+                        "Play Sequence",
+                        () => this.playSequence(),
+                        "play-button",
+                    );
+
+                    // Create reset button
+                    const resetButton = UI.createButton(
+                        "Reset Game",
+                        () => this.resetGame(),
+                        "reset-button",
+                    );
+
+                    controlsContainer.appendChild(this.playButton);
+                    controlsContainer.appendChild(resetButton);
+
+                    this.gameContent.appendChild(controlsContainer);
+                }
+
+                startGame() {
+                    this.gameActive = true;
+                    this.gameWon = false;
+                    this.currentLevel = 1;
+                    this.updateLevelDisplay();
+
+                    // Generate first sequence
+                    this.generateSequence();
+
+                    // Play the sequence after a short delay
+                    setTimeout(() => {
+                        this.playSequence();
+                    }, 1000);
+                }
+
+                resetGame() {
+                    // Reset game state
+                    this.currentLevel = 1;
+                    this.sequence = [];
+                    this.playerSequence = [];
+                    this.gameActive = true;
+                    this.gameWon = false;
+                    this.isPlayingSequence = false;
+
+                    // Update displays
+                    this.updateLevelDisplay();
+                    this.updateStatusMessage("Watch the sequence");
+
+                    // Generate new sequence
+                    this.generateSequence();
+
+                    // Play the sequence after a short delay
+                    setTimeout(() => {
+                        this.playSequence();
+                    }, 1000);
+                }
+
+                generateSequence() {
+                    // Calculate sequence length for current level
+                    const sequenceLength =
+                        this.options.initialSequenceLength +
+                        (this.currentLevel - 1);
+
+                    // Generate a random sequence of colors
+                    this.sequence = [];
+                    for (let i = 0; i < sequenceLength; i++) {
+                        const randomIndex = Math.floor(
+                            Math.random() * this.colors.length,
+                        );
+                        this.sequence.push(this.colors[randomIndex].id);
+                    }
+
+                    // Update sequence length display
+                    this.updateSequenceDisplay(sequenceLength);
+                }
+
+                playSequence() {
+                    // Don't play if already playing
+                    if (this.isPlayingSequence) return;
+
+                    this.isPlayingSequence = true;
+                    this.playerSequence = [];
+
+                    // Disable buttons during sequence playback
+                    this.disableColorButtons(true);
+                    this.playButton.disabled = true;
+
+                    // Update status
+                    this.updateStatusMessage("Watch carefully...");
+
+                    // Play each color in the sequence with a delay
+                    let i = 0;
+                    const intervalId = setInterval(() => {
+                        if (i < this.sequence.length) {
+                            this.flashColor(this.sequence[i]);
+                            i++;
+                        } else {
+                            // Sequence finished
+                            clearInterval(intervalId);
+                            setTimeout(() => {
+                                this.isPlayingSequence = false;
+                                this.disableColorButtons(false);
+                                this.playButton.disabled = false;
+                                this.updateStatusMessage(
+                                    "Your turn! Repeat the sequence",
+                                );
+                            }, this.options.sequenceSpeed);
+                        }
+                    }, this.options.sequenceSpeed);
+                }
+
+                flashColor(colorId) {
+                    const button = this.colorButtons[colorId];
+                    if (!button) return;
+
+                    // Add active class for visual effect
+                    button.classList.add("active");
+
+                    // Play sound effect if supported
+                    this.playColorSound(colorId);
+
+                    // Remove active class after delay
+                    setTimeout(() => {
+                        button.classList.remove("active");
+                    }, this.options.sequenceSpeed * 0.7);
+                }
+
+                playColorSound(colorId) {
+                    // Simple sound effect using Web Audio API
+                    try {
+                        const context = new (window.AudioContext ||
+                            window.webkitAudioContext)();
+                        const oscillator = context.createOscillator();
+                        const gainNode = context.createGain();
+
+                        oscillator.connect(gainNode);
+                        gainNode.connect(context.destination);
+
+                        // Different frequency for each color
+                        const frequencies = {
+                            red: 261.6, // C4
+                            blue: 329.6, // E4
+                            green: 392.0, // G4
+                            yellow: 440.0, // A4
+                            purple: 493.9, // B4
+                        };
+
+                        oscillator.frequency.value =
+                            frequencies[colorId] || 350;
+                        oscillator.type = "sine";
+
+                        gainNode.gain.setValueAtTime(0.1, context.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(
+                            0.001,
+                            context.currentTime + 0.5,
+                        );
+
+                        oscillator.start(context.currentTime);
+                        oscillator.stop(context.currentTime + 0.5);
+                    } catch (e) {
+                        console.log("Web Audio API not fully supported");
+                    }
+                }
+
+                handleColorClick(colorId) {
+                    // Ignore clicks if not in player input phase
+                    if (
+                        this.isPlayingSequence ||
+                        !this.gameActive ||
+                        this.gameWon
+                    )
+                        return;
+
+                    // Flash the clicked color
+                    this.flashColor(colorId);
+
+                    // Add to player sequence
+                    this.playerSequence.push(colorId);
+
+                    // Check if the move is correct
+                    const currentIndex = this.playerSequence.length - 1;
+                    if (
+                        this.playerSequence[currentIndex] !==
+                        this.sequence[currentIndex]
+                    ) {
+                        // Wrong move
+                        this.handleWrongMove();
+                        return;
+                    }
+
+                    // Check if sequence is complete
+                    if (this.playerSequence.length === this.sequence.length) {
+                        // Sequence complete - move to next level
+                        this.handleCorrectSequence();
+                    }
+                }
+
+                handleWrongMove() {
+                    // Visual feedback
+                    this.colorGrid.classList.add("wrong-sequence");
+                    setTimeout(() => {
+                        this.colorGrid.classList.remove("wrong-sequence");
+                    }, 500);
+
+                    // Update status
+                    this.updateStatusMessage("Wrong sequence! Watch again...");
+
+                    // Disable input
+                    this.disableColorButtons(true);
+
+                    // Replay sequence after a delay
+                    setTimeout(() => {
+                        this.playerSequence = [];
+                        this.playSequence();
+                    }, 1500);
+                }
+
+                handleCorrectSequence() {
+                    // Visual feedback
+                    this.colorGrid.classList.add("correct-sequence");
+                    setTimeout(() => {
+                        this.colorGrid.classList.remove("correct-sequence");
+                    }, 500);
+
+                    // Update status
+                    this.updateStatusMessage(
+                        "Correct! Prepare for next level...",
+                    );
+
+                    // Disable input
+                    this.disableColorButtons(true);
+
+                    // Check if game is complete
+                    if (this.currentLevel >= this.options.maxLevel) {
+                        // Game won
+                        this.gameWon = true;
+                        setTimeout(() => {
+                            this.handleGameWon();
+                        }, 1500);
+                        return;
+                    }
+
+                    // Move to next level
+                    setTimeout(() => {
+                        this.currentLevel++;
+                        this.updateLevelDisplay();
+                        this.playerSequence = [];
+                        this.generateSequence();
+                        this.playSequence();
+                    }, 1500);
+                }
+
+                handleGameWon() {
+                    // Show win modal
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--color-success);">Challenge Complete!</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Congratulations! You've mastered all ${this.options.maxLevel} levels of the color sequence puzzle.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Your memory and pattern recognition skills have proven exceptional. The ancient runes glow with approval.
+                        </p>
+                    `);
+
+                    modal.addButton("Complete Challenge", () => {
+                        modal.hide();
+                        GameComponents.handleGameCompletion();
+                    });
+
+                    modal.show();
+                }
+
+                disableColorButtons(disabled) {
+                    Object.values(this.colorButtons).forEach((button) => {
+                        button.classList.toggle("disabled", disabled);
+                    });
+                }
+
+                updateLevelDisplay() {
+                    const levelSpan = this.levelDisplay.querySelector("span");
+                    if (levelSpan) {
+                        levelSpan.textContent = this.currentLevel;
+                    }
+                }
+
+                updateSequenceDisplay(length) {
+                    const sequenceSpan =
+                        this.sequenceDisplay.querySelector("span");
+                    if (sequenceSpan) {
+                        sequenceSpan.textContent = length;
+                    }
+                }
+
+                updateStatusMessage(message) {
+                    this.statusMessage.textContent = message;
+                }
+
+                showIntroModal() {
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px;">Color Sequence Puzzle</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            The Sage must test their memory and pattern recognition skills by reproducing sequences of magical lights.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Watch carefully as the colored lights illuminate in a specific order, then repeat that sequence by clicking on the lights in the same order.
+                        </p>
+                        <p style="text-align: center;">
+                            Each level adds one more step to the sequence. Master all ${this.options.maxLevel} levels to complete the challenge!
+                        </p>
+                    `);
+
+                    modal.addButton("Begin Challenge", () => {
+                        modal.hide();
+                        this.startGame();
+                    });
+
+                    modal.show();
+                }
+            }
+
+            // Initialize the game
+            const game = new ColorSequenceGame({
+                containerId: "game-container",
+                maxLevel: 8,
+                initialSequenceLength: 2,
+                sequenceSpeed: 800,
+            });
+        </script>
+    </body>
+</html>

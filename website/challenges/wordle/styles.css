@@ -1,0 +1,307 @@
+@import "../util/theme.css";
+
+/* Board Container */
+.board-container {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-md) 0;
+}
+
+/* Game Board */
+.board-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.board-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.board-tile {
+    width: 60px;
+    height: 60px;
+    background: rgba(26, 26, 46, 0.5);
+    border: 2px solid var(--color-secondary);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--color-text);
+    text-transform: uppercase;
+    transition: transform 0.1s ease;
+}
+
+.board-tile.filled {
+    border-color: var(--color-accent);
+}
+
+/* Tile status colors */
+.board-tile.correct {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: #fff;
+}
+
+.board-tile.present {
+    background: #d4aa00;
+    border-color: #d4aa00;
+    color: #fff;
+}
+
+.board-tile.absent {
+    background: #555;
+    border-color: #555;
+    color: #aaa;
+}
+
+/* Keyboard */
+.keyboard-container {
+    margin: var(--spacing-md) 0;
+    user-select: none;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.keyboard-key {
+    min-width: 40px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #3b2d1f, #2a1f16);
+    border: 2px solid var(--color-secondary);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text);
+    font-size: var(--font-size-md);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.keyboard-key:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.keyboard-key:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.enter-key,
+.backspace-key {
+    min-width: 65px;
+    font-size: var(--font-size-sm);
+}
+
+/* Keyboard key status colors - same as tiles */
+.keyboard-key.correct {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: #fff;
+}
+
+.keyboard-key.present {
+    background: #d4aa00;
+    border-color: #d4aa00;
+    color: #fff;
+}
+
+.keyboard-key.absent {
+    background: #555;
+    border-color: #555;
+    color: #aaa;
+}
+
+/* Toast Message */
+.toast-message {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: rgba(26, 26, 46, 0.9);
+    border: 2px solid var(--color-secondary);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--color-text);
+    font-size: var(--font-size-md);
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    box-shadow: var(--shadow-lg);
+}
+
+.toast-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Animations */
+.pop-animation {
+    animation: pop 0.1s ease-in-out;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.shake-animation {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-3px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+.flip-animation {
+    animation: flip 0.5s ease;
+    transform-style: preserve-3d;
+}
+
+@keyframes flip {
+    0% {
+        transform: perspective(400px) rotateX(0);
+    }
+    50% {
+        transform: perspective(400px) rotateX(-90deg);
+    }
+    100% {
+        transform: perspective(400px) rotateX(0);
+    }
+}
+
+.bounce-animation {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%,
+    20% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+    80% {
+        transform: translateY(0);
+    }
+}
+
+/* Adding subtle rune background to board tiles */
+.board-tile::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" opacity="0.05"><text x="0" y="15" font-family="serif" font-size="15" fill="white">ᚱ</text></svg>');
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+/* Special visual flair for correct guesses */
+.board-tile.correct::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle,
+        transparent 60%,
+        rgba(255, 255, 255, 0.2) 100%
+    );
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .board-tile {
+        width: 50px;
+        height: 50px;
+        font-size: var(--font-size-lg);
+    }
+
+    .keyboard-key {
+        min-width: 32px;
+        height: 50px;
+        font-size: var(--font-size-sm);
+    }
+
+    .enter-key,
+    .backspace-key {
+        min-width: 50px;
+        font-size: var(--font-size-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .board-tile {
+        width: 40px;
+        height: 40px;
+        font-size: var(--font-size-md);
+    }
+
+    .keyboard-key {
+        min-width: 28px;
+        height: 45px;
+        font-size: var(--font-size-xs);
+        padding: 0 2px;
+    }
+
+    .enter-key,
+    .backspace-key {
+        min-width: 42px;
+        font-size: 10px;
+    }
+
+    .keyboard-row {
+        gap: 3px;
+        margin-bottom: 5px;
+    }
+
+    .board-row {
+        gap: var(--spacing-xs);
+    }
+}

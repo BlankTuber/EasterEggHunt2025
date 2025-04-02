@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Word Ladder Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="game-container"></div>
+
+        <script type="module">
+            import UI from "../util/ui.js";
+            import GameComponents from "../util/components.js";
+            import GameModal from "../util/modal.js";
+
+            class WordLadderGame {
+                constructor(options = {}) {
+                    this.options = {
+                        containerId: "game-container",
+                        maxAttempts: 6,
+                        wordLength: 5,
+                        totalWins: 3, // Number of words to solve to win the challenge
+                        ...options,
+                    };
+
+                    this.container = document.getElementById(
+                        this.options.containerId,
+                    );
+                    if (!this.container) {
+                        console.error("Game container not found");
+                        return;
+                    }
+
+                    // Game state
+                    this.gameActive = false;
+                    this.currentRow = 0;
+                    this.currentCol = 0;
+                    this.targetWord = "";
+                    this.attempts = [];
+                    this.currentAttempt = [];
+                    this.guessedLetters = {}; // Track letter statuses: correct, present, absent
+                    this.wordsCompleted = 0;
+
+                    // Track shake and bounce animations
+                    this.isAnimating = false;
+
+                    // Word list - target words
+                    this.targetWords = [
+                        "QUEST",
+                        "MAGIC",
+                        "SWORD",
+                        "BRAVE",
+                        "TOWER",
+                        "RUNES",
+                        "GUILD",
+                        "CROWN",
+                        "HONOR",
+                        "FLAME",
+                        "TITAN",
+                        "VALOR",
+                        "STORM",
+                        "FORGE",
+                        "MOUNT",
+                        "HAVEN",
+                        "WORLD",
+                        "MIGHT",
+                        "GLORY",
+                        "POWER",
+                    ];
+
+                    // Valid guesses - all words that can be guessed
+                    this.validGuesses = [
+                        // Include all target words
+                        ...this.targetWords,
+                        // Plus many common 5-letter words
+                        "ABOUT",
+                        "ABOVE",
+                        "ACTOR",
+                        "ACUTE",
+                        "ALIVE",
+                        "ALONE",
+                        "ANGRY",
+                        "AUDIO",
+                        "BASIC",
+                        "BEACH",
+                        "BEGIN",
+                        "BLACK",
+                        "BLAME",
+                        "BLIND",
+                        "BLOCK",
+                        "BLOOD",
+                        "BOARD",
+                        "BRAIN",
+                        "BRAND",
+                        "BREAD",
+                        "BREAK",
+                        "BRING",
+                        "BROWN",
+                        "BUILD",
+                        "BURST",
+                        "CARRY",
+                        "CATCH",
+                        "CAUSE",
+                        "CHAIN",
+                        "CHAIR",
+                        "CHART",
+                        "CHASE",
+                        "CHEAP",
+                        "CHECK",
+                        "CHEST",
+                        "CHIEF",
+                        "CHILD",
+                        "CIVIC",
+                        "CIVIL",
+                        "CLAIM",
+                        "CLASS",
+                        "CLEAN",
+                        "CLEAR",
+                        "CLICK",
+                        "CLOCK",
+                        "CLOSE",
+                        "CLOUD",
+                        "COAST",
+                        "COLOR",
+                        "COME",
+                        "COUNT",
+                        "COURT",
+                        "COVER",
+                        "CRAFT",
+                        "CRASH",
+                        "CRAZY",
+                        "CREAM",
+                        "CRIME",
+                        "CROSS",
+                        "CROWD",
+                        "DANCE",
+                        "DEATH",
+                        "DEPTH",
+                        "DIRTY",
+                        "DOUBT",
+                        "DRAFT",
+                        "DRAMA",
+                        "DREAM",
+                        "DRESS",
+                        "DRINK",
+                        "DRIVE",
+                        "EARTH",
+                        "ENEMY",
+                        "ENJOY",
+                        "ENTER",
+                        "ENTRY",
+                        "EQUAL",
+                        "ERROR",
+                        "EVENT",
+                        "EXACT",
+                        "EXIST",
+                        "EXTRA",
+                        "FAITH",
+                        "FALSE",
+                        "FAULT",
+                        "FIELD",
+                        "FIGHT",
+                        "FINAL",
+                        "FIRST",
+                        "FIXED",
+                        "FLASH",
+                        "FLEET",
+                        "FLOOR",
+                        "FOCUS",
+                        "FORCE",
+                        "FRAME",
+                        "FRANK",
+                        "FRESH",
+                        "FRONT",
+                        "FRUIT",
+                        "FULLY",
+                        "FUNNY",
+                        "GHOST",
+                        "GIANT",
+                        "GIVEN",
+                        "GLASS",
+                        "GRADE",
+                        "GRAND",
+                        "GRANT",
+                        "GRASS",
+                        "GREAT",
+                        "GREEN",
+                        "GROSS",
+                        "GROUP",
+                        "GUARD",
+                        "GUESS",
+                        "GUEST",
+                        "GUIDE",
+                        "HAPPY",
+                        "HARSH",
+                        "HEART",
+                        "HEAVY",
+                        "HELLO",
+                        "HORSE",
+                        "HOTEL",
+                        "HOUSE",
+                        "HUMAN",
+                        "IDEAL",
+                        "IMAGE",
+                        "INDEX",
+                        "INNER",
+                        "INPUT",
+                        "ISSUE",
+                        "JOINT",
+                        "JUDGE",
+                        "JUICE",
+                        "KNOWN",
+                        "LABEL",
+                        "LARGE",
+                        "LASER",
+                        "LATER",
+                        "LAUGH",
+                        "LAYER",
+                        "LEARN",
+                        "LEAST",
+                        "LEAVE",
+                        "LEGAL",
+                        "LEVEL",
+                        "LIGHT",
+                        "LIMIT",
+                        "LOCAL",
+                        "LOGIC",
+                        "LOOSE",
+                        "LUCKY",
+                        "LUNCH",
+                        "MAJOR",
+                        "MARCH",
+                        "MATCH",
+                        "METAL",
+                        "MODEL",
+                        "MONEY",
+                        "MONTH",
+                        "MORAL",
+                        "MOTOR",
+                        "MOUNT",
+                        "MOUSE",
+                        "MOUTH",
+                        "MOVIE",
+                        "MUSIC",
+                        "NASTY",
+                        "NAVAL",
+                        "NEVER",
+                        "NIGHT",
+                        "NOISE",
+                        "NORTH",
+                        "NOVEL",
+                        "NURSE",
+                        "OCCUR",
+                        "OFFER",
+                        "OFTEN",
+                        "ORDER",
+                        "OTHER",
+                        "OUGHT",
+                        "PAINT",
+                        "PANEL",
+                        "PAPER",
+                        "PARTY",
+                        "PATCH",
+                        "PAUSE",
+                        "PEACE",
+                        "PHASE",
+                        "PHONE",
+                        "PHOTO",
+                        "PIECE",
+                        "PILOT",
+                        "PITCH",
+                        "PLACE",
+                        "PLAIN",
+                        "PLANE",
+                        "PLANT",
+                        "PLATE",
+                        "POINT",
+                        "POUND",
+                        "PRESS",
+                        "PRICE",
+                        "PRIDE",
+                        "PRIME",
+                        "PRINT",
+                        "PRIOR",
+                        "PRIZE",
+                        "PROOF",
+                        "PROUD",
+                        "PROVE",
+                        "QUEEN",
+                        "QUICK",
+                        "QUIET",
+                        "QUITE",
+                        "RADIO",
+                        "RAISE",
+                        "RANGE",
+                        "RAPID",
+                        "REACH",
+                        "READY",
+                        "REFER",
+                        "RIGHT",
+                        "RIVAL",
+                        "RIVER",
+                        "ROUGH",
+                        "ROUND",
+                        "ROUTE",
+                        "ROYAL",
+                        "RURAL",
+                        "SCALE",
+                        "SCENE",
+                        "SCOPE",
+                        "SCORE",
+                        "SENSE",
+                        "SERVE",
+                        "SHALL",
+                        "SHAPE",
+                        "SHARE",
+                        "SHARP",
+                        "SHEET",
+                        "SHELF",
+                        "SHELL",
+                        "SHIFT",
+                        "SHINE",
+                        "SHOCK",
+                        "SHOOT",
+                        "SHORT",
+                        "SHOWN",
+                        "SIGHT",
+                        "SINCE",
+                        "SKILL",
+                        "SLEEP",
+                        "SLIDE",
+                        "SMALL",
+                        "SMART",
+                        "SMILE",
+                        "SMOKE",
+                        "SOLID",
+                        "SOLVE",
+                        "SORRY",
+                        "SOUND",
+                        "SOUTH",
+                        "SPACE",
+                        "SPARE",
+                        "SPEAK",
+                        "SPEED",
+                        "SPEND",
+                        "SPENT",
+                        "SPLIT",
+                        "SPOKE",
+                        "SPORT",
+                        "STAFF",
+                        "STAGE",
+                        "STAND",
+                        "START",
+                        "STATE",
+                        "STEAM",
+                        "STEEL",
+                        "STEEP",
+                        "STICK",
+                        "STILL",
+                        "STOCK",
+                        "STONE",
+                        "STORE",
+                        "STORM",
+                        "STORY",
+                        "STRIP",
+                        "STUCK",
+                        "STUDY",
+                        "STUFF",
+                        "STYLE",
+                        "SUGAR",
+                        "SUITE",
+                        "SUPER",
+                        "SWEET",
+                        "TABLE",
+                        "TAKEN",
+                        "TASTE",
+                        "TEACH",
+                        "THEME",
+                        "THERE",
+                        "THICK",
+                        "THING",
+                        "THINK",
+                        "THIRD",
+                        "THOSE",
+                        "THREE",
+                        "THROW",
+                        "TIGHT",
+                        "TIMES",
+                        "TIRED",
+                        "TITLE",
+                        "TODAY",
+                        "TOPIC",
+                        "TOTAL",
+                        "TOUCH",
+                        "TOUGH",
+                        "TRACK",
+                        "TRADE",
+                        "TRAIN",
+                        "TREAT",
+                        "TREND",
+                        "TRIAL",
+                        "TRIED",
+                        "TRIES",
+                        "TRUCK",
+                        "TRULY",
+                        "TRUST",
+                        "TRUTH",
+                        "TWICE",
+                        "UNDER",
+                        "UNION",
+                        "UNITY",
+                        "UNTIL",
+                        "UPPER",
+                        "UPSET",
+                        "URBAN",
+                        "USAGE",
+                        "USUAL",
+                        "VALID",
+                        "VALUE",
+                        "VIDEO",
+                        "VIRUS",
+                        "VISIT",
+                        "VITAL",
+                        "VOICE",
+                        "WASTE",
+                        "WATCH",
+                        "WATER",
+                        "WHEEL",
+                        "WHERE",
+                        "WHICH",
+                        "WHILE",
+                        "WHITE",
+                        "WHOLE",
+                        "WHOSE",
+                        "WOMAN",
+                        "WORLD",
+                        "WORSE",
+                        "WORST",
+                        "WORTH",
+                        "WOULD",
+                        "WOUND",
+                        "WRITE",
+                        "WRONG",
+                        "WROTE",
+                        "YIELD",
+                        "YOUNG",
+                        "YOUTH",
+                    ];
+
+                    // Letters for keyboard
+                    this.letters = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+
+                    // Initialize the game
+                    this.init();
+                }
+
+                init() {
+                    // Create game layout
+                    this.createGameLayout();
+
+                    // Show introduction modal
+                    this.showIntroModal();
+                }
+
+                createGameLayout() {
+                    // Clear container
+                    this.container.innerHTML = "";
+
+                    // Create game layout
+                    const layout = GameComponents.createGameLayout(
+                        "Word Ladder Challenge",
+                        "Guess the secret words in six tries or less",
+                    );
+
+                    this.container.appendChild(layout.container);
+                    this.gameContent = layout.content;
+
+                    // Create how to play button
+                    const howToPlayPages = [
+                        {
+                            title: "How to Play",
+                            description:
+                                "Guess the secret 5-letter word in six tries or less. Each guess must be a valid 5-letter word.",
+                            image: "images/tutorial/wordladder-1.jpg",
+                        },
+                        {
+                            title: "Guess Feedback",
+                            description:
+                                "After each guess, the color of the tiles will change to show how close your guess was.",
+                            image: "images/tutorial/wordladder-2.jpg",
+                        },
+                        {
+                            title: "Color Meanings",
+                            description:
+                                "🟩 Green: Letter is correct and in the right position. 🟨 Yellow: Letter is in the word but in the wrong position. ⬛ Gray: Letter is not in the word.",
+                            image: "images/tutorial/wordladder-3.jpg",
+                        },
+                    ];
+
+                    GameComponents.addHowToPlay(
+                        layout.container,
+                        howToPlayPages,
+                    );
+
+                    // Create progress tracker for words completed
+                    this.progressTracker = GameComponents.createProgressTracker(
+                        this.wordsCompleted,
+                        this.options.totalWins,
+                    );
+                    this.gameContent.appendChild(this.progressTracker);
+
+                    // Create game board
+                    this.createGameBoard();
+
+                    // Create keyboard
+                    this.createKeyboard();
+                }
+
+                createGameBoard() {
+                    // Create board container
+                    const boardContainer = document.createElement("div");
+                    boardContainer.className = "board-container";
+
+                    // Create the game board grid
+                    this.boardGrid = document.createElement("div");
+                    this.boardGrid.className = "board-grid";
+
+                    // Create grid of tiles
+                    for (let row = 0; row < this.options.maxAttempts; row++) {
+                        const rowDiv = document.createElement("div");
+                        rowDiv.className = "board-row";
+
+                        for (
+                            let col = 0;
+                            col < this.options.wordLength;
+                            col++
+                        ) {
+                            const tile = document.createElement("div");
+                            tile.className = "board-tile";
+                            tile.dataset.row = row;
+                            tile.dataset.col = col;
+
+                            rowDiv.appendChild(tile);
+                        }
+
+                        this.boardGrid.appendChild(rowDiv);
+                    }
+
+                    boardContainer.appendChild(this.boardGrid);
+                    this.gameContent.appendChild(boardContainer);
+                }
+
+                createKeyboard() {
+                    // Create keyboard container
+                    const keyboardContainer = document.createElement("div");
+                    keyboardContainer.className = "keyboard-container";
+
+                    // Create keyboard rows
+                    const rows = [
+                        this.letters.slice(0, 10),
+                        this.letters.slice(10, 19),
+                        this.letters.slice(19),
+                    ];
+
+                    rows.forEach((rowLetters, rowIndex) => {
+                        const rowDiv = document.createElement("div");
+                        rowDiv.className = "keyboard-row";
+
+                        // Add Enter key to the beginning of the last row
+                        if (rowIndex === 2) {
+                            const enterKey = document.createElement("div");
+                            enterKey.className = "keyboard-key enter-key";
+                            enterKey.textContent = "ENTER";
+                            enterKey.addEventListener("click", () =>
+                                this.submitGuess(),
+                            );
+                            rowDiv.appendChild(enterKey);
+                        }
+
+                        // Add letter keys
+                        rowLetters.forEach((letter) => {
+                            const keyDiv = document.createElement("div");
+                            keyDiv.className = "keyboard-key";
+                            keyDiv.textContent = letter;
+                            keyDiv.dataset.key = letter;
+                            keyDiv.addEventListener("click", () =>
+                                this.letterClick(letter),
+                            );
+                            rowDiv.appendChild(keyDiv);
+                        });
+
+                        // Add Backspace key to the end of the last row
+                        if (rowIndex === 2) {
+                            const backspaceKey = document.createElement("div");
+                            backspaceKey.className =
+                                "keyboard-key backspace-key";
+                            backspaceKey.innerHTML = "⌫";
+                            backspaceKey.addEventListener("click", () =>
+                                this.backspaceClick(),
+                            );
+                            rowDiv.appendChild(backspaceKey);
+                        }
+
+                        keyboardContainer.appendChild(rowDiv);
+                    });
+
+                    this.gameContent.appendChild(keyboardContainer);
+
+                    // Add keyboard event listener
+                    document.addEventListener("keydown", (e) =>
+                        this.handleKeyDown(e),
+                    );
+                }
+
+                startGame() {
+                    this.gameActive = true;
+
+                    // Reset game state
+                    this.currentRow = 0;
+                    this.currentCol = 0;
+                    this.attempts = [];
+                    this.currentAttempt = [];
+                    this.guessedLetters = {};
+
+                    // Select a target word
+                    this.targetWord = this.selectRandomWord();
+
+                    // Clear the board
+                    this.clearBoard();
+
+                    // Reset keyboard
+                    this.resetKeyboard();
+
+                    // Focus the game (for keyboard input)
+                    window.focus();
+
+                    console.log("Target word:", this.targetWord); // For debugging
+                }
+
+                selectRandomWord() {
+                    // Shuffle the array and pick a word
+                    const shuffled = [...this.targetWords].sort(
+                        () => 0.5 - Math.random(),
+                    );
+                    return shuffled[0];
+                }
+
+                clearBoard() {
+                    // Clear all tiles
+                    const tiles = document.querySelectorAll(".board-tile");
+                    tiles.forEach((tile) => {
+                        tile.textContent = "";
+                        tile.className = "board-tile";
+                    });
+                }
+
+                resetKeyboard() {
+                    // Reset all key states
+                    const keys = document.querySelectorAll(".keyboard-key");
+                    keys.forEach((key) => {
+                        if (key.dataset.key) {
+                            key.className = "keyboard-key";
+                        } else if (key.classList.contains("enter-key")) {
+                            key.className = "keyboard-key enter-key";
+                        } else if (key.classList.contains("backspace-key")) {
+                            key.className = "keyboard-key backspace-key";
+                        }
+                    });
+                }
+
+                letterClick(letter) {
+                    if (!this.gameActive || this.isAnimating) return;
+
+                    // Add letter if there's room in the current row
+                    if (this.currentCol < this.options.wordLength) {
+                        this.addLetter(letter);
+                    }
+                }
+
+                backspaceClick() {
+                    if (!this.gameActive || this.isAnimating) return;
+
+                    // Remove letter if there's a letter to remove
+                    if (this.currentCol > 0) {
+                        this.removeLetter();
+                    }
+                }
+
+                handleKeyDown(e) {
+                    if (!this.gameActive || this.isAnimating) return;
+
+                    // Handle letter keys
+                    if (
+                        /^[a-zA-Z]$/.test(e.key) &&
+                        this.currentCol < this.options.wordLength
+                    ) {
+                        this.addLetter(e.key.toUpperCase());
+                    }
+                    // Handle backspace
+                    else if (e.key === "Backspace" && this.currentCol > 0) {
+                        this.removeLetter();
+                    }
+                    // Handle enter key
+                    else if (e.key === "Enter") {
+                        this.submitGuess();
+                    }
+                }
+
+                addLetter(letter) {
+                    // Add letter to current attempt
+                    this.currentAttempt.push(letter);
+
+                    // Update the tile
+                    const tile = this.boardGrid.querySelector(
+                        `.board-tile[data-row="${this.currentRow}"][data-col="${this.currentCol}"]`,
+                    );
+                    if (tile) {
+                        tile.textContent = letter;
+                        tile.classList.add("filled");
+
+                        // Add pop animation
+                        tile.classList.add("pop-animation");
+                        setTimeout(() => {
+                            tile.classList.remove("pop-animation");
+                        }, 100);
+                    }
+
+                    // Increment column
+                    this.currentCol++;
+                }
+
+                removeLetter() {
+                    // Decrement column
+                    this.currentCol--;
+
+                    // Remove letter from current attempt
+                    this.currentAttempt.pop();
+
+                    // Update the tile
+                    const tile = this.boardGrid.querySelector(
+                        `.board-tile[data-row="${this.currentRow}"][data-col="${this.currentCol}"]`,
+                    );
+                    if (tile) {
+                        tile.textContent = "";
+                        tile.classList.remove("filled");
+                    }
+                }
+
+                submitGuess() {
+                    if (!this.gameActive || this.isAnimating) return;
+
+                    // Check if the guess is complete
+                    if (
+                        this.currentAttempt.length !== this.options.wordLength
+                    ) {
+                        this.showMessage("Not enough letters");
+                        this.shakeRow();
+                        return;
+                    }
+
+                    // Get the current guess as a string
+                    const guess = this.currentAttempt.join("");
+
+                    // Check if the guess is a valid word
+                    if (!this.isValidWord(guess)) {
+                        this.showMessage("Not in word list");
+                        this.shakeRow();
+                        return;
+                    }
+
+                    // Evaluate the guess
+                    this.evaluateGuess(guess);
+
+                    // Add guess to attempts
+                    this.attempts.push(guess);
+
+                    // Move to next row
+                    this.currentRow++;
+                    this.currentCol = 0;
+                    this.currentAttempt = [];
+
+                    // Check if the game is over
+                    if (guess === this.targetWord) {
+                        this.wordCompleted();
+                    } else if (this.currentRow >= this.options.maxAttempts) {
+                        this.wordFailed();
+                    }
+                }
+
+                isValidWord(word) {
+                    return this.validGuesses.includes(word);
+                }
+
+                evaluateGuess(guess) {
+                    // Create a frequency map of the target word
+                    const targetFrequency = {};
+                    for (let i = 0; i < this.targetWord.length; i++) {
+                        const char = this.targetWord[i];
+                        targetFrequency[char] =
+                            (targetFrequency[char] || 0) + 1;
+                    }
+
+                    // First pass: Mark correct positions
+                    const evaluation = Array(this.options.wordLength).fill(
+                        "absent",
+                    );
+                    const frequencyRemaining = { ...targetFrequency };
+
+                    for (let i = 0; i < guess.length; i++) {
+                        const char = guess[i];
+                        if (char === this.targetWord[i]) {
+                            evaluation[i] = "correct";
+                            frequencyRemaining[char]--;
+                        }
+                    }
+
+                    // Second pass: Mark present letters
+                    for (let i = 0; i < guess.length; i++) {
+                        const char = guess[i];
+                        if (
+                            evaluation[i] !== "correct" &&
+                            frequencyRemaining[char] > 0
+                        ) {
+                            evaluation[i] = "present";
+                            frequencyRemaining[char]--;
+                        }
+                    }
+
+                    // Update tiles with evaluation
+                    this.isAnimating = true;
+
+                    for (let i = 0; i < guess.length; i++) {
+                        const char = guess[i];
+                        const status = evaluation[i];
+
+                        // Update guessed letters for keyboard
+                        if (
+                            !this.guessedLetters[char] ||
+                            (this.guessedLetters[char] !== "correct" &&
+                                status === "correct")
+                        ) {
+                            this.guessedLetters[char] = status;
+                        }
+
+                        // Schedule evaluation animation
+                        setTimeout(() => {
+                            // Get the tile
+                            const tile = this.boardGrid.querySelector(
+                                `.board-tile[data-row="${this.currentRow}"][data-col="${i}"]`,
+                            );
+                            if (tile) {
+                                // Flip animation
+                                tile.classList.add("flip-animation");
+
+                                // After half the flip, update the class
+                                setTimeout(() => {
+                                    tile.classList.add(status);
+
+                                    // Update keyboard key
+                                    this.updateKeyStatus(char, status);
+                                }, 250);
+                            }
+
+                            // If this is the last tile, release animation lock
+                            if (i === guess.length - 1) {
+                                setTimeout(() => {
+                                    this.isAnimating = false;
+                                }, 250);
+                            }
+                        }, i * 300);
+                    }
+                }
+
+                updateKeyStatus(letter, status) {
+                    // Find the key
+                    const key = document.querySelector(
+                        `.keyboard-key[data-key="${letter}"]`,
+                    );
+                    if (key) {
+                        // Remove existing status classes
+                        key.classList.remove("correct", "present", "absent");
+
+                        // Don't downgrade (e.g., from correct to present)
+                        if (
+                            key.classList.contains("correct") &&
+                            status !== "correct"
+                        ) {
+                            return;
+                        }
+                        if (
+                            key.classList.contains("present") &&
+                            status === "absent"
+                        ) {
+                            return;
+                        }
+
+                        // Add new status class
+                        key.classList.add(status);
+                    }
+                }
+
+                shakeRow() {
+                    // Add shake animation to the current row
+                    this.isAnimating = true;
+
+                    const tiles = document.querySelectorAll(
+                        `.board-tile[data-row="${this.currentRow}"]`,
+                    );
+                    tiles.forEach((tile) => {
+                        tile.classList.add("shake-animation");
+                    });
+
+                    setTimeout(() => {
+                        tiles.forEach((tile) => {
+                            tile.classList.remove("shake-animation");
+                        });
+                        this.isAnimating = false;
+                    }, 500);
+                }
+
+                showMessage(message) {
+                    // Create toast message
+                    const toast = document.createElement("div");
+                    toast.className = "toast-message";
+                    toast.textContent = message;
+
+                    // Add to container
+                    this.container.appendChild(toast);
+
+                    // Animate in
+                    setTimeout(() => {
+                        toast.classList.add("show");
+                    }, 10);
+
+                    // Remove after delay
+                    setTimeout(() => {
+                        toast.classList.remove("show");
+                        setTimeout(() => {
+                            toast.remove();
+                        }, 300);
+                    }, 1500);
+                }
+
+                wordCompleted() {
+                    this.gameActive = false;
+                    this.wordsCompleted++;
+
+                    // Update progress tracker
+                    this.progressTracker.update(this.wordsCompleted);
+
+                    // Jump animation for the tiles in the current row
+                    this.bounceRow();
+
+                    setTimeout(() => {
+                        // Check if all words are completed
+                        if (this.wordsCompleted >= this.options.totalWins) {
+                            this.challengeCompleted();
+                        } else {
+                            // Show success modal and offer next word
+                            this.showWordCompletedModal();
+                        }
+                    }, 1500);
+                }
+
+                wordFailed() {
+                    this.gameActive = false;
+
+                    setTimeout(() => {
+                        this.showWordFailedModal();
+                    }, 1000);
+                }
+
+                challengeCompleted() {
+                    // Show challenge completed modal
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--color-success);">Challenge Complete!</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Congratulations! You've successfully solved ${this.options.totalWins} word puzzles.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Your mastery of words and pattern recognition has impressed the Apprentice.
+                        </p>
+                    `);
+
+                    modal.addButton("Complete Challenge", () => {
+                        modal.hide();
+                        GameComponents.handleGameCompletion();
+                    });
+
+                    modal.show();
+                }
+
+                bounceRow() {
+                    // Add bounce animation to the current row
+                    const tiles = document.querySelectorAll(
+                        `.board-tile[data-row="${this.currentRow - 1}"]`,
+                    );
+
+                    tiles.forEach((tile, index) => {
+                        setTimeout(() => {
+                            tile.classList.add("bounce-animation");
+                        }, index * 100);
+                    });
+                }
+
+                showWordCompletedModal() {
+                    // Show word completed modal
+                    const modal = new GameModal();
+                    const messages = [
+                        "Excellent work!",
+                        "Impressive!",
+                        "Magnificent!",
+                        "Brilliant!",
+                        "Outstanding!",
+                        "Exceptional!",
+                    ];
+
+                    const randomMessage =
+                        messages[Math.floor(Math.random() * messages.length)];
+
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--color-success);">${randomMessage}</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            You've solved the word in ${this.currentRow} attempts.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Words completed: ${this.wordsCompleted} of ${this.options.totalWins}
+                        </p>
+                    `);
+
+                    modal.addButton("Next Word", () => {
+                        modal.hide();
+                        this.startGame();
+                    });
+
+                    modal.show();
+                }
+
+                showWordFailedModal() {
+                    // Show word failed modal
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--color-error);">Word Failed</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            The word was: <strong>${this.targetWord}</strong>
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Don't worry! You can try again with a new word.
+                        </p>
+                    `);
+
+                    modal.addButton("Try New Word", () => {
+                        modal.hide();
+                        this.startGame();
+                    });
+
+                    modal.show();
+                }
+
+                showIntroModal() {
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px;">Word Ladder Challenge</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            The Apprentice has presented you with a series of word puzzles to test your deduction skills.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Your task is to guess the secret 5-letter word in six tries or less. After each guess, the color of the tiles will change to show you how close your guess was.
+                        </p>
+                        <p style="text-align: center;">
+                            <span style="color: var(--color-success); font-weight: bold;">Green</span>: Letter is correct and in the right position<br>
+                            <span style="color: #d4aa00; font-weight: bold;">Yellow</span>: Letter is in the word but in the wrong position<br>
+                            <span style="color: #777; font-weight: bold;">Gray</span>: Letter is not in the word
+                        </p>
+                        <p style="text-align: center; margin-top: 20px;">
+                            Solve ${this.options.totalWins} words to complete the challenge!
+                        </p>
+                    `);
+
+                    modal.addButton("Begin Challenge", () => {
+                        modal.hide();
+                        this.startGame();
+                    });
+
+                    modal.show();
+                }
+            }
+
+            // Initialize the game
+            const game = new WordLadderGame({
+                containerId: "game-container",
+                maxAttempts: 6,
+                wordLength: 5,
+                totalWins: 3,
+            });
+        </script>
+    </body>
+</html>

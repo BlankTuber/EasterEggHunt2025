@@ -13,7 +13,6 @@
         <script type="module">
             import MusicCloudGame from "./music-cloud.js";
 
-            // Game data with music tracks and games
             const gameData = {
                 title: "8-bit Music Identification",
                 description:
@@ -78,11 +77,12 @@
                 ],
             };
 
-            // Initialize the game
             const game = new MusicCloudGame({
                 containerId: "game-container",
                 gameData: gameData,
             });
+
+            window.gameInstance = game;
         </script>
     </body>
 </html>

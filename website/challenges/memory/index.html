@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Memory Cards Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="game-container"></div>
+
+        <script type="module">
+            import UI from "../util/ui.js";
+            import GameComponents from "../util/components.js";
+            import GameModal from "../util/modal.js";
+
+            class MemoryCardGame {
+                constructor(options = {}) {
+                    this.options = {
+                        containerId: "game-container",
+                        gridSize: { rows: 4, cols: 4 },
+                        pairsToWin: 8,
+                        matchTime: 1500, // Time in ms to show non-matching cards
+                        ...options,
+                    };
+
+                    this.container = document.getElementById(
+                        this.options.containerId,
+                    );
+                    if (!this.container) {
+                        console.error("Game container not found");
+                        return;
+                    }
+
+                    // Game state
+                    this.cards = [];
+                    this.flippedCards = [];
+                    this.matchedPairs = 0;
+                    this.attempts = 0;
+                    this.gameActive = false;
+                    this.boardLocked = false;
+                    this.timer = null;
+                    this.seconds = 0;
+
+                    // Card symbols
+                    this.symbols = [
+                        "🐉",
+                        "🧙",
+                        "🏰",
+                        "⚔️",
+                        "🛡️",
+                        "📜",
+                        "🔮",
+                        "🧪",
+                        "🦄",
+                        "🧝",
+                        "🗡️",
+                        "🗿",
+                        "🦁",
+                        "🌟",
+                        "🔱",
+                        "👑",
+                    ];
+
+                    // Initialize the game
+                    this.init();
+                }
+
+                init() {
+                    // Create game layout
+                    this.createGameLayout();
+
+                    // Show introduction modal
+                    this.showIntroModal();
+                }
+
+                createGameLayout() {
+                    // Clear container
+                    this.container.innerHTML = "";
+
+                    // Create game layout
+                    const layout = GameComponents.createGameLayout(
+                        "Memory Cards Challenge",
+                        "Find matching pairs to complete your training.",
+                    );
+
+                    this.container.appendChild(layout.container);
+                    this.gameContent = layout.content;
+
+                    // Create how to play button
+                    const howToPlayPages = [
+                        {
+                            title: "How to Play",
+                            description:
+                                "Click on cards to flip them over. Try to find matching pairs of symbols.",
+                            image: "images/tutorial/memory-1.jpg",
+                        },
+                        {
+                            title: "Finding Matches",
+                            description:
+                                "You can flip two cards at a time. If they match, they stay face up. If not, they flip back down.",
+                            image: "images/tutorial/memory-2.jpg",
+                        },
+                        {
+                            title: "Winning",
+                            description:
+                                "Find all matching pairs to complete the challenge. Try to do it in as few attempts as possible!",
+                            image: "images/tutorial/memory-3.jpg",
+                        },
+                    ];
+
+                    GameComponents.addHowToPlay(
+                        layout.container,
+                        howToPlayPages,
+                    );
+
+                    // Create game stat display
+                    this.createStatDisplay();
+
+                    // Create memory grid
+                    this.createMemoryGrid();
+                }
+
+                createStatDisplay() {
+                    // Create stat container
+                    const statContainer = document.createElement("div");
+                    statContainer.className = "stats-container";
+
+                    // Create pairs display
+                    this.pairsDisplay = document.createElement("div");
+                    this.pairsDisplay.className = "stat-display pairs-display";
+                    this.pairsDisplay.innerHTML = `Pairs: <span>0</span>/${this.options.pairsToWin}`;
+
+                    // Create attempts display
+                    this.attemptsDisplay = document.createElement("div");
+                    this.attemptsDisplay.className =
+                        "stat-display attempts-display";
+                    this.attemptsDisplay.innerHTML = `Attempts: <span>0</span>`;
+
+                    // Create timer display
+                    this.timerDisplay = document.createElement("div");
+                    this.timerDisplay.className = "stat-display timer-display";
+                    this.timerDisplay.innerHTML = `Time: <span>00:00</span>`;
+
+                    statContainer.appendChild(this.pairsDisplay);
+                    statContainer.appendChild(this.attemptsDisplay);
+                    statContainer.appendChild(this.timerDisplay);
+
+                    this.gameContent.appendChild(statContainer);
+                }
+
+                createMemoryGrid() {
+                    // Create grid container
+                    this.gridContainer = document.createElement("div");
+                    this.gridContainer.className = "memory-grid";
+                    this.gridContainer.style.gridTemplateColumns = `repeat(${this.options.gridSize.cols}, 1fr)`;
+                    this.gridContainer.style.gridTemplateRows = `repeat(${this.options.gridSize.rows}, 1fr)`;
+
+                    this.gameContent.appendChild(this.gridContainer);
+
+                    // Create reset button
+                    const resetButton = UI.createButton("Reset Game", () =>
+                        this.resetGame(),
+                    );
+                    resetButton.className = "reset-button";
+                    this.gameContent.appendChild(resetButton);
+                }
+
+                generateCards() {
+                    // Clear existing cards
+                    this.gridContainer.innerHTML = "";
+                    this.cards = [];
+
+                    const totalCards =
+                        this.options.gridSize.rows * this.options.gridSize.cols;
+                    const pairsNeeded = totalCards / 2;
+
+                    // Select symbols
+                    let gameSymbols = [...this.symbols].slice(0, pairsNeeded);
+
+                    // Create pairs
+                    let cardSymbols = [...gameSymbols, ...gameSymbols];
+
+                    // Shuffle the cards
+                    cardSymbols = this.shuffleArray(cardSymbols);
+
+                    // Create card elements
+                    for (let i = 0; i < totalCards; i++) {
+                        const card = document.createElement("div");
+                        card.className = "memory-card";
+                        card.dataset.index = i;
+                        card.dataset.symbol = cardSymbols[i];
+
+                        const cardFront = document.createElement("div");
+                        cardFront.className = "card-front";
+                        cardFront.textContent = cardSymbols[i];
+
+                        const cardBack = document.createElement("div");
+                        cardBack.className = "card-back";
+                        cardBack.textContent = "?";
+
+                        card.appendChild(cardFront);
+                        card.appendChild(cardBack);
+
+                        // Add click event
+                        card.addEventListener("click", () =>
+                            this.flipCard(card),
+                        );
+
+                        this.gridContainer.appendChild(card);
+                        this.cards.push(card);
+                    }
+                }
+
+                shuffleArray(array) {
+                    const newArray = [...array];
+                    for (let i = newArray.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                    }
+                    return newArray;
+                }
+
+                startGame() {
+                    this.resetGame();
+                    this.gameActive = true;
+
+                    // Start timer
+                    this.startTimer();
+                }
+
+                startTimer() {
+                    this.seconds = 0;
+                    this.updateTimerDisplay();
+
+                    // Clear any existing timer
+                    if (this.timer) clearInterval(this.timer);
+
+                    // Set new timer
+                    this.timer = setInterval(() => {
+                        this.seconds++;
+                        this.updateTimerDisplay();
+                    }, 1000);
+                }
+
+                stopTimer() {
+                    if (this.timer) {
+                        clearInterval(this.timer);
+                        this.timer = null;
+                    }
+                }
+
+                updateTimerDisplay() {
+                    const minutes = Math.floor(this.seconds / 60);
+                    const remainingSeconds = this.seconds % 60;
+
+                    const timeString = `${minutes
+                        .toString()
+                        .padStart(2, "0")}:${remainingSeconds
+                        .toString()
+                        .padStart(2, "0")}`;
+                    this.timerDisplay.querySelector("span").textContent =
+                        timeString;
+                }
+
+                flipCard(card) {
+                    // Ignore clicks if the board is locked or card is already flipped/matched
+                    if (
+                        this.boardLocked ||
+                        card.classList.contains("flipped") ||
+                        card.classList.contains("matched")
+                    ) {
+                        return;
+                    }
+
+                    // Flip the card
+                    card.classList.add("flipped");
+                    this.flippedCards.push(card);
+
+                    // Check if we have 2 flipped cards
+                    if (this.flippedCards.length === 2) {
+                        this.attempts++;
+                        this.updateAttemptsDisplay();
+                        this.checkForMatch();
+                    }
+                }
+
+                checkForMatch() {
+                    // Lock the board while checking
+                    this.boardLocked = true;
+
+                    const [card1, card2] = this.flippedCards;
+                    const isMatch =
+                        card1.dataset.symbol === card2.dataset.symbol;
+
+                    if (isMatch) {
+                        this.handleMatch(card1, card2);
+                    } else {
+                        this.handleMismatch(card1, card2);
+                    }
+                }
+
+                handleMatch(card1, card2) {
+                    // Mark cards as matched
+                    card1.classList.add("matched");
+                    card2.classList.add("matched");
+
+                    // Increment matched pairs counter
+                    this.matchedPairs++;
+                    this.updatePairsDisplay();
+
+                    // Reset flipped cards
+                    this.flippedCards = [];
+                    this.boardLocked = false;
+
+                    // Check if game is won
+                    if (this.matchedPairs === this.options.pairsToWin) {
+                        this.gameWon();
+                    }
+                }
+
+                handleMismatch(card1, card2) {
+                    // Flip cards back after a delay
+                    setTimeout(() => {
+                        card1.classList.remove("flipped");
+                        card2.classList.remove("flipped");
+
+                        // Reset flipped cards
+                        this.flippedCards = [];
+                        this.boardLocked = false;
+                    }, this.options.matchTime);
+                }
+
+                updatePairsDisplay() {
+                    this.pairsDisplay.querySelector("span").textContent =
+                        this.matchedPairs;
+                }
+
+                updateAttemptsDisplay() {
+                    this.attemptsDisplay.querySelector("span").textContent =
+                        this.attempts;
+                }
+
+                gameWon() {
+                    // Stop the timer
+                    this.stopTimer();
+
+                    // Show win modal
+                    this.showWinModal();
+                }
+
+                resetGame() {
+                    // Reset game state
+                    this.matchedPairs = 0;
+                    this.attempts = 0;
+                    this.flippedCards = [];
+                    this.boardLocked = false;
+
+                    // Reset displays
+                    this.updatePairsDisplay();
+                    this.updateAttemptsDisplay();
+
+                    // Generate new cards
+                    this.generateCards();
+
+                    // Restart timer
+                    this.stopTimer();
+                    this.startTimer();
+                }
+
+                showIntroModal() {
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px;">Memory Cards Challenge</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            The Navigator has discovered ancient runes that can only be unlocked by training your memory.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Find all matching pairs of symbols to complete the challenge.
+                        </p>
+                        <p style="text-align: center;">
+                            Remember the positions of cards as you flip them to find matching pairs!
+                        </p>
+                    `);
+
+                    modal.addButton("Begin Challenge", () => {
+                        modal.hide();
+                        this.startGame();
+                    });
+
+                    modal.show();
+                }
+
+                showWinModal() {
+                    const minutes = Math.floor(this.seconds / 60);
+                    const remainingSeconds = this.seconds % 60;
+                    const timeString = `${minutes}:${remainingSeconds
+                        .toString()
+                        .padStart(2, "0")}`;
+
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--color-success);">Challenge Complete!</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Congratulations! You've successfully matched all pairs!
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Your Results:<br>
+                            Time: ${timeString}<br>
+                            Attempts: ${this.attempts}
+                        </p>
+                        <p style="text-align: center;">
+                            Your memory skills have unlocked the ancient magic required for your journey.
+                        </p>
+                    `);
+
+                    modal.addButton("Complete Challenge", () => {
+                        modal.hide();
+                        GameComponents.handleGameCompletion();
+                    });
+
+                    modal.show();
+                }
+            }
+
+            // Initialize the game
+            const game = new MemoryCardGame({
+                containerId: "game-container",
+                gridSize: { rows: 8, cols: 8 },
+                pairsToWin: 16,
+            });
+        </script>
+    </body>
+</html>

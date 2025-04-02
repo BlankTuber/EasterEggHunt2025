@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Word Scramble Challenge</title>
+        <link rel="stylesheet" href="../util/global.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="game-container"></div>
+
+        <script type="module">
+            import UI from "../util/ui.js";
+            import GameComponents from "../util/components.js";
+            import GameModal from "../util/modal.js";
+
+            class WordScrambleGame {
+                constructor(options = {}) {
+                    this.options = {
+                        containerId: "game-container",
+                        maxHints: 3,
+                        wordsToWin: 8,
+                        ...options,
+                    };
+
+                    this.container = document.getElementById(
+                        this.options.containerId,
+                    );
+                    if (!this.container) {
+                        console.error("Game container not found");
+                        return;
+                    }
+
+                    // Game state
+                    this.currentWordIndex = 0;
+                    this.solvedWords = [];
+                    this.attempts = 0;
+                    this.hintsUsed = 0;
+                    this.gameActive = false;
+                    this.letterTiles = [];
+                    this.selectedLetters = [];
+
+                    // Word data
+                    this.words = [
+                        {
+                            word: "HAMMER",
+                            hint: "A tool used for driving nails, breaking objects, and forming metal",
+                            definition:
+                                "One of the most basic and versatile tools in construction for driving nails and shaping materials.",
+                        },
+                        {
+                            word: "BLUEPRINT",
+                            hint: "A technical drawing showing the design of a building or structure",
+                            definition:
+                                "A detailed architectural plan that guides construction, traditionally printed with white lines on blue paper.",
+                        },
+                        {
+                            word: "SCAFFOLD",
+                            hint: "A temporary structure used to support workers and materials during building",
+                            definition:
+                                "A temporary framework that provides support for workers and materials during construction or maintenance.",
+                        },
+                        {
+                            word: "DYNAMITE",
+                            hint: "An explosive used in mining and demolition",
+                            definition:
+                                "A powerful explosive invented by Alfred Nobel, commonly used in mining, quarrying, and construction.",
+                        },
+                        {
+                            word: "MASONRY",
+                            hint: "The building of structures from stone, brick, or similar materials",
+                            definition:
+                                "The craft of building structures by laying individual units of stone, brick, or concrete with mortar.",
+                        },
+                        {
+                            word: "CONCRETE",
+                            hint: "A building material made from cement, sand, gravel, and water",
+                            definition:
+                                "A composite material composed of fine and coarse aggregate bonded with fluid cement that hardens over time.",
+                        },
+                        {
+                            word: "CARPENTRY",
+                            hint: "The skill of making and repairing wooden objects and structures",
+                            definition:
+                                "The trade of cutting, shaping, and installing wooden components in buildings and structures.",
+                        },
+                        {
+                            word: "EXCAVATOR",
+                            hint: "A large machine used for digging and moving earth",
+                            definition:
+                                "A heavy construction equipment consisting of a boom, dipper, bucket and cab on a rotating platform for digging and moving earth.",
+                        },
+                        {
+                            word: "PLUMBING",
+                            hint: "The system of pipes, tanks, and fittings for water distribution and waste disposal",
+                            definition:
+                                "The system that conveys fluids for a wide range of applications, particularly water supply and waste removal.",
+                        },
+                        {
+                            word: "FOUNDATION",
+                            hint: "The lowest load-bearing part of a building, typically below ground level",
+                            definition:
+                                "The base structure of a building that transfers its weight to the underlying soil or rock and provides support.",
+                        },
+                    ];
+
+                    // Initialize the game
+                    this.init();
+                }
+
+                init() {
+                    // Create game layout
+                    this.createGameLayout();
+
+                    // Show introduction modal
+                    this.showIntroModal();
+                }
+
+                createGameLayout() {
+                    // Clear container
+                    this.container.innerHTML = "";
+
+                    // Create game layout
+                    const layout = GameComponents.createGameLayout(
+                        "Word Scramble Challenge",
+                        "Unscramble letters to form words related to building and crafting",
+                    );
+
+                    this.container.appendChild(layout.container);
+                    this.gameContent = layout.content;
+
+                    // Create how to play button
+                    const howToPlayPages = [
+                        {
+                            title: "How to Play",
+                            description:
+                                "Rearrange the scrambled letters to form words related to building and crafting.",
+                            image: "images/tutorial/scramble-1.jpg",
+                        },
+                        {
+                            title: "Letter Selection",
+                            description:
+                                "Click on letters to select them or click on letters in your answer to remove them. You can also use 'Clear' to start over.",
+                            image: "images/tutorial/scramble-2.jpg",
+                        },
+                        {
+                            title: "Using Hints",
+                            description:
+                                "If you're stuck, use the hint button for clues about the word. Complete 8 words to finish the challenge.",
+                            image: "images/tutorial/scramble-3.jpg",
+                        },
+                    ];
+
+                    GameComponents.addHowToPlay(
+                        layout.container,
+                        howToPlayPages,
+                    );
+
+                    // Create progress tracker
+                    this.progressTracker = GameComponents.createProgressTracker(
+                        1,
+                        this.options.wordsToWin,
+                    );
+                    this.gameContent.appendChild(this.progressTracker);
+
+                    // Create scramble display
+                    this.createScrambleDisplay();
+
+                    // Create hint area
+                    this.createHintArea();
+
+                    // Create input area
+                    this.createInputArea();
+                }
+
+                createScrambleDisplay() {
+                    // Create scramble container
+                    const scrambleContainer = document.createElement("div");
+                    scrambleContainer.className = "scramble-container";
+
+                    // Create scrambled letters area
+                    this.scrambledLettersArea = document.createElement("div");
+                    this.scrambledLettersArea.className = "scrambled-letters";
+
+                    scrambleContainer.appendChild(this.scrambledLettersArea);
+
+                    this.gameContent.appendChild(scrambleContainer);
+                }
+
+                createHintArea() {
+                    // Create hint container
+                    const hintContainer = document.createElement("div");
+                    hintContainer.className = "hint-container";
+
+                    // Create hint text
+                    this.hintText = document.createElement("div");
+                    this.hintText.className = "hint-text";
+                    this.hintText.textContent =
+                        "Need a hint? Click the button below.";
+
+                    // Create hint button
+                    this.hintBtn = UI.createButton("Get Hint", () =>
+                        this.showHint(),
+                    );
+
+                    hintContainer.appendChild(this.hintText);
+                    hintContainer.appendChild(this.hintBtn);
+
+                    this.gameContent.appendChild(hintContainer);
+                }
+
+                createInputArea() {
+                    // Create input container
+                    const inputContainer = document.createElement("div");
+                    inputContainer.className = "input-container";
+
+                    // Create answer display
+                    this.answerDisplay = document.createElement("div");
+                    this.answerDisplay.className = "answer-display";
+
+                    // Create controls
+                    const controlsContainer = document.createElement("div");
+                    controlsContainer.className = "controls-container";
+
+                    // Create clear button
+                    const clearBtn = UI.createButton("Clear", () =>
+                        this.clearAnswer(),
+                    );
+
+                    // Create submit button
+                    this.submitBtn = UI.createButton("Submit", () =>
+                        this.submitAnswer(),
+                    );
+                    this.submitBtn.disabled = true;
+
+                    // Create skip button
+                    const skipBtn = UI.createButton("Skip Word", () =>
+                        this.skipWord(),
+                    );
+
+                    controlsContainer.appendChild(clearBtn);
+                    controlsContainer.appendChild(this.submitBtn);
+                    controlsContainer.appendChild(skipBtn);
+
+                    inputContainer.appendChild(this.answerDisplay);
+                    inputContainer.appendChild(controlsContainer);
+
+                    // Create feedback area
+                    this.feedbackArea = document.createElement("div");
+                    this.feedbackArea.className = "feedback hidden";
+
+                    inputContainer.appendChild(this.feedbackArea);
+
+                    this.gameContent.appendChild(inputContainer);
+                }
+
+                startGame() {
+                    this.gameActive = true;
+                    this.currentWordIndex = 0;
+                    this.solvedWords = [];
+
+                    // Shuffle the words
+                    this.shuffleWords();
+
+                    // Load first word
+                    this.loadWord();
+                }
+
+                shuffleWords() {
+                    // Create a copy and shuffle
+                    this.words = [...this.words].sort(
+                        () => Math.random() - 0.5,
+                    );
+                }
+
+                loadWord() {
+                    // Reset state for new word
+                    this.hintsUsed = 0;
+                    this.attempts = 0;
+                    this.selectedLetters = [];
+                    this.letterTiles = [];
+
+                    // Clear displays
+                    this.hintText.textContent =
+                        "Need a hint? Click the button below.";
+                    this.hintBtn.disabled = false;
+                    this.answerDisplay.innerHTML = "";
+                    this.feedbackArea.classList.add("hidden");
+
+                    // Update progress tracker
+                    this.progressTracker.update(this.solvedWords.length + 1);
+
+                    // Get current word and scramble it
+                    const currentWord = this.words[this.currentWordIndex].word;
+                    const scrambledLetters = this.scrambleWord(currentWord);
+
+                    // Create letter tiles
+                    this.createLetterTiles(scrambledLetters);
+                }
+
+                scrambleWord(word) {
+                    // Convert to array, shuffle, and join back
+                    return word
+                        .split("")
+                        .sort(() => Math.random() - 0.5)
+                        .join("");
+                }
+
+                createLetterTiles(scrambledWord) {
+                    // Clear the scrambled letters area
+                    this.scrambledLettersArea.innerHTML = "";
+                    this.letterTiles = [];
+
+                    // Create a tile for each letter
+                    for (let i = 0; i < scrambledWord.length; i++) {
+                        const letter = scrambledWord[i];
+                        const tile = document.createElement("div");
+                        tile.className = "letter-tile";
+                        tile.textContent = letter;
+                        tile.dataset.letter = letter;
+                        tile.dataset.index = i;
+
+                        // Add click event
+                        tile.addEventListener("click", () =>
+                            this.selectLetter(tile),
+                        );
+
+                        this.scrambledLettersArea.appendChild(tile);
+                        this.letterTiles.push(tile);
+                    }
+                }
+
+                selectLetter(tile) {
+                    // Ignore if tile is already used
+                    if (tile.classList.contains("used")) return;
+
+                    // Mark tile as used
+                    tile.classList.add("used");
+
+                    // Add letter to selected letters
+                    this.selectedLetters.push({
+                        letter: tile.dataset.letter,
+                        tile: tile,
+                    });
+
+                    // Update answer display
+                    this.updateAnswerDisplay();
+                }
+
+                updateAnswerDisplay() {
+                    // Clear the answer display
+                    this.answerDisplay.innerHTML = "";
+
+                    // Create a tile for each selected letter
+                    this.selectedLetters.forEach((selection, index) => {
+                        const answerTile = document.createElement("div");
+                        answerTile.className = "answer-tile";
+                        answerTile.textContent = selection.letter;
+                        answerTile.dataset.index = index;
+
+                        // Add click event to remove letter
+                        answerTile.addEventListener("click", () =>
+                            this.removeLetter(index),
+                        );
+
+                        this.answerDisplay.appendChild(answerTile);
+                    });
+
+                    // Enable/disable submit button based on if any letters are selected
+                    this.submitBtn.disabled = this.selectedLetters.length === 0;
+
+                    // Add pulse animation if all letters are used
+                    if (
+                        this.selectedLetters.length === this.letterTiles.length
+                    ) {
+                        this.submitBtn.classList.add("pulse-animation");
+                    } else {
+                        this.submitBtn.classList.remove("pulse-animation");
+                    }
+                }
+
+                removeLetter(index) {
+                    // Remove the selected letter
+                    const selection = this.selectedLetters[index];
+                    this.selectedLetters.splice(index, 1);
+
+                    // Mark the original tile as not used
+                    selection.tile.classList.remove("used");
+
+                    // Update answer display
+                    this.updateAnswerDisplay();
+                }
+
+                clearAnswer() {
+                    // Clear selected letters
+                    this.selectedLetters = [];
+
+                    // Mark all tiles as not used
+                    this.letterTiles.forEach((tile) => {
+                        tile.classList.remove("used");
+                    });
+
+                    // Update answer display
+                    this.updateAnswerDisplay();
+                }
+
+                submitAnswer() {
+                    // Get the current word
+                    const currentWord = this.words[this.currentWordIndex].word;
+
+                    // Get user's answer
+                    const userAnswer = this.selectedLetters
+                        .map((selection) => selection.letter)
+                        .join("");
+
+                    // Increment attempts
+                    this.attempts++;
+
+                    // Check if correct
+                    if (userAnswer === currentWord) {
+                        this.handleCorrectAnswer();
+                    } else {
+                        this.handleIncorrectAnswer();
+                    }
+                }
+
+                handleCorrectAnswer() {
+                    // Show feedback
+                    this.showFeedback(
+                        `Correct! "${
+                            this.words[this.currentWordIndex].word
+                        }" is the right word.`,
+                        "success",
+                    );
+
+                    // Add to solved words
+                    this.solvedWords.push(this.currentWordIndex);
+
+                    // Show word definition
+                    this.showDefinition();
+
+                    // Check if game is complete
+                    if (this.solvedWords.length >= this.options.wordsToWin) {
+                        setTimeout(() => {
+                            this.handleGameCompletion();
+                        }, 2000);
+                    } else {
+                        // Move to next word after a delay
+                        setTimeout(() => {
+                            this.nextWord();
+                        }, 2000);
+                    }
+                }
+
+                handleIncorrectAnswer() {
+                    // Show feedback
+                    this.showFeedback(
+                        "That's not the correct word. Try rearranging the letters!",
+                        "error",
+                    );
+
+                    // Shake answer for visual feedback
+                    this.answerDisplay.classList.add("shake-animation");
+                    setTimeout(() => {
+                        this.answerDisplay.classList.remove("shake-animation");
+                    }, 500);
+
+                    // Suggest a hint after multiple attempts
+                    if (
+                        this.attempts >= 3 &&
+                        this.hintsUsed < this.options.maxHints
+                    ) {
+                        this.showFeedback(
+                            "Having trouble? Try using a hint!",
+                            "info",
+                        );
+                    }
+                }
+
+                showDefinition() {
+                    // Show definition below feedback
+                    const definition =
+                        this.words[this.currentWordIndex].definition;
+
+                    setTimeout(() => {
+                        this.showFeedback(`Definition: ${definition}`, "info");
+                    }, 1000);
+                }
+
+                skipWord() {
+                    // Show the correct word
+                    const currentWord = this.words[this.currentWordIndex].word;
+                    this.showFeedback(
+                        `The word was "${currentWord}". Moving to the next word...`,
+                        "info",
+                    );
+
+                    // Move to next word after a delay
+                    setTimeout(() => {
+                        this.nextWord();
+                    }, 2000);
+                }
+
+                nextWord() {
+                    // Move to next word
+                    this.currentWordIndex++;
+
+                    // Check if we've gone through all words
+                    if (this.currentWordIndex >= this.words.length) {
+                        // Wrap around to the beginning if there are still more words to solve
+                        this.currentWordIndex = 0;
+
+                        // Reshuffle words to avoid immediate repeats
+                        this.shuffleWords();
+                    }
+
+                    // Load the next word
+                    this.loadWord();
+                }
+
+                showHint() {
+                    if (this.hintsUsed >= this.options.maxHints) {
+                        this.hintText.textContent =
+                            "No more hints available for this word.";
+                        this.hintBtn.disabled = true;
+                        return;
+                    }
+
+                    // Get hint for current word
+                    const hint = this.words[this.currentWordIndex].hint;
+                    this.hintText.textContent = hint;
+
+                    // Increment hints used
+                    this.hintsUsed++;
+
+                    // Disable hint button if all hints used
+                    if (this.hintsUsed >= this.options.maxHints) {
+                        this.hintBtn.disabled = true;
+                    }
+                }
+
+                showFeedback(message, type = "info") {
+                    this.feedbackArea.textContent = message;
+                    this.feedbackArea.className = `feedback ${type}`;
+
+                    // Auto-hide error messages after a delay
+                    if (type === "error") {
+                        setTimeout(() => {
+                            this.feedbackArea.classList.add("hidden");
+                        }, 3000);
+                    }
+                }
+
+                handleGameCompletion() {
+                    // Show completion modal
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px; color: var(--color-success);">Challenge Complete!</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Congratulations! You've successfully unscrambled ${this.options.wordsToWin} building and crafting words.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Your mastery of construction terminology has impressed the Craftsman.
+                            The knowledge of these building terms will serve you well on your journey.
+                        </p>
+                    `);
+
+                    modal.addButton("Complete Challenge", () => {
+                        modal.hide();
+                        GameComponents.handleGameCompletion();
+                    });
+
+                    modal.show();
+                }
+
+                showIntroModal() {
+                    const modal = new GameModal();
+                    modal.setContent(`
+                        <h2 style="text-align: center; margin-bottom: 20px;">Word Scramble Challenge</h2>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            The Craftsman has discovered scrambled words related to building and crafting.
+                        </p>
+                        <p style="margin-bottom: 20px; text-align: center;">
+                            Your task is to unscramble these words to learn the terminology of construction and crafting.
+                        </p>
+                        <p style="text-align: center;">
+                            Click on letters to build your answer, then submit when you think it's correct.
+                            Solve ${this.options.wordsToWin} words to complete the challenge!
+                        </p>
+                    `);
+
+                    modal.addButton("Begin Challenge", () => {
+                        modal.hide();
+                        this.startGame();
+                    });
+
+                    modal.show();
+                }
+            }
+
+            // Initialize the game
+            const game = new WordScrambleGame({
+                containerId: "game-container",
+                maxHints: 3,
+                wordsToWin: 8,
+            });
+        </script>
+    </body>
+</html>

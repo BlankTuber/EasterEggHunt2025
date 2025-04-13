@@ -1,0 +1,38 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Base directory (if site is in a subdirectory, update this)
+# RewriteBase /
+
+# Protect sensitive files
+<FilesMatch "^(\.htaccess|\.gitignore|config\.php)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Disable directory browsing
+Options -Indexes
+
+# Protect against XSS attacks
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Handle 404 errors
+ErrorDocument 404 /index.php
+
+# Prevent access to .php files in the includes directory
+RewriteRule ^includes/.+\.php$ - [F,L]
+
+# Allow direct access to specific directories
+RewriteCond %{REQUEST_URI} !^/assets/
+RewriteCond %{REQUEST_URI} !^/challenges/
+RewriteCond %{REQUEST_URI} !^/story/
+RewriteCond %{REQUEST_URI} !^/admin/
+
+# Handle normal page requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]

@@ -1,0 +1,57 @@
+<div class="player-form">
+    <h2>Skriv inn ditt navn</h2>
+    <form id="playerForm">
+        <input type="text" id="playerName" placeholder="Ditt navn" required />
+        <button type="submit" class="btn">Start spill</button>
+    </form>
+</div>
+
+<div class="game-area" style="display: none">
+    <!-- Game content will show here -->
+</div>
+
+<div id="winModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Gratulerer!</h2>
+        <p id="winMessage"></p>
+        <button class="btn close-modal">Lukk</button>
+    </div>
+</div>
+
+<script>
+    document
+        .getElementById("playerForm")
+        .addEventListener("submit", function (e) {
+            e.preventDefault();
+            const playerName = document
+                .getElementById("playerName")
+                .value.trim();
+
+            if (playerName) {
+                // Hide form and show game area
+                document.querySelector(".player-form").style.display = "none";
+                document.querySelector(".game-area").style.display = "block";
+
+                // Start the game (this function must be defined in game-specific JS)
+                if (typeof startGame === "function") {
+                    startGame(playerName);
+                }
+            }
+        });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add event listener for the close button
+        const closeButtons = document.querySelectorAll(".close-modal");
+        closeButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                document.getElementById("winModal").classList.remove("visible");
+            });
+        });
+    });
+
+    // Function to show win message
+    function showWinMessage(message) {
+        document.getElementById("winMessage").textContent = message;
+        document.getElementById("winModal").classList.add("visible");
+    }
+</script>

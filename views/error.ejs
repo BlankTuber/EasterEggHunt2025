@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Feil</title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <style>
+            .error-container {
+                text-align: center;
+                padding: 50px 20px;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .error-icon {
+                font-size: 60px;
+                color: #ff4136;
+                margin-bottom: 20px;
+            }
+
+            .error-title {
+                font-size: 28px;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+            .error-message {
+                font-size: 18px;
+                margin-bottom: 30px;
+                color: #666;
+            }
+
+            .home-link {
+                display: inline-block;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="error-container">
+                <div class="error-icon">⚠️</div>
+                <h1 class="error-title">Oisann, noe gikk galt</h1>
+                <p class="error-message">
+                    <%= message || 'Det oppstod en feil. Vennligst prøv igjen.'
+                    %>
+                </p>
+                <a href="/" class="btn home-link">Tilbake til hovedsiden</a>
+            </div>
+        </div>
+    </body>
+</html>

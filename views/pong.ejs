@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pong Utfordring</title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="game-header">
+                <h1>Pong Utfordring</h1>
+                <a href="/" class="btn">Tilbake</a>
+            </div>
+
+            <div class="game-content game-area" style="display: none">
+                <div class="game-header">
+                    <h2>Pong</h2>
+                    <div class="game-score">
+                        <span
+                            >Din Poengsum: <span id="playerScore">0</span></span
+                        >
+                        <span> | </span>
+                        <span>AI Poengsum: <span id="aiScore">0</span></span>
+                    </div>
+                </div>
+
+                <canvas
+                    id="pongCanvas"
+                    class="pong-canvas"
+                    width="800"
+                    height="400"
+                ></canvas>
+
+                <div
+                    class="game-instructions"
+                    id="gameInstructions"
+                    style="display: none"
+                >
+                    <h3>Instruksjoner:</h3>
+                    <p>
+                        Bruk musen eller fingeren (på berøringsskjerm) for å
+                        flytte rekkerten. Scor 10 poeng for å vinne!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Win modal (keeping this) -->
+        <div id="winModal" class="modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Gratulerer!</h2>
+                <p id="winMessage"></p>
+                <button class="btn close-modal">Lukk</button>
+            </div>
+        </div>
+
+        <script>
+            // Win modal functionality
+            document.addEventListener("DOMContentLoaded", function () {
+                // Add event listener for the close button
+                const closeButtons = document.querySelectorAll(".close-modal");
+                closeButtons.forEach((button) => {
+                    button.addEventListener("click", function () {
+                        document
+                            .getElementById("winModal")
+                            .classList.remove("visible");
+                    });
+                });
+            });
+
+            function showWinMessage(message) {
+                document.getElementById("winMessage").textContent = message;
+                document.getElementById("winModal").classList.add("visible");
+            }
+        </script>
+
+        <!-- Game configuration data -->
+        <script type="application/json" id="gameConfigData">
+            <%- JSON.stringify(gameConfig) %>
+        </script>
+
+        <script src="/js/pong.js"></script>
+    </body>
+</html>

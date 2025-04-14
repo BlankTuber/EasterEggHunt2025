@@ -1,0 +1,696 @@
+/* Generell styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1,
+h2,
+h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+/* Spill-liste på forsiden */
+.game-list {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.game-group {
+    margin-bottom: 30px;
+}
+
+.game-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.game-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-weight: 500;
+}
+
+.game-button:hover {
+    background-color: #2980b9;
+}
+
+/* Spillgrensesnitt generelt */
+.game-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.game-title {
+    margin: 0;
+}
+
+.game-score {
+    font-size: 1.2rem;
+    background-color: #f1f1f1;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+.game-content {
+    margin-bottom: 30px;
+}
+
+.btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.message {
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Spillernavnform */
+.player-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.player-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Pong-spill */
+.pong-canvas {
+    display: block;
+    background-color: #000;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+/* Silhuettspill */
+.silhouette-container {
+    text-align: center;
+}
+
+.silhouette-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    margin-bottom: 20px;
+    filter: brightness(0);
+}
+
+.silhouette-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Musikk-identifikasjon */
+.music-container {
+    text-align: center;
+}
+
+.music-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.music-option {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.music-option:hover {
+    background-color: #e1e1e1;
+}
+
+.music-option.selected {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Fargesekvens */
+.color-sequence {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.color-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    opacity: 0.3;
+}
+
+.color-btn.red {
+    background-color: #ff4136;
+}
+.color-btn.blue {
+    background-color: #0074d9;
+}
+.color-btn.green {
+    background-color: #2ecc40;
+}
+.color-btn.yellow {
+    background-color: #ffdc00;
+}
+.color-btn.purple {
+    background-color: #b10dc9;
+}
+
+.sequence-display {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+/* Wordle */
+.wordle-grid {
+    display: grid;
+    grid-template-rows: repeat(6, 60px);
+    gap: 10px;
+    margin-bottom: 30px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wordle-row {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    gap: 10px;
+}
+
+.wordle-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f1f1;
+    border: 2px solid #ddd;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.wordle-cell.green {
+    background-color: #2ecc40;
+    color: white;
+    border-color: #2ecc40;
+}
+
+.wordle-cell.yellow {
+    background-color: #ffdc00;
+    border-color: #ffdc00;
+}
+
+.wordle-cell.gray {
+    background-color: #aaa;
+    color: white;
+    border-color: #aaa;
+}
+
+.wordle-keyboard {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.key-btn {
+    margin: 0 5px;
+    padding: 10px;
+    min-width: 40px;
+    height: 50px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.key-btn:hover {
+    background-color: #ccc;
+}
+
+.key-btn.green {
+    background-color: #2ecc40;
+    color: white;
+}
+
+.key-btn.yellow {
+    background-color: #ffdc00;
+}
+
+.key-btn.gray {
+    background-color: #aaa;
+    color: white;
+}
+
+/* Hangman */
+.hangman-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hangman-img {
+    width: 200px;
+    height: 250px;
+    margin-bottom: 20px;
+}
+
+.hangman-word {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.hangman-letter {
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #333;
+}
+
+.hangman-letter.space {
+    border-bottom: none;
+    margin: 0 10px;
+}
+
+.hangman-keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.hangman-key {
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.hangman-key:hover {
+    background-color: #ccc;
+}
+
+.hangman-key.used {
+    background-color: #aaa;
+    color: white;
+    cursor: not-allowed;
+}
+
+/* Sekvenspuslespill */
+.sequence-grid-container {
+    margin-bottom: 20px;
+}
+
+.map-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.sequence-grid-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: auto;
+    border: 1px solid #333;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+}
+
+.sequence-grid {
+    display: grid;
+    gap: 1px;
+    margin: 0 auto;
+    transform-origin: top left;
+    transition: transform 0.3s ease;
+}
+
+.sequence-cell {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    min-height: 30px;
+    position: relative;
+}
+
+.sequence-cell.obstacle {
+    background-color: #555;
+}
+
+.player-marker {
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 3px;
+    z-index: 5;
+}
+
+.goal-marker {
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 3px dashed;
+    background-color: transparent;
+    z-index: 4;
+}
+
+.map-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-marker {
+    width: 20px;
+    height: 20px;
+}
+
+.legend-marker.player-marker {
+    background-color: #ff4136;
+    position: static;
+    transform: none;
+}
+
+.legend-marker.goal-marker {
+    border: 3px dashed #ff4136;
+    position: static;
+    transform: none;
+    width: 14px;
+    height: 14px;
+}
+
+.legend-marker.obstacle-marker {
+    background-color: #555;
+}
+
+.sequence-controls {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.direction-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.direction-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.direction-btn:hover {
+    background-color: #2980b9;
+}
+
+.player-moves {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.move-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px auto;
+    gap: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+}
+
+.move-item {
+    background-color: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin: 3px;
+}
+
+/* Trivia */
+.trivia-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.question-container {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.options-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.option-btn {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option-btn:hover {
+    background-color: #f1f1f1;
+}
+
+.option-btn.selected {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.players-status {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.player-status {
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 20px;
+}
+
+.player-status.answered {
+    background-color: #2ecc40;
+    color: white;
+}
+
+/* Win modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.visible {
+    display: flex;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.close-modal {
+    margin-top: 20px;
+}
+
+/* Responsive tilpasninger */
+@media (max-width: 768px) {
+    .wordle-grid {
+        max-width: 300px;
+    }
+
+    .wordle-row {
+        grid-template-columns: repeat(5, 50px);
+    }
+
+    .wordle-cell {
+        font-size: 1.2rem;
+    }
+
+    .key-btn {
+        min-width: 30px;
+        height: 40px;
+        padding: 5px;
+        font-size: 0.9rem;
+    }
+
+    .direction-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .options-container {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Hangman Utfordring</title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="game-header">
+                <h1>Hangman Utfordring</h1>
+                <a href="/" class="btn">Tilbake</a>
+            </div>
+
+            <div class="game-content game-area" style="display: none">
+                <div class="game-header">
+                    <h2>Hangman</h2>
+                    <div class="game-score">
+                        <span>Feil: <span id="wrongGuesses">0</span>/6</span>
+                    </div>
+                </div>
+
+                <div class="hangman-container">
+                    <img
+                        id="hangmanImage"
+                        class="hangman-img"
+                        src="/images/hangman/0.png"
+                        alt="Hangman"
+                    />
+
+                    <div id="hangmanWord" class="hangman-word">
+                        <!-- Fylles dynamisk med JS -->
+                    </div>
+
+                    <div id="hangmanKeyboard" class="hangman-keyboard">
+                        <!-- Fylles dynamisk med JS -->
+                    </div>
+
+                    <div
+                        id="feedbackMessage"
+                        class="message"
+                        style="display: none"
+                    ></div>
+                </div>
+
+                <div class="game-instructions">
+                    <h3>Instruksjoner:</h3>
+                    <p>
+                        Gjett en bokstav om gangen for å finne den skjulte
+                        frasen. Unngå 6 feil!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Win modal -->
+        <div id="winModal" class="modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Gratulerer!</h2>
+                <p id="winMessage"></p>
+                <button class="btn close-modal">Lukk</button>
+            </div>
+        </div>
+
+        <script>
+            // Win modal functionality
+            function showWinMessage(message) {
+                document.getElementById("winMessage").textContent = message;
+                document.getElementById("winModal").classList.add("visible");
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document
+                    .querySelector(".close-modal")
+                    .addEventListener("click", function () {
+                        document
+                            .getElementById("winModal")
+                            .classList.remove("visible");
+                    });
+            });
+        </script>
+
+        <!-- Game configuration data -->
+        <script type="application/json" id="gameConfigData">
+            <%- JSON.stringify(gameConfig) %>
+        </script>
+
+        <script src="/js/hangman.js"></script>
+    </body>
+</html>

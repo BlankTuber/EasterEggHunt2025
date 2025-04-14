@@ -1,0 +1,104 @@
+[
+    {
+        "id": "mario",
+        "answer": "Super Mario Bros.",
+        "audioUrl": "/audio/music/mario_theme.mp3",
+        "options": [
+            "Super Mario Bros.",
+            "The Legend of Zelda",
+            "Sonic the Hedgehog",
+            "Mega Man"
+        ]
+    },
+    {
+        "id": "zelda",
+        "answer": "The Legend of Zelda",
+        "audioUrl": "/audio/music/zelda_theme.mp3",
+        "options": [
+            "The Legend of Zelda",
+            "Final Fantasy",
+            "Dragon Quest",
+            "Chrono Trigger"
+        ]
+    },
+    {
+        "id": "tetris",
+        "answer": "Tetris",
+        "audioUrl": "/audio/music/tetris_theme.mp3",
+        "options": ["Tetris", "Dr. Mario", "Columns", "Puyo Puyo"]
+    },
+    {
+        "id": "sonic",
+        "answer": "Sonic the Hedgehog",
+        "audioUrl": "/audio/music/sonic_greenhill.mp3",
+        "options": [
+            "Sonic the Hedgehog",
+            "Super Mario Bros.",
+            "Crash Bandicoot",
+            "Donkey Kong Country"
+        ]
+    },
+    {
+        "id": "pacman",
+        "answer": "Pac-Man",
+        "audioUrl": "/audio/music/pacman_theme.mp3",
+        "options": ["Pac-Man", "Donkey Kong", "Galaga", "Space Invaders"]
+    },
+    {
+        "id": "pokemon",
+        "answer": "Pokémon",
+        "audioUrl": "/audio/music/pokemon_theme.mp3",
+        "options": ["Pokémon", "Digimon", "Final Fantasy", "Animal Crossing"]
+    },
+    {
+        "id": "megaman",
+        "answer": "Mega Man",
+        "audioUrl": "/audio/music/megaman_theme.mp3",
+        "options": ["Mega Man", "Metroid", "Castlevania", "Contra"]
+    },
+    {
+        "id": "finalfantasy",
+        "answer": "Final Fantasy",
+        "audioUrl": "/audio/music/ff_prelude.mp3",
+        "options": [
+            "Final Fantasy",
+            "Dragon Quest",
+            "Chrono Trigger",
+            "Secret of Mana"
+        ]
+    },
+    {
+        "id": "streetfighter",
+        "answer": "Street Fighter II",
+        "audioUrl": "/audio/music/sf2_guile.mp3",
+        "options": [
+            "Street Fighter II",
+            "Mortal Kombat",
+            "Tekken",
+            "King of Fighters"
+        ]
+    },
+    {
+        "id": "donkeykong",
+        "answer": "Donkey Kong Country",
+        "audioUrl": "/audio/music/dkc_aquatic.mp3",
+        "options": [
+            "Donkey Kong Country",
+            "Super Mario World",
+            "Banjo-Kazooie",
+            "Crash Bandicoot"
+        ]
+    },
+    {
+        "id": "castlevania",
+        "answer": "Castlevania",
+        "audioUrl": "/audio/music/castlevania_bloody.mp3",
+        "options": ["Castlevania", "Mega Man", "Metroid", "Ghosts 'n Goblins"]
+    },
+    {
+        "id": "metroid",
+        "answer": "Metroid",
+        "audioUrl": "/audio/music/metroid_brinstar.mp3",
+        "options": ["Metroid", "Castlevania", "F-Zero", "Star Fox"]
+    }
+]

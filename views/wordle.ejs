@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Wordle Utfordring</title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="game-header">
+                <h1>Wordle Utfordring</h1>
+                <a href="/" class="btn">Tilbake</a>
+            </div>
+
+            <div class="game-content game-area" style="display: none">
+                <div class="game-header">
+                    <h2>Wordle</h2>
+                    <div class="game-score">
+                        <span
+                            >Ord løst: <span id="wordsGuessed">0</span>/5</span
+                        >
+                    </div>
+                </div>
+
+                <div class="wordle-grid" id="wordleGrid">
+                    <!-- Fylles dynamisk med JS -->
+                </div>
+
+                <div
+                    id="feedbackMessage"
+                    class="message"
+                    style="display: none"
+                ></div>
+
+                <div class="wordle-keyboard">
+                    <div class="keyboard-row">
+                        <button class="key-btn" data-key="q">Q</button>
+                        <button class="key-btn" data-key="w">W</button>
+                        <button class="key-btn" data-key="e">E</button>
+                        <button class="key-btn" data-key="r">R</button>
+                        <button class="key-btn" data-key="t">T</button>
+                        <button class="key-btn" data-key="y">Y</button>
+                        <button class="key-btn" data-key="u">U</button>
+                        <button class="key-btn" data-key="i">I</button>
+                        <button class="key-btn" data-key="o">O</button>
+                        <button class="key-btn" data-key="p">P</button>
+                        <button class="key-btn" data-key="å">Å</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key-btn" data-key="a">A</button>
+                        <button class="key-btn" data-key="s">S</button>
+                        <button class="key-btn" data-key="d">D</button>
+                        <button class="key-btn" data-key="f">F</button>
+                        <button class="key-btn" data-key="g">G</button>
+                        <button class="key-btn" data-key="h">H</button>
+                        <button class="key-btn" data-key="j">J</button>
+                        <button class="key-btn" data-key="k">K</button>
+                        <button class="key-btn" data-key="l">L</button>
+                        <button class="key-btn" data-key="ø">Ø</button>
+                        <button class="key-btn" data-key="æ">Æ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button
+                            class="key-btn"
+                            data-key="enter"
+                            style="width: 80px"
+                        >
+                            ENTER
+                        </button>
+                        <button class="key-btn" data-key="z">Z</button>
+                        <button class="key-btn" data-key="x">X</button>
+                        <button class="key-btn" data-key="c">C</button>
+                        <button class="key-btn" data-key="v">V</button>
+                        <button class="key-btn" data-key="b">B</button>
+                        <button class="key-btn" data-key="n">N</button>
+                        <button class="key-btn" data-key="m">M</button>
+                        <button
+                            class="key-btn"
+                            data-key="backspace"
+                            style="width: 80px"
+                        >
+                            ⌫
+                        </button>
+                    </div>
+                </div>
+
+                <div class="game-instructions">
+                    <h3>Instruksjoner:</h3>
+                    <p>
+                        Gjett et 5-bokstavers ord. Du har 5 forsøk per ord og må
+                        løse 5 ord for å vinne.
+                    </p>
+                    <p>
+                        Grønn = riktig bokstav på rett plass, Gul = riktig
+                        bokstav på feil plass, Grå = bokstaven er ikke i ordet.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Win modal -->
+        <div id="winModal" class="modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Gratulerer!</h2>
+                <p id="winMessage"></p>
+                <button class="btn close-modal">Lukk</button>
+            </div>
+        </div>
+
+        <script>
+            // Win modal functionality
+            function showWinMessage(message) {
+                document.getElementById("winMessage").textContent = message;
+                document.getElementById("winModal").classList.add("visible");
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document
+                    .querySelector(".close-modal")
+                    .addEventListener("click", function () {
+                        document
+                            .getElementById("winModal")
+                            .classList.remove("visible");
+                    });
+            });
+        </script>
+
+        <!-- Game configuration data -->
+        <script type="application/json" id="gameConfigData">
+            <%- JSON.stringify(gameConfig) %>
+        </script>
+
+        <script src="/js/wordle.js"></script>
+    </body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Utfordringer</title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <style>
+            .game-section {
+                margin-bottom: 40px;
+                background-color: white;
+                border-radius: 10px;
+                padding: 25px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .section-title {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .section-title h2 {
+                margin: 0;
+                margin-right: 15px;
+            }
+
+            .section-badge {
+                display: inline-block;
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .badge-single {
+                background-color: #e0f2f1;
+                color: #00796b;
+            }
+
+            .badge-multi {
+                background-color: #e8eaf6;
+                color: #3f51b5;
+            }
+
+            .game-description {
+                color: #666;
+                margin-bottom: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Velkommen til Utfordringer</h1>
+
+            <div class="game-section">
+                <div class="section-title">
+                    <h2>Enkeltspiller spill</h2>
+                    <span class="section-badge badge-single"
+                        >Starter umiddelbart</span
+                    >
+                </div>
+                <p class="game-description">
+                    Disse spillene starter med en gang du klikker på dem, ingen
+                    ventetid!
+                </p>
+
+                <div class="game-buttons">
+                    <a href="/game/pong" class="game-button">Pong</a>
+                    <a
+                        href="/game/silhouette?config=gamecharacters"
+                        class="game-button"
+                        >Silhuett (Spillkarakterer)</a
+                    >
+                    <a
+                        href="/game/silhouette?config=football"
+                        class="game-button"
+                        >Silhuett (Fotballag)</a
+                    >
+                    <a href="/game/music?config=videogames" class="game-button"
+                        >Musikk-identifikasjon</a
+                    >
+                    <a href="/game/colorseq" class="game-button"
+                        >Fargesekvens</a
+                    >
+                    <a href="/game/wordle" class="game-button">Wordle</a>
+                    <a href="/game/hangman" class="game-button">Hangman</a>
+                </div>
+            </div>
+
+            <div class="game-section">
+                <div class="section-title">
+                    <h2>Flerspiller spill</h2>
+                    <span class="section-badge badge-multi"
+                        >Krever flere deltakere</span
+                    >
+                </div>
+                <p class="game-description">
+                    Disse spillene krever at flere spillere kobler til før
+                    spillet kan starte. Del lenken med andre spillere!
+                </p>
+
+                <div class="game-buttons">
+                    <a href="/game/sequence" class="game-button"
+                        >Sekvenspuslespill (5 spillere)</a
+                    >
+                    <a
+                        href="/game/trivia?config=commonknowledge&players=3"
+                        class="game-button"
+                        >Trivia (3 spillere)</a
+                    >
+                    <a
+                        href="/game/trivia?config=tech&players=2"
+                        class="game-button"
+                        >Teknologi-trivia (2 spillere)</a
+                    >
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,77 @@
+[
+    {
+        "id": "mario",
+        "answer": "Mario",
+        "imageUrl": "/images/silhouette/mario.png"
+    },
+    {
+        "id": "sonic",
+        "answer": "Sonic",
+        "imageUrl": "/images/silhouette/sonic.png"
+    },
+    {
+        "id": "pikachu",
+        "answer": "Pikachu",
+        "imageUrl": "/images/silhouette/pikachu.png"
+    },
+    {
+        "id": "link",
+        "answer": "Link",
+        "imageUrl": "/images/silhouette/link.png"
+    },
+    {
+        "id": "masterchief",
+        "answer": "Master Chief",
+        "imageUrl": "/images/silhouette/masterchief.png"
+    },
+    {
+        "id": "lara",
+        "answer": "Lara Croft",
+        "imageUrl": "/images/silhouette/laracroft.png"
+    },
+    {
+        "id": "kratos",
+        "answer": "Kratos",
+        "imageUrl": "/images/silhouette/kratos.png"
+    },
+    {
+        "id": "doomguy",
+        "answer": "Doomguy",
+        "imageUrl": "/images/silhouette/doomguy.png"
+    },
+    {
+        "id": "nathan",
+        "answer": "Nathan Drake",
+        "imageUrl": "/images/silhouette/drake.png"
+    },
+    {
+        "id": "solid",
+        "answer": "Solid Snake",
+        "imageUrl": "/images/silhouette/snake.png"
+    },
+    {
+        "id": "cloud",
+        "answer": "Cloud Strife",
+        "imageUrl": "/images/silhouette/cloud.png"
+    },
+    {
+        "id": "gordon",
+        "answer": "Gordon Freeman",
+        "imageUrl": "/images/silhouette/gordon.png"
+    },
+    {
+        "id": "pacman",
+        "answer": "Pac-Man",
+        "imageUrl": "/images/silhouette/pacman.png"
+    },
+    {
+        "id": "samus",
+        "answer": "Samus Aran",
+        "imageUrl": "/images/silhouette/samus.png"
+    },
+    {
+        "id": "geralt",
+        "answer": "Geralt",
+        "imageUrl": "/images/silhouette/geralt.png"
+    }
+]

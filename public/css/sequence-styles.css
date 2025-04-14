@@ -1,0 +1,386 @@
+/* Sequence Game Specific Styles */
+:root {
+    --cell-font-size: 10px;
+}
+
+.game-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid layout for 1:1 aspect ratio */
+.sequence-grid-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.map-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.sequence-grid-wrapper {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Will be overridden to maintain square aspect ratio */
+    overflow: auto;
+    border: 1px solid #333;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    max-width: 100%;
+}
+
+.sequence-grid {
+    display: grid;
+    transform-origin: top left;
+    transition: transform 0.3s ease;
+}
+
+/* Base cell style */
+.sequence-cell {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: var(--cell-font-size);
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+    border: 1px solid #eee;
+}
+
+/* Wall/obstacle cell */
+.sequence-cell.wall {
+    background-color: #555;
+    border: none;
+}
+
+/* Player start position */
+.sequence-cell.player {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    z-index: 2;
+    animation: pulse 2s infinite;
+}
+
+/* Other player start position */
+.sequence-cell.other-player {
+    opacity: 0.7;
+    font-weight: bold;
+}
+
+/* Target cell */
+.sequence-cell.target {
+    background-color: transparent;
+    border: 2px dashed;
+    color: #333;
+    text-shadow: none;
+    font-weight: bold;
+    z-index: 2;
+}
+
+/* Path preview */
+.sequence-cell.path {
+    position: relative;
+}
+
+.sequence-cell.path::after {
+    content: attr(data-path-step);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--player-color, #ff4136);
+    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--cell-font-size);
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.sequence-cell.path-end::after {
+    opacity: 0.6;
+    font-weight: bold;
+}
+
+/* Player position marker for animation */
+.player-position-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--cell-font-size);
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+    z-index: 3;
+}
+
+/* Collision marker */
+.player-position-marker.collision {
+    box-shadow: 0 0 8px 2px red;
+    border: 2px solid white;
+    animation: flash 0.5s infinite;
+}
+
+@keyframes flash {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.map-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.legend-marker {
+    width: 20px;
+    height: 20px;
+}
+
+.legend-marker.player-marker {
+    background-color: #ff4136;
+}
+
+.legend-marker.goal-marker {
+    border: 2px dashed #ff4136;
+    background-color: transparent;
+}
+
+.legend-marker.obstacle-marker {
+    background-color: #555;
+}
+
+.legend-marker.path-marker {
+    background-color: #ff4136;
+    opacity: 0.3;
+}
+
+/* Improved sequence controls */
+.sequence-controls {
+    margin-top: 25px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.direction-buttons {
+    display: grid;
+    grid-template-areas:
+        ". up ."
+        "left stop right"
+        ". down .";
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.direction-btn[data-direction="up"] {
+    grid-area: up;
+}
+.direction-btn[data-direction="right"] {
+    grid-area: right;
+}
+.direction-btn[data-direction="down"] {
+    grid-area: down;
+}
+.direction-btn[data-direction="left"] {
+    grid-area: left;
+}
+.direction-btn[data-direction="stop"] {
+    grid-area: stop;
+}
+
+.direction-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.direction-btn::before {
+    margin-right: 5px;
+    font-size: 1.2rem;
+}
+
+.direction-btn[data-direction="up"]::before {
+    content: "↑";
+}
+.direction-btn[data-direction="right"]::before {
+    content: "→";
+}
+.direction-btn[data-direction="down"]::before {
+    content: "↓";
+}
+.direction-btn[data-direction="left"]::before {
+    content: "←";
+}
+.direction-btn[data-direction="stop"]::before {
+    content: "◉";
+}
+
+.direction-btn:hover {
+    background-color: #2980b9;
+}
+
+.direction-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.player-moves {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.move-list {
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+}
+
+.move-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 8px 12px;
+    border-radius: 3px;
+    margin: 3px 0;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.move-item:hover {
+    background-color: #e5e5e5;
+}
+
+.move-text {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.remove-move-btn {
+    background: none;
+    border: none;
+    color: #ff4136;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+    margin-left: 10px;
+    line-height: 1;
+    transition: transform 0.2s;
+}
+
+.remove-move-btn:hover {
+    transform: scale(1.2);
+}
+
+.sequence-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+#clearMoves,
+#submitSequence {
+    min-width: 120px;
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+
+#readyPlayers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.player-status {
+    background-color: #f1f1f1;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .sequence-grid-wrapper {
+        height: 300px; /* Will still be overridden */
+    }
+
+    .direction-buttons {
+        gap: 5px;
+    }
+
+    .direction-btn {
+        min-width: 60px;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .move-list {
+        max-height: 150px;
+    }
+}

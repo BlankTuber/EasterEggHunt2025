@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sekvens Utfordring</title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/multiplayer-additions.css" />
+        <link rel="stylesheet" href="/css/waiting-styles.css" />
+        <link rel="stylesheet" href="/css/sequence-styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="game-header">
+                <h1>Sekvens Utfordring</h1>
+                <a href="/" class="btn">Tilbake</a>
+            </div>
+
+            <div id="waitingRoom" class="game-container">
+                <h2>Venter på spillere</h2>
+                <p>Inviter andre spillere ved å dele denne lenken:</p>
+                <div class="share-link">
+                    <input type="text" id="shareLink" readonly />
+                    <button id="copyLink" class="btn">Kopier</button>
+                </div>
+
+                <div class="player-entry">
+                    <%- include('partials/player-entry') %>
+                </div>
+
+                <div class="players-list">
+                    <h3 class="current-players-title">
+                        Spillere (<span id="playerCount">0</span>/<span
+                            id="requiredPlayers"
+                            ><%= requiredPlayers %></span
+                        >)
+                    </h3>
+                    <ul id="playersList"></ul>
+                </div>
+            </div>
+
+            <div id="gameArea" class="game-container" style="display: none">
+                <div class="game-header">
+                    <h2>Sekvens Utfordring</h2>
+                    <div class="game-status">
+                        Status: <span id="gameStatus">Planlegg din reise</span>
+                    </div>
+                </div>
+
+                <div class="sequence-grid-container">
+                    <div class="map-controls">
+                        <button id="zoomIn" class="btn">Zoom Inn</button>
+                        <button id="zoomOut" class="btn">Zoom Ut</button>
+                        <button id="resetView" class="btn">
+                            Reset Visning
+                        </button>
+                    </div>
+
+                    <div class="sequence-grid-wrapper">
+                        <div id="sequenceGrid" class="sequence-grid">
+                            <!-- Grid will be generated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-marker player-marker"></div>
+                            <span>Din Spiller</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-marker goal-marker"></div>
+                            <span>Ditt Mål</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-marker obstacle-marker"></div>
+                            <span>Vegg</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-marker path-marker"></div>
+                            <span>Din Rute</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-controls">
+                    <h3>Lag din sekvens</h3>
+                    <p>
+                        Planlegg en sekvens av bevegelser for å nå målet ditt.
+                        Unngå kollisjoner med andre spillere og vegger.
+                    </p>
+
+                    <div class="direction-buttons">
+                        <button class="direction-btn" data-direction="up">
+                            Opp
+                        </button>
+                        <button class="direction-btn" data-direction="right">
+                            Høyre
+                        </button>
+                        <button class="direction-btn" data-direction="down">
+                            Ned
+                        </button>
+                        <button class="direction-btn" data-direction="left">
+                            Venstre
+                        </button>
+                        <button class="direction-btn" data-direction="stop">
+                            Vent
+                        </button>
+                    </div>
+
+                    <div class="player-moves">
+                        <h4>Din sekvens:</h4>
+                        <div id="moveList" class="move-list"></div>
+
+                        <div class="sequence-action-buttons">
+                            <button id="clearMoves" class="btn">
+                                Tøm Sekvens
+                            </button>
+                            <button id="submitSequence" class="btn">
+                                Send Sekvens
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        id="feedbackMessage"
+                        class="message"
+                        style="display: none; margin-top: 20px"
+                    ></div>
+
+                    <div class="players-status">
+                        <h4>Spillere klare:</h4>
+                        <div id="readyPlayers"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Socket.io client library -->
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!-- Game configuration data -->
+        <script type="application/json" id="gameConfigData">
+            <%- JSON.stringify(gameConfig) %>
+        </script>
+
+        <!-- Game ID data -->
+        <script>
+            const gameId = "<%= gameId %>";
+        </script>
+
+        <script src="/js/sequence.js"></script>
+    </body>
+</html>

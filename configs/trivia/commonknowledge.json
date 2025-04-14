@@ -1,0 +1,138 @@
+[
+    {
+        "text": "Hva er hovedstaden i Norge?",
+        "options": [
+            { "id": "a1", "text": "Bergen", "correct": false },
+            { "id": "a2", "text": "Trondheim", "correct": false },
+            { "id": "a3", "text": "Oslo", "correct": true },
+            { "id": "a4", "text": "Stavanger", "correct": false },
+            { "id": "a5", "text": "Kristiansand", "correct": false },
+            { "id": "a6", "text": "Tromsø", "correct": false },
+            { "id": "a7", "text": "Ålesund", "correct": false },
+            { "id": "a8", "text": "Drammen", "correct": false },
+            { "id": "a9", "text": "Bodø", "correct": false },
+            { "id": "a10", "text": "Fredrikstad", "correct": false },
+            { "id": "a11", "text": "Lillehammer", "correct": false },
+            { "id": "a12", "text": "Hamar", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket år ble Norge selvstendig fra Sverige?",
+        "options": [
+            { "id": "b1", "text": "1814", "correct": false },
+            { "id": "b2", "text": "1905", "correct": true },
+            { "id": "b3", "text": "1945", "correct": false },
+            { "id": "b4", "text": "1901", "correct": false },
+            { "id": "b5", "text": "1899", "correct": false },
+            { "id": "b6", "text": "1921", "correct": false },
+            { "id": "b7", "text": "1867", "correct": false },
+            { "id": "b8", "text": "1917", "correct": false },
+            { "id": "b9", "text": "1809", "correct": false },
+            { "id": "b10", "text": "1884", "correct": false },
+            { "id": "b11", "text": "1850", "correct": false },
+            { "id": "b12", "text": "1910", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilken norsk forfatter skrev 'Sult'?",
+        "options": [
+            { "id": "c1", "text": "Henrik Ibsen", "correct": false },
+            { "id": "c2", "text": "Sigrid Undset", "correct": false },
+            { "id": "c3", "text": "Knut Hamsun", "correct": true },
+            { "id": "c4", "text": "Camilla Collett", "correct": false },
+            { "id": "c5", "text": "Bjørnstjerne Bjørnson", "correct": false },
+            { "id": "c6", "text": "Jo Nesbø", "correct": false },
+            { "id": "c7", "text": "Alexander Kielland", "correct": false },
+            { "id": "c8", "text": "Amalie Skram", "correct": false },
+            { "id": "c9", "text": "Jonas Lie", "correct": false },
+            { "id": "c10", "text": "Dag Solstad", "correct": false },
+            { "id": "c11", "text": "Olav Duun", "correct": false },
+            { "id": "c12", "text": "Jens Bjørneboe", "correct": false }
+        ]
+    },
+    {
+        "text": "Hva heter Norges høyeste fjell?",
+        "options": [
+            { "id": "d1", "text": "Galdhøpiggen", "correct": true },
+            { "id": "d2", "text": "Glittertind", "correct": false },
+            { "id": "d3", "text": "Snøhetta", "correct": false },
+            { "id": "d4", "text": "Gaustatoppen", "correct": false },
+            { "id": "d5", "text": "Rondslottet", "correct": false },
+            { "id": "d6", "text": "Store Skagastølstind", "correct": false },
+            { "id": "d7", "text": "Stetind", "correct": false },
+            { "id": "d8", "text": "Trollheimen", "correct": false },
+            { "id": "d9", "text": "Besseggen", "correct": false },
+            { "id": "d10", "text": "Romsdalshornet", "correct": false },
+            { "id": "d11", "text": "Kniven", "correct": false },
+            { "id": "d12", "text": "Storen", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilken planet ligger nærmest solen?",
+        "options": [
+            { "id": "e1", "text": "Venus", "correct": false },
+            { "id": "e2", "text": "Merkur", "correct": true },
+            { "id": "e3", "text": "Mars", "correct": false },
+            { "id": "e4", "text": "Jupiter", "correct": false },
+            { "id": "e5", "text": "Saturn", "correct": false },
+            { "id": "e6", "text": "Uranus", "correct": false },
+            { "id": "e7", "text": "Neptun", "correct": false },
+            { "id": "e8", "text": "Pluto", "correct": false },
+            { "id": "e9", "text": "Ceres", "correct": false },
+            { "id": "e10", "text": "Eris", "correct": false },
+            { "id": "e11", "text": "Haumea", "correct": false },
+            { "id": "e12", "text": "Makemake", "correct": false }
+        ]
+    },
+    {
+        "text": "Hva er det største dyret på jorden?",
+        "options": [
+            { "id": "f1", "text": "Elefant", "correct": false },
+            { "id": "f2", "text": "Blåhval", "correct": true },
+            { "id": "f3", "text": "Hvithai", "correct": false },
+            { "id": "f4", "text": "Giraff", "correct": false },
+            { "id": "f5", "text": "Spermhval", "correct": false },
+            { "id": "f6", "text": "Brugde", "correct": false },
+            { "id": "f7", "text": "Kolossal blekksprut", "correct": false },
+            { "id": "f8", "text": "Knølhval", "correct": false },
+            { "id": "f9", "text": "Finnhval", "correct": false },
+            { "id": "f10", "text": "Seihval", "correct": false },
+            { "id": "f11", "text": "Grønlandshval", "correct": false },
+            { "id": "f12", "text": "Nesehorn", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket land vant verdensmesterskapet i fotball i 2018?",
+        "options": [
+            { "id": "g1", "text": "Brasil", "correct": false },
+            { "id": "g2", "text": "Tyskland", "correct": false },
+            { "id": "g3", "text": "Frankrike", "correct": true },
+            { "id": "g4", "text": "Argentina", "correct": false },
+            { "id": "g5", "text": "Spania", "correct": false },
+            { "id": "g6", "text": "England", "correct": false },
+            { "id": "g7", "text": "Belgia", "correct": false },
+            { "id": "g8", "text": "Kroatia", "correct": false },
+            { "id": "g9", "text": "Portugal", "correct": false },
+            { "id": "g10", "text": "Nederland", "correct": false },
+            { "id": "g11", "text": "Italia", "correct": false },
+            { "id": "g12", "text": "Uruguay", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilken farge får du når du blander gul og blå?",
+        "options": [
+            { "id": "h1", "text": "Lilla", "correct": false },
+            { "id": "h2", "text": "Grønn", "correct": true },
+            { "id": "h3", "text": "Brun", "correct": false },
+            { "id": "h4", "text": "Oransje", "correct": false },
+            { "id": "h5", "text": "Turkis", "correct": false },
+            { "id": "h6", "text": "Magenta", "correct": false },
+            { "id": "h7", "text": "Cyan", "correct": false },
+            { "id": "h8", "text": "Fuchsia", "correct": false },
+            { "id": "h9", "text": "Kobolt", "correct": false },
+            { "id": "h10", "text": "Indigo", "correct": false },
+            { "id": "h11", "text": "Karmosinrød", "correct": false },
+            { "id": "h12", "text": "Olivengrønn", "correct": false }
+        ]
+    }
+]

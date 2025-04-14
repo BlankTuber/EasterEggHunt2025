@@ -1,0 +1,169 @@
+[
+    {
+        "text": "Hvilket programmeringsspråk ble skapt av Brendan Eich på 10 dager i 1995?",
+        "options": [
+            { "id": "a1", "text": "Python", "correct": false },
+            { "id": "a2", "text": "Java", "correct": false },
+            { "id": "a3", "text": "JavaScript", "correct": true },
+            { "id": "a4", "text": "C++", "correct": false },
+            { "id": "a5", "text": "PHP", "correct": false },
+            { "id": "a6", "text": "Ruby", "correct": false },
+            { "id": "a7", "text": "Swift", "correct": false },
+            { "id": "a8", "text": "Go", "correct": false },
+            { "id": "a9", "text": "TypeScript", "correct": false },
+            { "id": "a10", "text": "Rust", "correct": false },
+            { "id": "a11", "text": "Kotlin", "correct": false },
+            { "id": "a12", "text": "Perl", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket selskap laget den første kommersielt suksessfulle PC-en kalt IBM PC?",
+        "options": [
+            { "id": "b1", "text": "Apple", "correct": false },
+            { "id": "b2", "text": "Microsoft", "correct": false },
+            { "id": "b3", "text": "IBM", "correct": true },
+            { "id": "b4", "text": "Compaq", "correct": false },
+            { "id": "b5", "text": "Commodore", "correct": false },
+            { "id": "b6", "text": "Dell", "correct": false },
+            { "id": "b7", "text": "HP", "correct": false },
+            { "id": "b8", "text": "Atari", "correct": false },
+            { "id": "b9", "text": "Xerox", "correct": false },
+            { "id": "b10", "text": "Tandy", "correct": false },
+            { "id": "b11", "text": "Acer", "correct": false },
+            { "id": "b12", "text": "Asus", "correct": false }
+        ]
+    },
+    {
+        "text": "Hva står HTML for?",
+        "options": [
+            {
+                "id": "c1",
+                "text": "Hypertext Markup Language",
+                "correct": true
+            },
+            {
+                "id": "c2",
+                "text": "High Tech Machine Learning",
+                "correct": false
+            },
+            {
+                "id": "c3",
+                "text": "Home Tool Markup Language",
+                "correct": false
+            },
+            {
+                "id": "c4",
+                "text": "Hypertext Machine Language",
+                "correct": false
+            },
+            {
+                "id": "c5",
+                "text": "Hypertext Transfer Module Language",
+                "correct": false
+            },
+            {
+                "id": "c6",
+                "text": "Home Transfer Markup Language",
+                "correct": false
+            },
+            {
+                "id": "c7",
+                "text": "Hot Text Markup Language",
+                "correct": false
+            },
+            {
+                "id": "c8",
+                "text": "Hyperlink Text Mode Language",
+                "correct": false
+            },
+            {
+                "id": "c9",
+                "text": "Hyper Technical Meta Language",
+                "correct": false
+            },
+            {
+                "id": "c10",
+                "text": "Hard Text Management Language",
+                "correct": false
+            },
+            {
+                "id": "c11",
+                "text": "Hypertext Modern Library",
+                "correct": false
+            },
+            {
+                "id": "c12",
+                "text": "High Transfer Modulation Language",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "text": "Hvem regnes som den første programmereren i verden?",
+        "options": [
+            { "id": "d1", "text": "Alan Turing", "correct": false },
+            { "id": "d2", "text": "Ada Lovelace", "correct": true },
+            { "id": "d3", "text": "Grace Hopper", "correct": false },
+            { "id": "d4", "text": "Charles Babbage", "correct": false },
+            { "id": "d5", "text": "John von Neumann", "correct": false },
+            { "id": "d6", "text": "Tim Berners-Lee", "correct": false },
+            { "id": "d7", "text": "Steve Jobs", "correct": false },
+            { "id": "d8", "text": "Bill Gates", "correct": false },
+            { "id": "d9", "text": "Dennis Ritchie", "correct": false },
+            { "id": "d10", "text": "Linus Torvalds", "correct": false },
+            { "id": "d11", "text": "James Gosling", "correct": false },
+            { "id": "d12", "text": "Margaret Hamilton", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket år ble den første iPhonen lansert?",
+        "options": [
+            { "id": "e1", "text": "2005", "correct": false },
+            { "id": "e2", "text": "2006", "correct": false },
+            { "id": "e3", "text": "2007", "correct": true },
+            { "id": "e4", "text": "2008", "correct": false },
+            { "id": "e5", "text": "2009", "correct": false },
+            { "id": "e6", "text": "2010", "correct": false },
+            { "id": "e7", "text": "2004", "correct": false },
+            { "id": "e8", "text": "2003", "correct": false },
+            { "id": "e9", "text": "2011", "correct": false },
+            { "id": "e10", "text": "2012", "correct": false },
+            { "id": "e11", "text": "2001", "correct": false },
+            { "id": "e12", "text": "2002", "correct": false }
+        ]
+    },
+    {
+        "text": "Hva representerer 'S' i HTTPS?",
+        "options": [
+            { "id": "f1", "text": "Safe", "correct": false },
+            { "id": "f2", "text": "Secure", "correct": true },
+            { "id": "f3", "text": "Short", "correct": false },
+            { "id": "f4", "text": "Solid", "correct": false },
+            { "id": "f5", "text": "System", "correct": false },
+            { "id": "f6", "text": "Standard", "correct": false },
+            { "id": "f7", "text": "Swift", "correct": false },
+            { "id": "f8", "text": "Strong", "correct": false },
+            { "id": "f9", "text": "Simple", "correct": false },
+            { "id": "f10", "text": "Structural", "correct": false },
+            { "id": "f11", "text": "Service", "correct": false },
+            { "id": "f12", "text": "Static", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket operativsystem baserer MacOS på?",
+        "options": [
+            { "id": "g1", "text": "Linux", "correct": false },
+            { "id": "g2", "text": "UNIX", "correct": true },
+            { "id": "g3", "text": "DOS", "correct": false },
+            { "id": "g4", "text": "Windows NT", "correct": false },
+            { "id": "g5", "text": "BSD", "correct": false },
+            { "id": "g6", "text": "Solaris", "correct": false },
+            { "id": "g7", "text": "Chrome OS", "correct": false },
+            { "id": "g8", "text": "AmigaOS", "correct": false },
+            { "id": "g9", "text": "IBM OS/2", "correct": false },
+            { "id": "g10", "text": "BeOS", "correct": false },
+            { "id": "g11", "text": "ReactOS", "correct": false },
+            { "id": "g12", "text": "Plan 9", "correct": false }
+        ]
+    }
+]

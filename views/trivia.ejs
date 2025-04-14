@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Trivia Utfordring</title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="game-header">
+                <h1>Trivia Utfordring</h1>
+                <a href="/" class="btn">Tilbake</a>
+            </div>
+
+            <div id="waitingRoom" class="game-container">
+                <h2>Venter på spillere</h2>
+                <p>Inviter andre spillere ved å dele denne lenken:</p>
+                <div class="share-link">
+                    <input type="text" id="shareLink" readonly />
+                    <button id="copyLink" class="btn">Kopier</button>
+                </div>
+
+                <div class="player-entry">
+                    <%- include('partials/player-entry') %>
+                </div>
+
+                <div class="players-list">
+                    <h3>
+                        Spillere (<span id="playerCount">0</span>/<span
+                            id="requiredPlayers"
+                            ><%= requiredPlayers %></span
+                        >)
+                    </h3>
+                    <ul id="playersList"></ul>
+                </div>
+            </div>
+
+            <div id="gameArea" class="game-container" style="display: none">
+                <div class="game-header">
+                    <h2>
+                        Trivia Spørsmål <span id="questionNumber">1</span>/<span
+                            id="totalQuestions"
+                            >?</span
+                        >
+                    </h2>
+                </div>
+
+                <div class="trivia-container">
+                    <div class="question-container">
+                        <h3 id="questionText">Venter på spørsmål...</h3>
+                    </div>
+
+                    <p class="instruction-text">
+                        Diskuter med de andre spillerne. Kun én av dere har det
+                        riktige svaret blant sine alternativer!
+                    </p>
+
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Options will be added dynamically -->
+                    </div>
+
+                    <div
+                        id="feedbackMessage"
+                        class="message"
+                        style="display: none; margin-top: 20px"
+                    ></div>
+
+                    <div class="players-status">
+                        <!-- Player status indicators will be added dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Socket.io client library -->
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!-- Game configuration data -->
+        <script type="application/json" id="gameConfigData">
+            <%- JSON.stringify(gameConfig) %>
+        </script>
+
+        <!-- Game ID data -->
+        <script>
+            const gameId = "<%= gameId %>";
+        </script>
+
+        <script src="/js/trivia.js"></script>
+    </body>
+</html>

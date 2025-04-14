@@ -1,0 +1,160 @@
+/* Styles for waiting list and game status */
+
+.waiting-message {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.waiting-message h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+.waiting-animation {
+    margin: 20px 0;
+}
+
+.waiting-animation span {
+    display: inline-block;
+    font-size: 24px;
+    color: #3498db;
+    animation: pulse 1.5s infinite;
+    margin: 0 5px;
+}
+
+.waiting-animation span:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.waiting-animation span:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.waiting-info {
+    background-color: #e8f4fd;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #2980b9;
+    text-align: center;
+}
+
+.game-status-info {
+    background-color: #fff3cd;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    color: #856404;
+    text-align: center;
+}
+
+/* Waiting list position indicator */
+.waiting-position {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3498db;
+    margin: 15px 0;
+    background-color: #f1f1f1;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Add waiting players icon to waiting count */
+.waiting-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.waiting-count::before {
+    content: "👥";
+    font-size: 1.2rem;
+}
+
+/* Better styling for the current players list */
+.current-players-title {
+    margin-top: 0;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.current-players-title::before {
+    content: "🎮";
+    font-size: 1.2rem;
+}
+
+/* This refreshes animation to indicate auto-refresh */
+.auto-refresh-notice {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.auto-refresh-notice::before {
+    content: "↻";
+    display: inline-block;
+    animation: spin 2s infinite linear;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Make the player form more appealing when game is running */
+.game-running .player-form {
+    border-left: 4px solid #3498db;
+    padding-left: 15px;
+}
+
+.players-list-container {
+    position: relative;
+}
+
+.players-active-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #2ecc40;
+    box-shadow: 0 0 5px #2ecc40;
+    animation: pulse 2s infinite;
+}

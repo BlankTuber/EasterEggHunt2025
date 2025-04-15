@@ -6,11 +6,10 @@ let startPosition = { x: 0, y: 0 };
 let targetPosition = { x: 0, y: 0 };
 let playerIndex = 0;
 let currentSequence = [];
-let cellSize = 30;
+let cellSize = 25;
 let inWaitingList = false;
 let simulationRunning = false;
 
-// Define the grid adjustment function first to avoid reference errors
 function adjustGridForScreen() {
     if (!grid.length) return;
 
@@ -18,16 +17,12 @@ function adjustGridForScreen() {
     const gridWidth = grid[0].length;
     const gridWrapper = document.querySelector(".sequence-grid-wrapper");
 
-    // Get the container dimensions
     const containerWidth = gridWrapper.clientWidth;
 
-    // Calculate the optimal cell size based on available width
     let optimalCellSize = Math.floor(containerWidth / gridWidth);
 
-    // Apply a minimum size for readability
-    optimalCellSize = Math.max(optimalCellSize, 12);
+    optimalCellSize = Math.max(optimalCellSize, 10);
 
-    // Update the CSS variable
     document.documentElement.style.setProperty(
         "--cell-size",
         `${optimalCellSize}px`,
@@ -41,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     } catch (error) {
         console.error("Error parsing game config:", error);
-        gameConfig = { gridSize: 40, maxMoves: 100 };
+        gameConfig = { gridSize: 30, maxMoves: 100 };
     }
 
     const shareLink = document.getElementById("shareLink");
@@ -74,7 +69,44 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Handle window resize
+    // Add keyboard controls
+    document.addEventListener("keydown", function (event) {
+        // Only process if game area is visible and controls are enabled
+        if (
+            document.getElementById("gameArea").style.display === "none" ||
+            document.querySelector(".direction-btn").disabled
+        ) {
+            return;
+        }
+
+        // Prevent default behavior for arrow keys to avoid page scrolling
+        if (
+            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
+                event.key,
+            )
+        ) {
+            event.preventDefault();
+        }
+
+        switch (event.key) {
+            case "ArrowUp":
+                addMove("up");
+                break;
+            case "ArrowDown":
+                addMove("down");
+                break;
+            case "ArrowLeft":
+                addMove("left");
+                break;
+            case "ArrowRight":
+                addMove("right");
+                break;
+            case " ": // Space bar
+                addMove("stop");
+                break;
+        }
+    });
+
     window.addEventListener("resize", function () {
         if (grid.length > 0) {
             adjustGridForScreen();
@@ -177,7 +209,7 @@ function handleSequenceInit(data) {
     playerIndex = newPlayerIndex;
 
     createGrid();
-    adjustGridForScreen(); // Add dynamic sizing after creating the grid
+    adjustGridForScreen();
 
     clearMoves();
     document.getElementById("readyPlayers").innerHTML = "";
@@ -217,27 +249,32 @@ function handlePlayerReady(data) {
 }
 
 function handleSequenceResult(data) {
-    const { success, movements, collisionAt, message } = data;
+    const { success, movements, collisionAt, message, wallCollisions } = data;
     showFeedback(message, success ? "success" : "error");
 
     simulationRunning = true;
     document.getElementById("gameStatus").textContent = "Spiller av sekvens...";
     enableControls(false);
 
-    animateMovements(movements, collisionAt, () => {
+    // Clear any existing trails
+    clearTrails();
+
+    animateMovements(movements, collisionAt, wallCollisions, () => {
         simulationRunning = false;
 
         if (success) {
             document.getElementById("gameStatus").textContent =
                 "Fullført! Venter på neste spill...";
         } else {
-            document.getElementById("gameStatus").textContent =
-                "Planlegg din reise";
-            enableControls(true);
-            clearMoves();
-            // Reset the grid to its initial state
-            createGrid();
-            adjustGridForScreen();
+            // Add 1 second delay before resetting to see the end state
+            setTimeout(() => {
+                document.getElementById("gameStatus").textContent =
+                    "Planlegg din reise";
+                enableControls(true);
+                clearMoves();
+                createGrid();
+                adjustGridForScreen();
+            }, 1000);
         }
     });
 }
@@ -331,7 +368,6 @@ function createGrid() {
     const gridHeight = grid.length;
     const gridWidth = grid[0].length;
 
-    // Let CSS handle the container sizing - just set up the grid
     document.documentElement.style.setProperty("--grid-cols", gridWidth);
     document.documentElement.style.setProperty("--grid-rows", gridHeight);
 
@@ -442,22 +478,17 @@ function getDirectionText(direction) {
 }
 
 function previewPath() {
-    // First clear any existing path
     removePathPreview();
 
-    // Calculate the full path
     const path = calculatePath(startPosition, currentSequence);
 
-    // Only show the last 3 steps of the path (or fewer if the path is shorter)
     const lastThreeSteps = [];
     if (path.length > 1) {
-        // Start from index 1 to skip the starting position
         for (let i = Math.max(1, path.length - 3); i < path.length; i++) {
             lastThreeSteps.push(path[i]);
         }
     }
 
-    // Apply the path styling to only these cells
     lastThreeSteps.forEach((pos) => {
         const cell = document.querySelector(
             `.sequence-cell[data-x="${pos.x}"][data-y="${pos.y}"]`,
@@ -467,7 +498,6 @@ function previewPath() {
         }
     });
 
-    // Still check if the full path reaches the target
     const finalPos = path[path.length - 1];
     if (finalPos.x === targetPosition.x && finalPos.y === targetPosition.y) {
         showFeedback("Ruten når målet!", "success");
@@ -477,7 +507,6 @@ function previewPath() {
 }
 
 function removePathPreview() {
-    // Remove all path classes from all cells
     for (let i = 0; i < 5; i++) {
         document
             .querySelectorAll(`.sequence-cell.path-${i}`)
@@ -487,6 +516,16 @@ function removePathPreview() {
     }
 
     document.getElementById("feedbackMessage").style.display = "none";
+}
+
+function clearTrails() {
+    for (let i = 0; i < 5; i++) {
+        document
+            .querySelectorAll(`.sequence-cell.trail-${i}`)
+            .forEach((cell) => {
+                cell.classList.remove(`trail-${i}`);
+            });
+    }
 }
 
 function calculatePath(startPos, sequence) {
@@ -560,18 +599,27 @@ function enableControls(enabled) {
     document.getElementById("submitSequence").disabled = !enabled;
 }
 
-function animateMovements(movements, collisionAt, onComplete) {
+function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
     removePathPreview();
     clearPlayerMarkers();
+    clearTrails();
 
     let step = 0;
     const maxSteps = collisionAt ? collisionAt.step + 1 : movements.length;
+    const trailHistory = {};
+
+    // Initialize trail history for each player
+    for (let i = 0; i < 5; i++) {
+        trailHistory[i] = [];
+    }
 
     const startingPositions = {};
     if (movements[0]) {
         movements[0].forEach((move) => {
             startingPositions[move.player] = move.from;
             addPlayerMarker(move.from.x, move.from.y, move.player);
+            // Add starting position to trail history
+            trailHistory[move.player].push(move.from);
         });
     }
 
@@ -583,16 +631,51 @@ function animateMovements(movements, collisionAt, onComplete) {
 
         clearPlayerMarkers();
 
+        // Add trails for previous positions
+        for (let playerIdx in trailHistory) {
+            trailHistory[playerIdx].forEach((pos) => {
+                const trailCell = document.querySelector(
+                    `.sequence-cell[data-x="${pos.x}"][data-y="${pos.y}"]`,
+                );
+                if (trailCell) {
+                    trailCell.classList.add(`trail-${playerIdx}`);
+                }
+            });
+        }
+
         if (movements[step]) {
             movements[step].forEach((move) => {
+                // Add current position to trail history
+                trailHistory[move.player].push(move.to);
+
+                // Display player markers at current position
                 addPlayerMarker(move.to.x, move.to.y, move.player);
 
+                // Check for collision with another player
                 if (
                     collisionAt &&
                     step === collisionAt.step &&
                     collisionAt.players.includes(move.player)
                 ) {
                     markCollision(move.to.x, move.to.y);
+                }
+
+                // Check for wall collision
+                if (
+                    wallCollisions &&
+                    wallCollisions[step] &&
+                    wallCollisions[step].some((wc) => wc.player === move.player)
+                ) {
+                    const wallCollision = wallCollisions[step].find(
+                        (wc) => wc.player === move.player,
+                    );
+                    if (wallCollision) {
+                        markWallCollision(
+                            move.to.x,
+                            move.to.y,
+                            wallCollision.direction,
+                        );
+                    }
                 }
             });
         }
@@ -605,7 +688,6 @@ function animateMovements(movements, collisionAt, onComplete) {
 }
 
 function clearPlayerMarkers() {
-    // First, get all cells with player classes
     for (let i = 0; i < 5; i++) {
         document
             .querySelectorAll(`.sequence-cell.player-${i}`)
@@ -641,6 +723,23 @@ function markCollision(x, y) {
     );
 }
 
+function markWallCollision(x, y, direction) {
+    const cell = document.querySelector(
+        `.sequence-cell[data-x="${x}"][data-y="${y}"]`,
+    );
+    if (cell) {
+        cell.classList.add("wall-collision");
+    }
+
+    // Show feedback about wall collision
+    showFeedback(
+        `En spiller forsøkte å gå gjennom en vegg (${getDirectionText(
+            direction,
+        )})`,
+        "error",
+    );
+}
+
 function getPlayerColor(index) {
     const colors = ["#ff4136", "#0074d9", "#2ecc40", "#ffdc00", "#b10dc9"];
     return colors[index % colors.length];
@@ -648,11 +747,11 @@ function getPlayerColor(index) {
 
 function getPlayerRgb(index) {
     const rgbValues = [
-        "255, 65, 54", // Red
-        "0, 116, 217", // Blue
-        "46, 204, 64", // Green
-        "255, 220, 0", // Yellow
-        "177, 13, 201", // Purple
+        "255, 65, 54",
+        "0, 116, 217",
+        "46, 204, 64",
+        "255, 220, 0",
+        "177, 13, 201",
     ];
     return rgbValues[index % rgbValues.length];
 }

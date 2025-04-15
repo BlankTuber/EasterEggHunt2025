@@ -1,7 +1,7 @@
 :root {
-    --cell-size: 30px;
-    --grid-cols: 40; /* Will be set dynamically by JS */
-    --grid-rows: 40; /* Will be set dynamically by JS */
+    --cell-size: 25px;
+    --grid-cols: 30;
+    --grid-rows: 30;
 }
 
 .sequence-grid {
@@ -11,6 +11,11 @@
     background-color: #f8f8f8;
     max-width: 100%;
     width: fit-content;
+}
+
+.sequence-grid-container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .sequence-cell {
@@ -80,20 +85,40 @@
     background-color: rgba(177, 13, 201, 0.3);
 }
 
+.sequence-cell.trail-0 {
+    background-color: rgba(255, 65, 54, 0.2);
+}
+.sequence-cell.trail-1 {
+    background-color: rgba(0, 116, 217, 0.2);
+}
+.sequence-cell.trail-2 {
+    background-color: rgba(46, 204, 64, 0.2);
+}
+.sequence-cell.trail-3 {
+    background-color: rgba(255, 220, 0, 0.2);
+}
+.sequence-cell.trail-4 {
+    background-color: rgba(177, 13, 201, 0.2);
+}
+
 .game-container {
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .sequence-grid-wrapper {
     position: relative;
     width: 100%;
+    max-width: 750px;
     overflow: hidden;
     border: 1px solid #ccc;
-    margin-bottom: 15px;
+    margin: 0 auto 15px auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -109,16 +134,20 @@
 }
 
 .direction-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
     display: grid;
     grid-template-areas:
         ". up ."
         "left center right"
         ". down .";
-    gap: 10px;
-    justify-content: center;
-    margin: 15px 0;
-    width: 250px;
-    margin: 15px auto;
+    gap: 5px;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .direction-btn {
@@ -126,10 +155,10 @@
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 1rem;
+    padding: 6px 10px;
+    font-size: 0.85rem;
     cursor: pointer;
-    min-width: 70px;
+    min-width: 50px;
 }
 
 .direction-btn:hover {
@@ -139,6 +168,11 @@
 .direction-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.sequence-controls {
+    max-width: 750px;
+    margin: 0 auto;
 }
 
 .move-list {
@@ -248,9 +282,26 @@
     background: #555;
 }
 
+.wall-collision {
+    animation: wallCollision 0.5s 2;
+}
+
+@keyframes wallCollision {
+    0% {
+        border-color: #eee;
+    }
+    50% {
+        border-color: red;
+        border-width: 3px;
+    }
+    100% {
+        border-color: #eee;
+    }
+}
+
 @media (max-width: 768px) {
     :root {
-        --cell-size: 20px;
+        --cell-size: 18px;
     }
 
     .sequence-grid-wrapper {
@@ -258,18 +309,31 @@
     }
 
     .direction-btn {
-        min-width: 60px;
-        padding: 8px 12px;
-        font-size: 0.9rem;
+        min-width: 45px;
+        padding: 6px 8px;
+        font-size: 0.8rem;
+    }
+
+    .direction-buttons {
+        bottom: 10px;
+        right: 10px;
+        gap: 3px;
+        padding: 5px;
     }
 }
 
 @media (max-width: 480px) {
     :root {
-        --cell-size: 15px;
+        --cell-size: 12px;
     }
 
     .sequence-cell {
         font-size: 9px;
+    }
+
+    .direction-btn {
+        min-width: 40px;
+        padding: 5px 7px;
+        font-size: 0.75rem;
     }
 }

@@ -18,13 +18,21 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const gameRooms = new Map();
 
+// Global game IDs
 const GLOBAL_SEQUENCE_ID = "global-sequence";
+const GLOBAL_TRIVIA_COMMON_ID = "global-trivia-common";
+const GLOBAL_TRIVIA_TECH_ID = "global-trivia-tech";
+const GLOBAL_TRIVIA_ADVANCED_ID = "global-trivia-advanced";
+const GLOBAL_TRIVIA_MIXED_ID = "global-trivia-mixed";
+
 let sequenceGameActive = false;
 
+// Initialize global sequence game
 function initializeGlobalSequenceGame() {
     const maze = generateMaze(30, 30);
 
     gameRooms.set(GLOBAL_SEQUENCE_ID, {
+        id: GLOBAL_SEQUENCE_ID,
         type: "sequence",
         players: [],
         requiredPlayers: 5,
@@ -41,7 +49,63 @@ function initializeGlobalSequenceGame() {
     console.log("Global sequence game initialized");
 }
 
+// Initialize global trivia games
+function initializeGlobalTriviaGames() {
+    // Common knowledge trivia (3 players)
+    initializeGlobalTriviaGame(GLOBAL_TRIVIA_COMMON_ID, "commonknowledge", 3);
+
+    // Tech trivia (2 players)
+    initializeGlobalTriviaGame(GLOBAL_TRIVIA_TECH_ID, "tech", 2);
+
+    // Advanced trivia (3 players) - using commonknowledge questions but different ID
+    initializeGlobalTriviaGame(GLOBAL_TRIVIA_ADVANCED_ID, "commonknowledge", 3);
+
+    // Mixed trivia (2 players) - using tech questions but different ID
+    initializeGlobalTriviaGame(GLOBAL_TRIVIA_MIXED_ID, "tech", 2);
+
+    console.log("Global trivia games initialized");
+}
+
+// Initialize a global trivia game
+function initializeGlobalTriviaGame(gameId, configType, requiredPlayers) {
+    let questions;
+    try {
+        const configPath = path.join(
+            __dirname,
+            `configs/trivia/${configType}.json`,
+        );
+        if (!fs.existsSync(configPath)) {
+            questions = createDefaultTriviaQuestions();
+        } else {
+            const configData = fs.readFileSync(configPath, "utf8");
+            questions = JSON.parse(configData);
+        }
+    } catch (error) {
+        console.error(
+            `Error loading trivia questions for ${configType}:`,
+            error,
+        );
+        questions = createDefaultTriviaQuestions();
+    }
+
+    gameRooms.set(gameId, {
+        id: gameId,
+        type: "trivia",
+        players: [],
+        requiredPlayers,
+        questions,
+        currentQuestion: 0,
+        started: false,
+        playerAnswers: new Map(),
+        waitingPlayers: [],
+        gameActive: false,
+        configType,
+    });
+}
+
+// Initialize all global games at server startup
 initializeGlobalSequenceGame();
+initializeGlobalTriviaGames();
 
 app.get("/", (req, res) => {
     res.render("index");
@@ -156,43 +220,58 @@ app.get("/game/hangman", (req, res) => {
 });
 
 app.get("/game/trivia", (req, res) => {
-    const configType = req.query.config || "commonknowledge";
-    const requiredPlayers = parseInt(req.query.players || 3, 10);
+    const triviaType = req.query.type || "common";
 
-    let questions;
-    try {
-        const configPath = path.join(
-            __dirname,
-            `configs/trivia/${configType}.json`,
-        );
-        if (!fs.existsSync(configPath)) {
-            questions = createDefaultTriviaQuestions();
-        } else {
-            const configData = fs.readFileSync(configPath, "utf8");
-            questions = JSON.parse(configData);
-        }
-    } catch (error) {
-        console.error("Error loading trivia questions:", error);
-        questions = createDefaultTriviaQuestions();
+    // Select the appropriate global trivia game based on the type parameter
+    let gameId;
+    let configType;
+    let requiredPlayers;
+
+    switch (triviaType) {
+        case "tech":
+            gameId = GLOBAL_TRIVIA_TECH_ID;
+            configType = "tech";
+            requiredPlayers = 2;
+            break;
+        case "advanced":
+            gameId = GLOBAL_TRIVIA_ADVANCED_ID;
+            configType = "commonknowledge";
+            requiredPlayers = 3;
+            break;
+        case "mixed":
+            gameId = GLOBAL_TRIVIA_MIXED_ID;
+            configType = "tech";
+            requiredPlayers = 2;
+            break;
+        case "common":
+        default:
+            gameId = GLOBAL_TRIVIA_COMMON_ID;
+            configType = "commonknowledge";
+            requiredPlayers = 3;
     }
 
-    const gameId = uuidv4();
-    gameRooms.set(gameId, {
-        type: "trivia",
-        players: [],
-        requiredPlayers,
-        questions,
-        currentQuestion: 0,
-        started: false,
-        playerAnswers: new Map(),
-    });
+    const room = gameRooms.get(gameId);
+
+    if (!room) {
+        return res.render("error", {
+            message: "Trivia spill ikke funnet",
+        });
+    }
+
+    let playerCount = room.players.length;
+    let waitingCount = room.waitingPlayers ? room.waitingPlayers.length : 0;
+    let gameInProgress = room.started;
 
     res.render("trivia", {
         gameId,
         requiredPlayers,
         gameConfig: {
             type: configType,
-            numQuestions: questions.length,
+            triviaType: triviaType,
+            numQuestions: room.questions.length,
+            playerCount: playerCount,
+            waitingCount: waitingCount,
+            gameInProgress: gameInProgress,
         },
     });
 });
@@ -235,6 +314,14 @@ io.on("connection", (socket) => {
 
         if (gameId === GLOBAL_SEQUENCE_ID) {
             handleSequenceJoin(socket, room, playerName);
+            return;
+        } else if (
+            gameId === GLOBAL_TRIVIA_COMMON_ID ||
+            gameId === GLOBAL_TRIVIA_TECH_ID ||
+            gameId === GLOBAL_TRIVIA_ADVANCED_ID ||
+            gameId === GLOBAL_TRIVIA_MIXED_ID
+        ) {
+            handleTriviaJoin(socket, room, playerName, gameId);
             return;
         }
 
@@ -325,6 +412,16 @@ io.on("connection", (socket) => {
                     if (room.type === "trivia") {
                         room.currentQuestion = 0;
                         room.playerAnswers.clear();
+
+                        // Check waiting list for global trivia games
+                        if (
+                            gameId === GLOBAL_TRIVIA_COMMON_ID ||
+                            gameId === GLOBAL_TRIVIA_TECH_ID ||
+                            gameId === GLOBAL_TRIVIA_ADVANCED_ID ||
+                            gameId === GLOBAL_TRIVIA_MIXED_ID
+                        ) {
+                            checkTriviaWaitingList(room);
+                        }
                     } else if (room.type === "sequence") {
                         room.playerSequences.clear();
                         room.readyPlayers.clear();
@@ -337,7 +434,11 @@ io.on("connection", (socket) => {
 
                 if (
                     room.players.length === 0 &&
-                    gameId !== GLOBAL_SEQUENCE_ID
+                    gameId !== GLOBAL_SEQUENCE_ID &&
+                    gameId !== GLOBAL_TRIVIA_COMMON_ID &&
+                    gameId !== GLOBAL_TRIVIA_TECH_ID &&
+                    gameId !== GLOBAL_TRIVIA_ADVANCED_ID &&
+                    gameId !== GLOBAL_TRIVIA_MIXED_ID
                 ) {
                     gameRooms.delete(gameId);
                 }
@@ -345,17 +446,69 @@ io.on("connection", (socket) => {
                 break;
             }
 
+            // Check waiting lists for global games
             if (
-                gameId === GLOBAL_SEQUENCE_ID &&
+                (gameId === GLOBAL_SEQUENCE_ID ||
+                    gameId === GLOBAL_TRIVIA_COMMON_ID ||
+                    gameId === GLOBAL_TRIVIA_TECH_ID ||
+                    gameId === GLOBAL_TRIVIA_ADVANCED_ID ||
+                    gameId === GLOBAL_TRIVIA_MIXED_ID) &&
+                room.waitingPlayers &&
                 room.waitingPlayers.some((p) => p.id === socket.id)
             ) {
                 room.waitingPlayers = room.waitingPlayers.filter(
                     (p) => p.id !== socket.id,
                 );
+
+                // Update waiting count for remaining players
+                io.to(gameId).emit("waiting-count-update", {
+                    waitingCount: room.waitingPlayers.length,
+                });
             }
         }
     });
 });
+
+function handleTriviaJoin(socket, room, playerName, gameId) {
+    const player = {
+        id: socket.id,
+        name: playerName,
+        score: 0,
+    };
+
+    // Initialize waiting players array if it doesn't exist
+    if (!room.waitingPlayers) {
+        room.waitingPlayers = [];
+    }
+
+    if (!room.started && room.players.length < room.requiredPlayers) {
+        room.players.push(player);
+        socket.join(gameId);
+
+        io.to(gameId).emit("player-joined", {
+            player,
+            playerCount: room.players.length,
+            requiredPlayers: room.requiredPlayers,
+            waitingCount: room.waitingPlayers.length,
+        });
+
+        if (room.players.length === room.requiredPlayers) {
+            startGame(gameId, room);
+        }
+    } else {
+        room.waitingPlayers.push(player);
+        socket.join(gameId + "-waiting");
+
+        socket.emit("waiting-list", {
+            position: room.waitingPlayers.length,
+            message: `Du er nummer ${room.waitingPlayers.length} i køen. Vennligst vent...`,
+        });
+
+        io.to(gameId).emit("waiting-count-update", {
+            waitingCount: room.waitingPlayers.length,
+        });
+    }
+}
 
 function handleSequenceJoin(socket, room, playerName) {
     const player = {
@@ -390,6 +543,55 @@ function handleSequenceJoin(socket, room, playerName) {
         io.to(GLOBAL_SEQUENCE_ID).emit("waiting-count-update", {
             waitingCount: room.waitingPlayers.length,
         });
+    }
+}
+
+function checkTriviaWaitingList(room) {
+    // Safety check to prevent infinite loops
+    let processedCount = 0;
+    const maxToProcess = room.waitingPlayers.length;
+
+    while (
+        room.players.length < room.requiredPlayers &&
+        room.waitingPlayers.length > 0 &&
+        processedCount < maxToProcess
+    ) {
+        processedCount++;
+        const nextPlayer = room.waitingPlayers.shift();
+        const playerSocket = io.sockets.sockets.get(nextPlayer.id);
+
+        if (playerSocket) {
+            room.players.push(nextPlayer);
+
+            playerSocket.emit("joined-from-waiting", {
+                message: "Det er nå din tur å spille!",
+            });
+
+            io.to(room.id).emit("player-joined", {
+                player: nextPlayer,
+                playerCount: room.players.length,
+                requiredPlayers: room.requiredPlayers,
+                waitingCount: room.waitingPlayers.length,
+            });
+
+            room.waitingPlayers.forEach((waitingPlayer, index) => {
+                const waitingSocket = io.sockets.sockets.get(waitingPlayer.id);
+                if (waitingSocket) {
+                    waitingSocket.emit("waiting-list", {
+                        position: index + 1,
+                        message: `Du er nummer ${
+                            index + 1
+                        } i køen. Vennligst vent...`,
+                    });
+                }
+            });
+        } else {
+            console.log("Player disconnected while waiting:", nextPlayer.id);
+        }
+    }
+
+    if (room.players.length === room.requiredPlayers) {
+        startGame(room.id, room);
     }
 }
 
@@ -456,9 +658,13 @@ function startTriviaRound(gameId, room) {
     room.playerAnswers.clear();
 
     if (room.currentQuestion >= room.questions.length) {
-        io.to(gameId).emit("game-completed", {
-            message: "Gratulerer! Dere fullførte alle spørsmålene!",
-        });
+        // Game completed - reset the room
+        setTimeout(() => {
+            resetTriviaGame(gameId, room);
+            io.to(gameId).emit("game-completed", {
+                message: "Gratulerer! Dere fullførte alle spørsmålene!",
+            });
+        }, 3000);
         return;
     }
 
@@ -540,6 +746,35 @@ function checkTriviaAnswer(gameId, room) {
             startTriviaRound(gameId, room);
         }, 3000);
     }
+}
+
+function resetTriviaGame(gameId, room) {
+    room.started = false;
+    room.gameActive = false;
+    room.currentQuestion = 0;
+    room.playerAnswers.clear();
+
+    // Move current players to waiting list
+    for (let i = room.players.length - 1; i >= 0; i--) {
+        const player = room.players[i];
+        room.waitingPlayers.unshift(player);
+
+        const socket = io.sockets.sockets.get(player.id);
+        if (socket) {
+            socket.emit("moved-to-waiting", {
+                message: "Spillet er fullført. Du er nå i ventelisten.",
+            });
+        }
+    }
+
+    room.players = [];
+
+    checkTriviaWaitingList(room);
+
+    io.to(gameId).emit("trivia-room-reset", {
+        message: "Et nytt spill starter snart...",
+        waitingCount: room.waitingPlayers.length,
+    });
 }
 
 function startSequenceGame(gameId, room) {

@@ -1,4 +1,3 @@
-// Initialize variables
 let socket;
 let playerName = "";
 let gameConfig;
@@ -7,21 +6,35 @@ let startPosition = { x: 0, y: 0 };
 let targetPosition = { x: 0, y: 0 };
 let playerIndex = 0;
 let currentSequence = [];
-let cellSize = 20; // Will be dynamically calculated
-let zoomLevel = 1;
-let panOffset = { x: 0, y: 0 };
-let simulationRunning = false;
-let allPlayerPositions = [];
+let cellSize = 30;
 let inWaitingList = false;
+let simulationRunning = false;
 
-// Grid values
-const CELL_EMPTY = 0;
-const CELL_WALL = 1;
-const CELL_PLAYER_START = 2;
-const CELL_TARGET = 3;
+// Define the grid adjustment function first to avoid reference errors
+function adjustGridForScreen() {
+    if (!grid.length) return;
+
+    const gridHeight = grid.length;
+    const gridWidth = grid[0].length;
+    const gridWrapper = document.querySelector(".sequence-grid-wrapper");
+
+    // Get the container dimensions
+    const containerWidth = gridWrapper.clientWidth;
+
+    // Calculate the optimal cell size based on available width
+    let optimalCellSize = Math.floor(containerWidth / gridWidth);
+
+    // Apply a minimum size for readability
+    optimalCellSize = Math.max(optimalCellSize, 12);
+
+    // Update the CSS variable
+    document.documentElement.style.setProperty(
+        "--cell-size",
+        `${optimalCellSize}px`,
+    );
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Load game config
     try {
         gameConfig = JSON.parse(
             document.getElementById("gameConfigData").textContent,
@@ -31,11 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
         gameConfig = { gridSize: 40, maxMoves: 100 };
     }
 
-    // Set up share link
     const shareLink = document.getElementById("shareLink");
     shareLink.value = window.location.href;
 
-    // Copy link button
     document.getElementById("copyLink").addEventListener("click", function () {
         shareLink.select();
         document.execCommand("copy");
@@ -45,29 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2000);
     });
 
-    // Set up zoom controls
-    document.getElementById("zoomIn").addEventListener("click", () => {
-        if (zoomLevel < 2) {
-            zoomLevel += 0.1;
-            updateGridTransform();
-        }
-    });
-
-    document.getElementById("zoomOut").addEventListener("click", () => {
-        if (zoomLevel > 0.5) {
-            zoomLevel -= 0.1;
-            updateGridTransform();
-        }
-    });
-
-    document.getElementById("resetView").addEventListener("click", () => {
-        zoomLevel = 1;
-        panOffset = { x: 0, y: 0 };
-        updateGridTransform();
-        centerViewOnPlayer();
-    });
-
-    // Set up sequence controls
     document.querySelectorAll(".direction-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
             const direction = btn.dataset.direction;
@@ -76,26 +64,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById("clearMoves").addEventListener("click", clearMoves);
-
     document
         .getElementById("submitSequence")
         .addEventListener("click", submitSequence);
+    document.getElementById("resetView").addEventListener("click", function () {
+        if (grid.length > 0) {
+            createGrid();
+            adjustGridForScreen();
+        }
+    });
 
-    // Add drag functionality to grid
-    setupGridDragging();
+    // Handle window resize
+    window.addEventListener("resize", function () {
+        if (grid.length > 0) {
+            adjustGridForScreen();
+        }
+    });
 
-    // Make the grid wrapper respond to window resize
-    window.addEventListener("resize", adjustGridSize);
-
-    // Player form is handled by player-entry.ejs partial
-    // It will call startGame(playerName) when submitted
-
-    // If game info is available, update the waiting room display
     if (gameConfig.playerCount !== undefined) {
         document.getElementById("playerCount").textContent =
             gameConfig.playerCount;
 
-        // Add waiting count info if available
         if (
             gameConfig.waitingCount !== undefined &&
             gameConfig.waitingCount > 0
@@ -106,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(".players-list").appendChild(waitingInfo);
         }
 
-        // Add game in progress info if applicable
         if (gameConfig.gameInProgress) {
             const gameStatus = document.createElement("p");
             gameStatus.className = "game-status-info";
@@ -119,14 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function startGame(name) {
     playerName = name;
-
-    // Initialize socket connection
     socket = io();
-
-    // Connect to the game room
     socket.emit("join-game", { gameId, playerName });
 
-    // Socket event handlers
     socket.on("player-joined", handlePlayerJoined);
     socket.on("player-left", handlePlayerLeft);
     socket.on("sequence-init", handleSequenceInit);
@@ -141,40 +124,30 @@ function startGame(name) {
     socket.on("error", handleError);
 }
 
-// Socket event handlers
 function handlePlayerJoined(data) {
     const { player, playerCount, requiredPlayers, waitingCount } = data;
-
-    // Update player count
     document.getElementById("playerCount").textContent = playerCount;
 
-    // Add player to the list
     const playersList = document.getElementById("playersList");
     const playerItem = document.createElement("li");
     playerItem.textContent = player.name;
     playerItem.dataset.id = player.id;
     playersList.appendChild(playerItem);
 
-    // Update waiting count if provided
     if (waitingCount !== undefined) {
         updateWaitingCountDisplay(waitingCount);
     }
 
-    // If game is starting, hide waiting room and show game area
     if (playerCount === requiredPlayers) {
         document.getElementById("waitingRoom").style.display = "none";
         document.getElementById("gameArea").style.display = "block";
-        adjustGridSize(); // Make sure grid fits properly
     }
 }
 
 function handlePlayerLeft(data) {
     const { playerId, playerCount } = data;
-
-    // Update player count
     document.getElementById("playerCount").textContent = playerCount;
 
-    // Remove player from the list
     const playerItem = document.querySelector(
         `#playersList li[data-id="${playerId}"]`,
     );
@@ -182,7 +155,6 @@ function handlePlayerLeft(data) {
         playerItem.remove();
     }
 
-    // Remove player ready indicator
     const readyIndicator = document.querySelector(
         `#readyPlayers .player-status[data-id="${playerId}"]`,
     );
@@ -198,52 +170,27 @@ function handleSequenceInit(data) {
         targetPosition: newTargetPos,
         playerIndex: newPlayerIndex,
     } = data;
-
-    // We're no longer in the waiting list
     inWaitingList = false;
-
-    // Save game state
     grid = newGrid;
     startPosition = newStartPos;
     targetPosition = newTargetPos;
     playerIndex = newPlayerIndex;
 
-    // Initialize all player positions
-    allPlayerPositions = [];
-
-    // Create grid
     createGrid();
+    adjustGridForScreen(); // Add dynamic sizing after creating the grid
 
-    // Calculate appropriate cell size and adjust grid
-    adjustGridSize();
-
-    // Center view on player
-    centerViewOnPlayer();
-
-    // Reset sequence
     clearMoves();
-
-    // Clear ready players
     document.getElementById("readyPlayers").innerHTML = "";
-
-    // Update game status
     document.getElementById("gameStatus").textContent = "Planlegg din reise";
-
-    // Enable controls
     enableControls(true);
-
-    // Hide waiting room, show game area
     document.getElementById("waitingRoom").style.display = "none";
     document.getElementById("gameArea").style.display = "block";
 }
 
 function handlePlayerReady(data) {
     const { playerId, readyCount } = data;
-
-    // Update ready players display
     const readyPlayers = document.getElementById("readyPlayers");
 
-    // Add player to ready list if not already there
     if (
         !document.querySelector(
             `#readyPlayers .player-status[data-id="${playerId}"]`,
@@ -261,7 +208,6 @@ function handlePlayerReady(data) {
         }
     }
 
-    // Show count
     const requiredPlayers = parseInt(
         document.getElementById("requiredPlayers").textContent,
     );
@@ -272,16 +218,12 @@ function handlePlayerReady(data) {
 
 function handleSequenceResult(data) {
     const { success, movements, collisionAt, message } = data;
-
-    // Show result message
     showFeedback(message, success ? "success" : "error");
 
-    // Animate the sequence
     simulationRunning = true;
     document.getElementById("gameStatus").textContent = "Spiller av sekvens...";
     enableControls(false);
 
-    // Start animation
     animateMovements(movements, collisionAt, () => {
         simulationRunning = false;
 
@@ -293,24 +235,23 @@ function handleSequenceResult(data) {
                 "Planlegg din reise";
             enableControls(true);
             clearMoves();
+            // Reset the grid to its initial state
+            createGrid();
+            adjustGridForScreen();
         }
     });
 }
 
 function handleWaitingList(data) {
     const { position, message } = data;
-
-    // We're in the waiting list
     inWaitingList = true;
 
-    // Hide regular waiting room content
     const playersList = document.querySelector(".players-list");
     const playerForm = document.querySelector(".player-form");
 
     if (playersList) playersList.style.display = "none";
     if (playerForm) playerForm.style.display = "none";
 
-    // Create waiting message if it doesn't exist
     let waitingMessage = document.getElementById("waitingMessage");
     if (!waitingMessage) {
         waitingMessage = document.createElement("div");
@@ -319,7 +260,6 @@ function handleWaitingList(data) {
         document.getElementById("waitingRoom").appendChild(waitingMessage);
     }
 
-    // Update waiting message
     waitingMessage.innerHTML = `
         <h3>Du står i kø</h3>
         <p>${message}</p>
@@ -337,37 +277,25 @@ function handleWaitingCountUpdate(data) {
 
 function handleJoinedFromWaiting(data) {
     const { message } = data;
-
-    // We're no longer in the waiting list
     inWaitingList = false;
 
-    // Remove waiting message if it exists
     const waitingMessage = document.getElementById("waitingMessage");
     if (waitingMessage) {
         waitingMessage.remove();
     }
 
-    // Show notification
     showFeedback(message, "success");
-
-    // The sequence-init event will handle the rest of the game setup
 }
 
 function handleMovedToWaiting(data) {
     const { message } = data;
-
-    // We're now in the waiting list
     inWaitingList = true;
 
-    // Hide game area
     document.getElementById("gameArea").style.display = "none";
-
-    // Show waiting room
     document.getElementById("waitingRoom").style.display = "block";
 
-    // Create waiting message
     handleWaitingList({
-        position: null, // We don't know our position yet
+        position: null,
         message: message,
     });
 }
@@ -375,24 +303,19 @@ function handleMovedToWaiting(data) {
 function handleRoomReset(data) {
     const { message, waitingCount } = data;
 
-    // Update waiting count if provided
     if (waitingCount !== undefined) {
         updateWaitingCountDisplay(waitingCount);
     }
 
-    // If we're not in waiting list, show notification
     if (!inWaitingList) {
         showFeedback(message, "info");
     }
 }
 
 function handleGameReset(data) {
-    // Show waiting room if we're not in waiting list
     if (!inWaitingList) {
         document.getElementById("waitingRoom").style.display = "block";
         document.getElementById("gameArea").style.display = "none";
-
-        // Show reset message
         showFeedback(data.message, "info");
     }
 }
@@ -401,43 +324,39 @@ function handleError(data) {
     showFeedback(data.message, "error");
 }
 
-// Grid and visualization functions
 function createGrid() {
     const gridContainer = document.getElementById("sequenceGrid");
     gridContainer.innerHTML = "";
 
-    const gridSize = grid.length;
+    const gridHeight = grid.length;
+    const gridWidth = grid[0].length;
 
-    // Set grid dimensions
-    gridContainer.style.gridTemplateRows = `repeat(${gridSize}, ${cellSize}px)`;
-    gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+    // Let CSS handle the container sizing - just set up the grid
+    document.documentElement.style.setProperty("--grid-cols", gridWidth);
+    document.documentElement.style.setProperty("--grid-rows", gridHeight);
 
-    // Create cells
-    for (let y = 0; y < gridSize; y++) {
-        for (let x = 0; x < gridSize; x++) {
+    gridContainer.style.gridTemplateRows = `repeat(${gridHeight}, var(--cell-size))`;
+    gridContainer.style.gridTemplateColumns = `repeat(${gridWidth}, var(--cell-size))`;
+
+    for (let y = 0; y < gridHeight; y++) {
+        for (let x = 0; x < gridWidth; x++) {
             const cell = document.createElement("div");
             cell.className = "sequence-cell";
             cell.dataset.x = x;
             cell.dataset.y = y;
 
-            const cellValue = grid[y][x];
-
-            // Apply appropriate class based on cell value
-            if (cellValue === CELL_WALL) {
-                // Wall cell
+            if (grid[y][x] === 1) {
                 cell.classList.add("wall");
             }
-            // Check if this is the player's start position
-            else if (x === startPosition.x && y === startPosition.y) {
-                cell.classList.add("player");
-                cell.style.backgroundColor = getPlayerColor(playerIndex);
+
+            if (x === startPosition.x && y === startPosition.y) {
+                cell.classList.add(`player-${playerIndex}`);
                 cell.textContent = (playerIndex + 1).toString();
             }
-            // Check if this is the player's target position
-            else if (x === targetPosition.x && y === targetPosition.y) {
-                cell.classList.add("target");
-                cell.style.borderColor = getPlayerColor(playerIndex);
-                cell.textContent = (playerIndex + 1).toString();
+
+            if (x === targetPosition.x && y === targetPosition.y) {
+                cell.classList.add(`target-${playerIndex}`);
+                cell.textContent = "T";
             }
 
             gridContainer.appendChild(cell);
@@ -445,152 +364,6 @@ function createGrid() {
     }
 }
 
-function updateGridTransform() {
-    const gridElement = document.getElementById("sequenceGrid");
-    gridElement.style.transform = `scale(${zoomLevel}) translate(${panOffset.x}px, ${panOffset.y}px)`;
-}
-
-function centerViewOnPlayer() {
-    const gridWrapper = document.querySelector(".sequence-grid-wrapper");
-    const wrapperWidth = gridWrapper.clientWidth;
-    const wrapperHeight = gridWrapper.clientHeight;
-
-    // Calculate center position of player
-    const playerCenterX = startPosition.x * cellSize + cellSize / 2;
-    const playerCenterY = startPosition.y * cellSize + cellSize / 2;
-
-    // Calculate scroll position to center player
-    const scrollX = playerCenterX - wrapperWidth / 2;
-    const scrollY = playerCenterY - wrapperHeight / 2;
-
-    // Apply scroll
-    gridWrapper.scrollLeft = scrollX;
-    gridWrapper.scrollTop = scrollY;
-}
-
-function getPlayerColor(index) {
-    const colors = [
-        "#ff4136", // red
-        "#0074d9", // blue
-        "#2ecc40", // green
-        "#ffdc00", // yellow
-        "#b10dc9", // purple
-    ];
-    return colors[index % colors.length];
-}
-
-// Setup grid dragging functionality
-function setupGridDragging() {
-    const gridWrapper = document.querySelector(".sequence-grid-wrapper");
-    let isDragging = false;
-    let startX, startY, scrollLeft, scrollTop;
-
-    gridWrapper.addEventListener("mousedown", function (e) {
-        if (simulationRunning) return; // Don't allow dragging during simulation
-
-        isDragging = true;
-        startX = e.pageX - gridWrapper.offsetLeft;
-        startY = e.pageY - gridWrapper.offsetTop;
-        scrollLeft = gridWrapper.scrollLeft;
-        scrollTop = gridWrapper.scrollTop;
-        gridWrapper.style.cursor = "grabbing";
-    });
-
-    gridWrapper.addEventListener("mouseleave", function () {
-        isDragging = false;
-        gridWrapper.style.cursor = "grab";
-    });
-
-    gridWrapper.addEventListener("mouseup", function () {
-        isDragging = false;
-        gridWrapper.style.cursor = "grab";
-    });
-
-    gridWrapper.addEventListener("mousemove", function (e) {
-        if (!isDragging) return;
-        e.preventDefault();
-
-        const x = e.pageX - gridWrapper.offsetLeft;
-        const y = e.pageY - gridWrapper.offsetTop;
-        const moveX = (x - startX) * 1.5; // Adjust sensitivity
-        const moveY = (y - startY) * 1.5;
-
-        gridWrapper.scrollLeft = scrollLeft - moveX;
-        gridWrapper.scrollTop = scrollTop - moveY;
-    });
-
-    // Add touch support
-    gridWrapper.addEventListener("touchstart", function (e) {
-        if (simulationRunning) return;
-
-        isDragging = true;
-        startX = e.touches[0].pageX - gridWrapper.offsetLeft;
-        startY = e.touches[0].pageY - gridWrapper.offsetTop;
-        scrollLeft = gridWrapper.scrollLeft;
-        scrollTop = gridWrapper.scrollTop;
-    });
-
-    gridWrapper.addEventListener("touchend", function () {
-        isDragging = false;
-    });
-
-    gridWrapper.addEventListener("touchmove", function (e) {
-        if (!isDragging) return;
-        e.preventDefault();
-
-        const x = e.touches[0].pageX - gridWrapper.offsetLeft;
-        const y = e.touches[0].pageY - gridWrapper.offsetTop;
-        const moveX = (x - startX) * 1.5;
-        const moveY = (y - startY) * 1.5;
-
-        gridWrapper.scrollLeft = scrollLeft - moveX;
-        gridWrapper.scrollTop = scrollTop - moveY;
-    });
-
-    // Set initial cursor
-    gridWrapper.style.cursor = "grab";
-}
-
-// Calculate optimal cell size based on screen size
-function adjustGridSize() {
-    const gridWrapper = document.querySelector(".sequence-grid-wrapper");
-    if (!gridWrapper) return;
-
-    const gridSize = grid.length;
-
-    // Calculate the smaller of width or height
-    const containerWidth = gridWrapper.clientWidth;
-    const containerHeight = gridWrapper.clientHeight;
-    const smallerDimension = Math.min(containerWidth, containerHeight);
-
-    // Calculate cell size to make grid fit 1:1 in the available space
-    cellSize = Math.floor((smallerDimension - 10) / gridSize);
-
-    // Minimum cell size
-    cellSize = Math.max(cellSize, 8);
-
-    // Update grid dimensions
-    const gridElement = document.getElementById("sequenceGrid");
-    if (gridElement) {
-        gridElement.style.gridTemplateRows = `repeat(${gridSize}, ${cellSize}px)`;
-        gridElement.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
-
-        // Make sure font size scales with cell size
-        document.documentElement.style.setProperty(
-            "--cell-font-size",
-            `${Math.max(8, cellSize / 2)}px`,
-        );
-    }
-
-    // Make wrapper square (1:1 aspect ratio)
-    gridWrapper.style.height = `${smallerDimension}px`;
-    gridWrapper.style.width = `${smallerDimension}px`;
-
-    // Center the wrapper
-    gridWrapper.style.margin = "0 auto";
-}
-
-// Sequence management
 function addMove(direction) {
     if (currentSequence.length >= gameConfig.maxMoves) {
         showFeedback(
@@ -600,25 +373,15 @@ function addMove(direction) {
         return;
     }
 
-    // Add to sequence
     currentSequence.push(direction);
-
-    // Update move list
     updateMoveList();
-
-    // Show preview of path
     previewPath();
 }
 
 function removeMove(index) {
     if (index >= 0 && index < currentSequence.length) {
-        // Remove the move at the given index
         currentSequence.splice(index, 1);
-
-        // Update move list
         updateMoveList();
-
-        // Update path preview
         previewPath();
     }
 }
@@ -626,8 +389,6 @@ function removeMove(index) {
 function clearMoves() {
     currentSequence = [];
     updateMoveList();
-
-    // Clear path preview
     removePathPreview();
 }
 
@@ -640,24 +401,21 @@ function updateMoveList() {
         return;
     }
 
-    // Add each move
     currentSequence.forEach((move, index) => {
         const moveItem = document.createElement("div");
         moveItem.className = "move-item";
 
-        // Add move number and text
         const moveText = document.createElement("span");
         moveText.className = "move-text";
         moveText.textContent = `${index + 1}: ${getDirectionText(move)}`;
         moveItem.appendChild(moveText);
 
-        // Add remove button
         const removeBtn = document.createElement("button");
         removeBtn.className = "remove-move-btn";
         removeBtn.innerHTML = "×";
         removeBtn.title = "Fjern denne bevegelsen";
         removeBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent bubbling
+            e.stopPropagation();
             removeMove(index);
         });
         moveItem.appendChild(removeBtn);
@@ -684,57 +442,50 @@ function getDirectionText(direction) {
 }
 
 function previewPath() {
-    // Remove existing preview
+    // First clear any existing path
     removePathPreview();
 
-    // Calculate path based on current sequence
+    // Calculate the full path
     const path = calculatePath(startPosition, currentSequence);
 
-    // Mark cells in the path
-    path.forEach((pos, index) => {
-        // Skip the start position (index 0)
-        if (index === 0) return;
+    // Only show the last 3 steps of the path (or fewer if the path is shorter)
+    const lastThreeSteps = [];
+    if (path.length > 1) {
+        // Start from index 1 to skip the starting position
+        for (let i = Math.max(1, path.length - 3); i < path.length; i++) {
+            lastThreeSteps.push(path[i]);
+        }
+    }
 
+    // Apply the path styling to only these cells
+    lastThreeSteps.forEach((pos) => {
         const cell = document.querySelector(
             `.sequence-cell[data-x="${pos.x}"][data-y="${pos.y}"]`,
         );
         if (cell) {
-            // Add path marker class
-            cell.classList.add("path");
-
-            // Store step number as data attribute
-            cell.dataset.pathStep = index.toString();
-
-            // Set player color as CSS variable
-            cell.style.setProperty(
-                "--player-color",
-                getPlayerColor(playerIndex),
-            );
-
-            // Mark final position with a different style
-            if (index === path.length - 1) {
-                cell.classList.add("path-end");
-            }
+            cell.classList.add(`path-${playerIndex}`);
         }
     });
 
-    // Check if path ends at target
+    // Still check if the full path reaches the target
     const finalPos = path[path.length - 1];
     if (finalPos.x === targetPosition.x && finalPos.y === targetPosition.y) {
         showFeedback("Ruten når målet!", "success");
     } else {
-        // Show warning if path doesn't reach target
         showFeedback("Advarselse: Ruten når ikke målet", "info");
     }
 }
 
 function removePathPreview() {
-    document.querySelectorAll(".sequence-cell.path").forEach((cell) => {
-        cell.classList.remove("path", "path-end");
-        delete cell.dataset.pathStep;
-    });
+    // Remove all path classes from all cells
+    for (let i = 0; i < 5; i++) {
+        document
+            .querySelectorAll(`.sequence-cell.path-${i}`)
+            .forEach((cell) => {
+                cell.classList.remove(`path-${i}`);
+            });
+    }
 
-    // Hide feedback
     document.getElementById("feedbackMessage").style.display = "none";
 }
 
@@ -742,7 +493,6 @@ function calculatePath(startPos, sequence) {
     const path = [{ ...startPos }];
     let currentPos = { ...startPos };
 
-    // Apply each move in the sequence
     sequence.forEach((move) => {
         const newPos = getNewPosition(currentPos, move);
         currentPos = newPos;
@@ -755,14 +505,11 @@ function calculatePath(startPos, sequence) {
 function getNewPosition(pos, direction) {
     const newPos = { ...pos };
 
-    // Check if position has a wall
     const isWall = (x, y) => {
         if (x < 0 || y < 0 || x >= grid[0].length || y >= grid.length) {
-            return true; // Out of bounds counts as wall
+            return true;
         }
-
-        // Check if this position has a wall cell
-        return grid[y][x] === CELL_WALL;
+        return grid[y][x] === 1;
     };
 
     switch (direction) {
@@ -786,7 +533,6 @@ function getNewPosition(pos, direction) {
                 newPos.y++;
             }
             break;
-        // Stop does nothing
     }
 
     return newPos;
@@ -798,13 +544,8 @@ function submitSequence() {
         return;
     }
 
-    // Disable controls
     enableControls(false);
-
-    // Send sequence to server
     socket.emit("submit-sequence", { gameId, sequence: currentSequence });
-
-    // Update status
     document.getElementById("gameStatus").textContent =
         "Venter på andre spillere...";
     showFeedback("Sekvens sendt! Venter på andre spillere...", "info");
@@ -819,85 +560,69 @@ function enableControls(enabled) {
     document.getElementById("submitSequence").disabled = !enabled;
 }
 
-// Animation functions
 function animateMovements(movements, collisionAt, onComplete) {
-    // Remove any path preview
     removePathPreview();
+    clearPlayerMarkers();
 
-    // First, show starting positions of all players
-    const startingPositions = {};
-    movements[0].forEach((move) => {
-        startingPositions[move.player] = move.from;
-    });
-
-    // Clear existing player position markers
-    clearPlayerPositionMarkers();
-
-    // Show initial player positions
-    Object.entries(startingPositions).forEach(([player, pos]) => {
-        const playerIndex = parseInt(player);
-        addPlayerPositionMarker(pos.x, pos.y, playerIndex);
-    });
-
-    // Create animation frames
     let step = 0;
     const maxSteps = collisionAt ? collisionAt.step + 1 : movements.length;
 
-    const animate = () => {
+    const startingPositions = {};
+    if (movements[0]) {
+        movements[0].forEach((move) => {
+            startingPositions[move.player] = move.from;
+            addPlayerMarker(move.from.x, move.from.y, move.player);
+        });
+    }
+
+    function nextStep() {
         if (step >= maxSteps) {
             onComplete();
             return;
         }
 
-        // Clear previous positions
-        clearPlayerPositionMarkers();
+        clearPlayerMarkers();
 
-        // Update positions for this step
-        movements[step].forEach((move) => {
-            const playerIdx = move.player;
+        if (movements[step]) {
+            movements[step].forEach((move) => {
+                addPlayerMarker(move.to.x, move.to.y, move.player);
 
-            // Add player marker at current position
-            addPlayerPositionMarker(move.to.x, move.to.y, playerIdx);
+                if (
+                    collisionAt &&
+                    step === collisionAt.step &&
+                    collisionAt.players.includes(move.player)
+                ) {
+                    markCollision(move.to.x, move.to.y);
+                }
+            });
+        }
 
-            // If this is a collision step, mark it
-            if (
-                collisionAt &&
-                step === collisionAt.step &&
-                collisionAt.players.includes(playerIdx)
-            ) {
-                markCollision(move.to.x, move.to.y);
-            }
-        });
-
-        // Increment step
         step++;
+        setTimeout(nextStep, 500);
+    }
 
-        // Continue animation
-        setTimeout(animate, 500);
-    };
-
-    // Start animation
-    setTimeout(animate, 1000); // Small delay before starting
+    setTimeout(nextStep, 1000);
 }
 
-function clearPlayerPositionMarkers() {
-    document.querySelectorAll(".player-position-marker").forEach((marker) => {
-        marker.remove();
-    });
+function clearPlayerMarkers() {
+    // First, get all cells with player classes
+    for (let i = 0; i < 5; i++) {
+        document
+            .querySelectorAll(`.sequence-cell.player-${i}`)
+            .forEach((cell) => {
+                cell.classList.remove(`player-${i}`);
+                cell.textContent = "";
+            });
+    }
 }
 
-function addPlayerPositionMarker(x, y, playerIndex) {
+function addPlayerMarker(x, y, playerIdx) {
     const cell = document.querySelector(
         `.sequence-cell[data-x="${x}"][data-y="${y}"]`,
     );
     if (cell) {
-        const marker = document.createElement("div");
-        marker.className = "player-position-marker";
-        marker.style.backgroundColor = getPlayerColor(playerIndex);
-        marker.textContent = (playerIndex + 1).toString();
-
-        // Add to cell
-        cell.appendChild(marker);
+        cell.classList.add(`player-${playerIdx}`);
+        cell.textContent = (playerIdx + 1).toString();
     }
 }
 
@@ -906,20 +631,32 @@ function markCollision(x, y) {
         `.sequence-cell[data-x="${x}"][data-y="${y}"]`,
     );
     if (cell) {
-        const markers = cell.querySelectorAll(".player-position-marker");
-        markers.forEach((marker) => {
-            marker.classList.add("collision");
-        });
+        cell.style.boxShadow = "0 0 8px 2px red";
+        cell.style.border = "2px solid white";
     }
 
-    // Show collision message
     showFeedback(
         "Kollisjon oppdaget! Spillere krasjet med hverandre.",
         "error",
     );
 }
 
-// Helper functions
+function getPlayerColor(index) {
+    const colors = ["#ff4136", "#0074d9", "#2ecc40", "#ffdc00", "#b10dc9"];
+    return colors[index % colors.length];
+}
+
+function getPlayerRgb(index) {
+    const rgbValues = [
+        "255, 65, 54", // Red
+        "0, 116, 217", // Blue
+        "46, 204, 64", // Green
+        "255, 220, 0", // Yellow
+        "177, 13, 201", // Purple
+    ];
+    return rgbValues[index % rgbValues.length];
+}
+
 function showFeedback(message, type) {
     const feedbackElement = document.getElementById("feedbackMessage");
     feedbackElement.textContent = message;
@@ -928,13 +665,11 @@ function showFeedback(message, type) {
 }
 
 function updateWaitingCountDisplay(waitingCount) {
-    // Remove existing waiting info
     const existingInfo = document.querySelector(".waiting-info");
     if (existingInfo) {
         existingInfo.remove();
     }
 
-    // Add new waiting info if there are waiting players
     if (waitingCount > 0) {
         const waitingInfo = document.createElement("p");
         waitingInfo.className = "waiting-info";

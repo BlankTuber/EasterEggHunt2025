@@ -49,36 +49,13 @@
 
                 <div class="sequence-grid-container">
                     <div class="map-controls">
-                        <button id="zoomIn" class="btn">Zoom Inn</button>
-                        <button id="zoomOut" class="btn">Zoom Ut</button>
                         <button id="resetView" class="btn">
-                            Reset Visning
+                            Oppdater Visning
                         </button>
                     </div>
 
                     <div class="sequence-grid-wrapper">
-                        <div id="sequenceGrid" class="sequence-grid">
-                            <!-- Grid will be generated dynamically -->
-                        </div>
-                    </div>
-
-                    <div class="map-legend">
-                        <div class="legend-item">
-                            <div class="legend-marker player-marker"></div>
-                            <span>Din Spiller</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-marker goal-marker"></div>
-                            <span>Ditt Mål</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-marker obstacle-marker"></div>
-                            <span>Vegg</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-marker path-marker"></div>
-                            <span>Din Rute</span>
-                        </div>
+                        <div id="sequenceGrid" class="sequence-grid"></div>
                     </div>
                 </div>
 
@@ -90,22 +67,48 @@
                     </p>
 
                     <div class="direction-buttons">
-                        <button class="direction-btn" data-direction="up">
+                        <button
+                            class="direction-btn"
+                            data-direction="up"
+                            style="grid-area: up"
+                        >
                             Opp
                         </button>
-                        <button class="direction-btn" data-direction="right">
-                            Høyre
-                        </button>
-                        <button class="direction-btn" data-direction="down">
-                            Ned
-                        </button>
-                        <button class="direction-btn" data-direction="left">
+                        <button
+                            class="direction-btn"
+                            data-direction="left"
+                            style="grid-area: left"
+                        >
                             Venstre
                         </button>
-                        <button class="direction-btn" data-direction="stop">
+                        <button
+                            class="direction-btn"
+                            data-direction="stop"
+                            style="grid-area: center"
+                        >
                             Vent
                         </button>
+                        <button
+                            class="direction-btn"
+                            data-direction="right"
+                            style="grid-area: right"
+                        >
+                            Høyre
+                        </button>
+                        <button
+                            class="direction-btn"
+                            data-direction="down"
+                            style="grid-area: down"
+                        >
+                            Ned
+                        </button>
                     </div>
+
+                    <div
+                        id="feedbackMessage"
+                        class="message"
+                        style="display: none"
+                    ></div>
 
                     <div class="player-moves">
                         <h4>Din sekvens:</h4>
@@ -121,12 +124,6 @@
                         </div>
                     </div>
 
-                    <div
-                        id="feedbackMessage"
-                        class="message"
-                        style="display: none; margin-top: 20px"
-                    ></div>
-
                     <div class="players-status">
                         <h4>Spillere klare:</h4>
                         <div id="readyPlayers"></div>
@@ -135,15 +132,12 @@
             </div>
         </div>
 
-        <!-- Socket.io client library -->
         <script src="/socket.io/socket.io.js"></script>
 
-        <!-- Game configuration data -->
         <script type="application/json" id="gameConfigData">
             <%- JSON.stringify(gameConfig) %>
         </script>
 
-        <!-- Game ID data -->
         <script>
             const gameId = "<%= gameId %>";
         </script>

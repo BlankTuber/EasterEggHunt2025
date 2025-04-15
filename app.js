@@ -359,11 +359,14 @@ io.on("connection", (socket) => {
         const room = gameRooms.get(gameId);
         if (!room || room.type !== "trivia" || !room.started) return;
 
-        room.playerAnswers.set(socket.id, answerId);
+        // If this is the first answer, process it
+        if (room.playerAnswers.size === 0) {
+            room.playerAnswers.set(socket.id, answerId);
 
-        io.to(gameId).emit("player-answered", { playerId: socket.id });
+            // Notify everyone that this player has answered
+            io.to(gameId).emit("player-answered", { playerId: socket.id });
 
-        if (room.playerAnswers.size === room.players.length) {
+            // Immediately check the answer
             checkTriviaAnswer(gameId, room);
         }
     });
@@ -658,13 +661,14 @@ function startTriviaRound(gameId, room) {
     room.playerAnswers.clear();
 
     if (room.currentQuestion >= room.questions.length) {
-        // Game completed - reset the room
+        io.to(gameId).emit("game-completed", {
+            message: "Gratulerer! Dere fullførte alle spørsmålene!",
+        });
+
+        // Delay the reset to give players time to see the completion message
         setTimeout(() => {
             resetTriviaGame(gameId, room);
-            io.to(gameId).emit("game-completed", {
-                message: "Gratulerer! Dere fullførte alle spørsmålene!",
-            });
-        }, 3000);
+        }, 8000);
         return;
     }
 
@@ -674,24 +678,49 @@ function startTriviaRound(gameId, room) {
     const correctOption = allOptions.find((opt) => opt.correct);
     const wrongOptions = allOptions.filter((opt) => !opt.correct);
 
+    const shuffledWrongOptions = shuffleArray([...wrongOptions]);
+
     const playerOptions = {};
 
-    const luckyPlayerIndex = Math.floor(Math.random() * room.players.length);
+    // Create a shuffled array of player indices to ensure random distribution
+    const playerIndices = room.players.map((_, idx) => idx);
+    const shuffledPlayerIndices = shuffleArray([...playerIndices]);
+    const luckyPlayerIndex = shuffledPlayerIndices[0];
+
+    let nextWrongOptionIndex = 0;
 
     room.players.forEach((player, idx) => {
         const playerOpts = [];
 
         if (idx === luckyPlayerIndex) {
+            // This player gets the correct answer
             playerOpts.push(correctOption);
 
-            const shuffledWrong = shuffleArray([...wrongOptions]);
-            for (let i = 0; i < 3 && i < shuffledWrong.length; i++) {
-                playerOpts.push(shuffledWrong[i]);
+            for (let i = 0; i < 3; i++) {
+                if (nextWrongOptionIndex < shuffledWrongOptions.length) {
+                    playerOpts.push(
+                        shuffledWrongOptions[nextWrongOptionIndex++],
+                    );
+                } else {
+                    nextWrongOptionIndex = 0;
+                    playerOpts.push(
+                        shuffledWrongOptions[nextWrongOptionIndex++],
+                    );
+                }
             }
         } else {
-            const shuffledWrong = shuffleArray([...wrongOptions]);
-            for (let i = 0; i < 4 && i < shuffledWrong.length; i++) {
-                playerOpts.push(shuffledWrong[i]);
+            // This player only gets wrong answers
+            for (let i = 0; i < 4; i++) {
+                if (nextWrongOptionIndex < shuffledWrongOptions.length) {
+                    playerOpts.push(
+                        shuffledWrongOptions[nextWrongOptionIndex++],
+                    );
+                } else {
+                    nextWrongOptionIndex = 0;
+                    playerOpts.push(
+                        shuffledWrongOptions[nextWrongOptionIndex++],
+                    );
+                }
             }
         }
 
@@ -718,13 +747,9 @@ function checkTriviaAnswer(gameId, room) {
     const question = room.questions[room.currentQuestion];
     const correctOptionId = question.options.find((opt) => opt.correct).id;
 
-    let correct = false;
-    for (const [playerId, answerId] of room.playerAnswers.entries()) {
-        if (answerId === correctOptionId) {
-            correct = true;
-            break;
-        }
-    }
+    // Get the first (and only) answer that was submitted
+    const [playerId, answerId] = Array.from(room.playerAnswers.entries())[0];
+    const correct = answerId === correctOptionId;
 
     if (correct) {
         room.currentQuestion++;
@@ -732,20 +757,18 @@ function checkTriviaAnswer(gameId, room) {
             correct: true,
             message: "Riktig svar! Går videre til neste spørsmål...",
         });
-
-        setTimeout(() => {
-            startTriviaRound(gameId, room);
-        }, 3000);
     } else {
         io.to(gameId).emit("answer-result", {
             correct: false,
-            message: "Feil svar! Prøv igjen...",
+            message: "Feil svar! Prøv igjen med et nytt spørsmål...",
         });
-
-        setTimeout(() => {
-            startTriviaRound(gameId, room);
-        }, 3000);
+        room.currentQuestion++;
     }
+
+    // Go to next question after a delay
+    setTimeout(() => {
+        startTriviaRound(gameId, room);
+    }, 3000);
 }
 
 function resetTriviaGame(gameId, room) {

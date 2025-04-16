@@ -120,5 +120,132 @@
             "Moulin Rouge",
             "Romeo + Juliet"
         ]
+    },
+    {
+        "id": "inception",
+        "answer": "Inception",
+        "audioUrl": "/audio/music/movies/inception.mp3",
+        "options": ["Inception", "The Dark Knight", "Memento", "Prestige"]
+    },
+    {
+        "id": "lotr_fellowship",
+        "answer": "The Lord of the Rings: The Fellowship of the Ring",
+        "audioUrl": "/audio/music/movies/lotr_fellowship.mp3",
+        "options": [
+            "The Lord of the Rings: The Fellowship of the Ring",
+            "The Hobbit: An Unexpected Journey",
+            "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+            "Eragon"
+        ]
+    },
+    {
+        "id": "indiana_jones",
+        "answer": "Indiana Jones - Raiders March",
+        "audioUrl": "/audio/music/movies/indiana_jones.mp3",
+        "options": [
+            "Indiana Jones - Raiders March",
+            "The Goonies",
+            "Back to the Future",
+            "E.T. the Extra-Terrestrial"
+        ]
+    },
+    {
+        "id": "thegoodthebad",
+        "answer": "The Good, the Bad and the Ugly",
+        "audioUrl": "/audio/music/movies/good_bad_ugly.mp3",
+        "options": [
+            "The Good, the Bad and the Ugly",
+            "A Fistful of Dollars",
+            "For a Few Dollars More",
+            "Once Upon a Time in the West"
+        ]
+    },
+    {
+        "id": "pulpfiction_misirlou",
+        "answer": "Pulp Fiction - Misirlou",
+        "audioUrl": "/audio/music/movies/pulp_fiction_misirlou.mp3",
+        "options": [
+            "Pulp Fiction - Misirlou",
+            "Reservoir Dogs - Little Green Bag",
+            "Jackie Brown - Across 110th Street",
+            "Kill Bill - Battle Without Honor or Humanity"
+        ]
+    },
+    {
+        "id": "forrestgump",
+        "answer": "Forrest Gump - Feather Theme",
+        "audioUrl": "/audio/music/movies/forrest_gump.mp3",
+        "options": [
+            "Forrest Gump - Feather Theme",
+            "Cast Away - End Credits",
+            "The Green Mile - Did You Ever Have a Dream?",
+            "Saving Private Ryan - Hymn to the Fallen"
+        ]
+    },
+    {
+        "id": "gladiator_nowwearefree",
+        "answer": "Gladiator - Now We Are Free",
+        "audioUrl": "/audio/music/movies/gladiator_now_we_are_free.mp3",
+        "options": [
+            "Gladiator - Now We Are Free",
+            "Braveheart - For the Love of a Princess",
+            "Troy - Remember Me",
+            "Kingdom of Heaven - Crusaders"
+        ]
+    },
+    {
+        "id": "shawshankredemption",
+        "answer": "The Shawshank Redemption - End Titles",
+        "audioUrl": "/audio/music/movies/shawshank.mp3",
+        "options": [
+            "The Shawshank Redemption - End Titles",
+            "The Green Mile - Sparky's Theme",
+            "The Godfather - Main Theme",
+            "Goodfellas - Layla (Piano Exit)"
+        ]
+    },
+    {
+        "id": "backtothefuture",
+        "answer": "Back to the Future",
+        "audioUrl": "/audio/music/movies/back_to_the_future.mp3",
+        "options": [
+            "Back to the Future",
+            "E.T. the Extra-Terrestrial",
+            "The Breakfast Club - Don't You (Forget About Me)",
+            "Ghostbusters"
+        ]
+    },
+    {
+        "id": "thematrix",
+        "answer": "The Matrix - Main Title",
+        "audioUrl": "/audio/music/movies/the_matrix.mp3",
+        "options": [
+            "The Matrix - Main Title",
+            "Fight Club - Where Is My Mind?",
+            "Donnie Darko - Mad World",
+            "V for Vendetta - Remember, Remember"
+        ]
+    },
+    {
+        "id": "spiritedaway",
+        "answer": "Spirited Away - One Summer's Day",
+        "audioUrl": "/audio/music/movies/spirited_away.mp3",
+        "options": [
+            "Spirited Away - One Summer's Day",
+            "Howl's Moving Castle - Merry-Go-Round of Life",
+            "My Neighbor Totoro - Tonari no Totoro",
+            "Princess Mononoke - The Legend of Ashitaka"
+        ]
+    },
+    {
+        "id": "lalaland",
+        "answer": "La La Land - City of Stars",
+        "audioUrl": "/audio/music/movies/la_la_land.mp3",
+        "options": [
+            "La La Land - City of Stars",
+            "The Greatest Showman - This Is Me",
+            "A Star Is Born - Shallow",
+            "Moulin Rouge! - Come What May"
+        ]
     }
 ]

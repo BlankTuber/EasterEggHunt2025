@@ -100,5 +100,139 @@
         "answer": "SKAM",
         "audioUrl": "/audio/music/tv/skam.mp3",
         "options": ["SKAM", "Young Royals", "Euphoria", "Elite"]
+    },
+    {
+        "id": "thecrown",
+        "answer": "The Crown",
+        "audioUrl": "/audio/music/tv/the_crown.mp3",
+        "options": [
+            "The Crown",
+            "Downton Abbey",
+            "Bridgerton",
+            "Peaky Blinders"
+        ]
+    },
+    {
+        "id": "thewire",
+        "answer": "The Wire",
+        "audioUrl": "/audio/music/tv/the_wire.mp3",
+        "options": [
+            "The Wire",
+            "Oz",
+            "Homicide: Life on the Street",
+            "The Shield"
+        ]
+    },
+    {
+        "id": "sopranos",
+        "answer": "The Sopranos",
+        "audioUrl": "/audio/music/tv/sopranos_theme.mp3",
+        "options": [
+            "The Sopranos",
+            "Breaking Bad",
+            "Better Call Saul",
+            "Boardwalk Empire"
+        ]
+    },
+    {
+        "id": "seinfeld",
+        "answer": "Seinfeld",
+        "audioUrl": "/audio/music/tv/seinfeld_theme.mp3",
+        "options": [
+            "Seinfeld",
+            "Curb Your Enthusiasm",
+            "Arrested Development",
+            "Parks and Recreation"
+        ]
+    },
+    {
+        "id": "mash",
+        "answer": "M*A*S*H",
+        "audioUrl": "/audio/music/tv/mash_theme.mp3",
+        "options": ["M*A*S*H", "Cheers", "Frasier", "Taxi"]
+    },
+    {
+        "id": "xfiles",
+        "answer": "The X-Files",
+        "audioUrl": "/audio/music/tv/xfiles_theme.mp3",
+        "options": ["The X-Files", "Fringe", "Supernatural", "Millennium"]
+    },
+    {
+        "id": "battlestargalactica",
+        "answer": "Battlestar Galactica (2004)",
+        "audioUrl": "/audio/music/tv/battlestar_galactica.mp3",
+        "options": [
+            "Battlestar Galactica (2004)",
+            "Star Trek: The Next Generation",
+            "Babylon 5",
+            "Stargate SG-1"
+        ]
+    },
+    {
+        "id": "doctorwho",
+        "answer": "Doctor Who",
+        "audioUrl": "/audio/music/tv/doctor_who.mp3",
+        "options": [
+            "Doctor Who",
+            "Torchwood",
+            "The Sarah Jane Adventures",
+            "Being Human"
+        ]
+    },
+    {
+        "id": "thegoodplace",
+        "answer": "The Good Place",
+        "audioUrl": "/audio/music/tv/the_good_place.mp3",
+        "options": [
+            "The Good Place",
+            "Parks and Recreation",
+            "Brooklyn Nine-Nine",
+            "Community"
+        ]
+    },
+    {
+        "id": "blackmirror",
+        "answer": "Black Mirror",
+        "audioUrl": "/audio/music/tv/black_mirror.mp3",
+        "options": [
+            "Black Mirror",
+            "Twilight Zone",
+            "Outer Limits",
+            "Electric Dreams"
+        ]
+    },
+    {
+        "id": "bojackhorseman",
+        "answer": "BoJack Horseman",
+        "audioUrl": "/audio/music/tv/bojack_horseman.mp3",
+        "options": [
+            "BoJack Horseman",
+            "Rick and Morty",
+            "Archer",
+            "F is for Family"
+        ]
+    },
+    {
+        "id": "avatar",
+        "answer": "Avatar: The Last Airbender",
+        "audioUrl": "/audio/music/tv/avatar_theme.mp3",
+        "options": [
+            "Avatar: The Last Airbender",
+            "The Legend of Korra",
+            "Steven Universe",
+            "Adventure Time"
+        ]
+    },
+    {
+        "id": "thesopranos",
+        "answer": "The Sopranos",
+        "audioUrl": "/audio/music/tv/the_sopranos.mp3",
+        "options": ["The Sopranos", "The Wire", "Boardwalk Empire", "Mad Men"]
+    },
+    {
+        "id": "peakyblinders",
+        "answer": "Peaky Blinders",
+        "audioUrl": "/audio/music/tv/peaky_blinders.mp3",
+        "options": ["Peaky Blinders", "Gangs of London", "Taboo", "Vikings"]
     }
 ]

@@ -2,7 +2,7 @@
     {
         "id": "mario",
         "answer": "Super Mario Bros.",
-        "audioUrl": "/audio/music/mario_theme.mp3",
+        "audioUrl": "/audio/music/games/mario_theme.mp3",
         "options": [
             "Super Mario Bros.",
             "The Legend of Zelda",
@@ -13,7 +13,7 @@
     {
         "id": "zelda",
         "answer": "The Legend of Zelda",
-        "audioUrl": "/audio/music/zelda_theme.mp3",
+        "audioUrl": "/audio/music/games/zelda_theme.mp3",
         "options": [
             "The Legend of Zelda",
             "Final Fantasy",
@@ -24,13 +24,13 @@
     {
         "id": "tetris",
         "answer": "Tetris",
-        "audioUrl": "/audio/music/tetris_theme.mp3",
+        "audioUrl": "/audio/music/games/tetris_theme.mp3",
         "options": ["Tetris", "Dr. Mario", "Columns", "Puyo Puyo"]
     },
     {
         "id": "sonic",
         "answer": "Sonic the Hedgehog",
-        "audioUrl": "/audio/music/sonic_greenhill.mp3",
+        "audioUrl": "/audio/music/games/sonic_greenhill.mp3",
         "options": [
             "Sonic the Hedgehog",
             "Super Mario Bros.",
@@ -41,25 +41,25 @@
     {
         "id": "pacman",
         "answer": "Pac-Man",
-        "audioUrl": "/audio/music/pacman_theme.mp3",
+        "audioUrl": "/audio/music/games/pacman_theme.mp3",
         "options": ["Pac-Man", "Donkey Kong", "Galaga", "Space Invaders"]
     },
     {
         "id": "pokemon",
         "answer": "Pokémon",
-        "audioUrl": "/audio/music/pokemon_theme.mp3",
+        "audioUrl": "/audio/music/games/pokemon_theme.mp3",
         "options": ["Pokémon", "Digimon", "Final Fantasy", "Animal Crossing"]
     },
     {
         "id": "megaman",
         "answer": "Mega Man",
-        "audioUrl": "/audio/music/megaman_theme.mp3",
+        "audioUrl": "/audio/music/games/megaman_theme.mp3",
         "options": ["Mega Man", "Metroid", "Castlevania", "Contra"]
     },
     {
         "id": "finalfantasy",
         "answer": "Final Fantasy",
-        "audioUrl": "/audio/music/ff_prelude.mp3",
+        "audioUrl": "/audio/music/games/ff_prelude.mp3",
         "options": [
             "Final Fantasy",
             "Dragon Quest",
@@ -70,7 +70,7 @@
     {
         "id": "streetfighter",
         "answer": "Street Fighter II",
-        "audioUrl": "/audio/music/sf2_guile.mp3",
+        "audioUrl": "/audio/music/games/sf2_guile.mp3",
         "options": [
             "Street Fighter II",
             "Mortal Kombat",
@@ -81,7 +81,7 @@
     {
         "id": "donkeykong",
         "answer": "Donkey Kong Country",
-        "audioUrl": "/audio/music/dkc_aquatic.mp3",
+        "audioUrl": "/audio/music/games/dkc_aquatic.mp3",
         "options": [
             "Donkey Kong Country",
             "Super Mario World",
@@ -92,13 +92,153 @@
     {
         "id": "castlevania",
         "answer": "Castlevania",
-        "audioUrl": "/audio/music/castlevania_bloody.mp3",
+        "audioUrl": "/audio/music/games/castlevania_bloody.mp3",
         "options": ["Castlevania", "Mega Man", "Metroid", "Ghosts 'n Goblins"]
     },
     {
         "id": "metroid",
         "answer": "Metroid",
-        "audioUrl": "/audio/music/metroid_brinstar.mp3",
+        "audioUrl": "/audio/music/games/metroid_brinstar.mp3",
         "options": ["Metroid", "Castlevania", "F-Zero", "Star Fox"]
+    },
+    {
+        "id": "supermario64",
+        "answer": "Super Mario 64",
+        "audioUrl": "/audio/music/games/mario64_bobomb.mp3",
+        "options": [
+            "Super Mario 64",
+            "Super Mario Galaxy",
+            "Super Mario Odyssey",
+            "Super Mario World"
+        ]
+    },
+    {
+        "id": "minecraft_nether",
+        "answer": "Minecraft - Nether",
+        "audioUrl": "/audio/music/games/minecraft_nether.mp3",
+        "options": [
+            "Minecraft - Nether",
+            "Minecraft - End",
+            "Terraria - Underground",
+            "Stardew Valley - Winter"
+        ]
+    },
+    {
+        "id": "leagueoflegends",
+        "answer": "League of Legends",
+        "audioUrl": "/audio/music/games/lol_login.mp3",
+        "options": [
+            "League of Legends",
+            "Dota 2",
+            "World of Warcraft",
+            "Final Fantasy XIV"
+        ]
+    },
+    {
+        "id": "overwatch",
+        "answer": "Overwatch",
+        "audioUrl": "/audio/music/games/overwatch_theme.mp3",
+        "options": ["Overwatch", "Valorant", "Counter-Strike", "Apex Legends"]
+    },
+    {
+        "id": "skyrim",
+        "answer": "The Elder Scrolls V: Skyrim",
+        "audioUrl": "/audio/music/games/skyrim_theme.mp3",
+        "options": [
+            "The Elder Scrolls V: Skyrim",
+            "The Witcher 3: Wild Hunt",
+            "Fallout 4",
+            "Grand Theft Auto V"
+        ]
+    },
+    {
+        "id": "portal2",
+        "answer": "Portal 2 - Still Alive",
+        "audioUrl": "/audio/music/games/portal2_still_alive.mp3",
+        "options": [
+            "Portal 2 - Still Alive",
+            "Portal - Want You Gone",
+            "Half-Life 2 - Triage at Dawn",
+            "Left 4 Dead - Midnight Ride"
+        ]
+    },
+    {
+        "id": "undertale",
+        "answer": "Undertale - Megalovania",
+        "audioUrl": "/audio/music/games/undertale_megalovania.mp3",
+        "options": [
+            "Undertale - Megalovania",
+            "Undertale - Hopes and Dreams",
+            "Hollow Knight - Hornet",
+            "Cuphead - Floral Fury"
+        ]
+    },
+    {
+        "id": "stardewvalley",
+        "answer": "Stardew Valley",
+        "audioUrl": "/audio/music/games/stardew_valley_spring.mp3",
+        "options": [
+            "Stardew Valley",
+            "Animal Crossing",
+            "Terraria",
+            "Minecraft"
+        ]
+    },
+    {
+        "id": "godofwar",
+        "answer": "God of War",
+        "audioUrl": "/audio/music/games/god_of_war_theme.mp3",
+        "options": [
+            "God of War",
+            "Horizon Zero Dawn",
+            "The Last of Us",
+            "Ghost of Tsushima"
+        ]
+    },
+    {
+        "id": "reddeadredemption",
+        "answer": "Red Dead Redemption 2",
+        "audioUrl": "/audio/music/games/rdr2_theme.mp3",
+        "options": [
+            "Red Dead Redemption 2",
+            "Grand Theft Auto V",
+            "Cyberpunk 2077",
+            "Assassin's Creed Valhalla"
+        ]
+    },
+    {
+        "id": "bioshock",
+        "answer": "BioShock",
+        "audioUrl": "/audio/music/games/bioshock_welcome.mp3",
+        "options": ["BioShock", "System Shock 2", "Deus Ex", "Prey"]
+    },
+    {
+        "id": "terraria",
+        "answer": "Terraria",
+        "audioUrl": "/audio/music/games/terraria_overworld.mp3",
+        "options": ["Terraria", "Minecraft", "Starbound", "Craft the World"]
+    },
+    {
+        "id": "minecraft",
+        "answer": "Minecraft",
+        "audioUrl": "/audio/music/games/minecraft_calm1.mp3",
+        "options": ["Minecraft", "Terraria", "Stardew Valley", "Roblox"]
+    },
+    {
+        "id": "fortnite",
+        "answer": "Fortnite",
+        "audioUrl": "/audio/music/games/fortnite_main.mp3",
+        "options": ["Fortnite", "Apex Legends", "Call of Duty", "PUBG"]
+    },
+    {
+        "id": "animalcrossing",
+        "answer": "Animal Crossing",
+        "audioUrl": "/audio/music/games/ac_new_horizons.mp3",
+        "options": [
+            "Animal Crossing",
+            "Stardew Valley",
+            "The Sims",
+            "Harvest Moon"
+        ]
     }
 ]

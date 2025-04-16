@@ -7,6 +7,8 @@ let currentAttempt = [];
 let wordsGuessed = 0;
 let currentWord = "";
 let wordList = [];
+let playerName = "";
+let guessedWords = [];
 
 function init() {
     // Load game config from page
@@ -16,6 +18,12 @@ function init() {
     wordLength = gameConfig.wordLength || 5;
     maxAttempts = gameConfig.attempts || 5;
     wordList = gameConfig.words || [];
+
+    // Get player name if available
+    const playerNameInput = document.getElementById("playerName");
+    if (playerNameInput) {
+        playerName = playerNameInput.value.trim();
+    }
 
     // Create game board
     createWordleGrid();
@@ -69,6 +77,7 @@ function createWordleGrid() {
     currentRow = 0;
     currentCol = 0;
     currentAttempt = [];
+    guessedWords = [];
 }
 
 function getNewWord() {
@@ -154,6 +163,9 @@ function submitGuess() {
 
     const guess = currentAttempt.join("");
 
+    // Add to guessed words list
+    guessedWords.push(guess);
+
     // Process guess
     const result = processGuess(guess);
 
@@ -188,6 +200,8 @@ function submitGuess() {
                     gameId: getGameIdFromUrl(),
                     gameType: "wordle",
                     score: wordsGuessed,
+                    playerName: playerName,
+                    words: guessedWords.join(", "),
                 }),
             );
         } else {

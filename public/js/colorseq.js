@@ -6,6 +6,7 @@ let canGuess = false;
 let currentLevel = 1;
 let availableColors = ["red", "blue", "green", "yellow", "purple"];
 let maxLevel = 7;
+let playerName = "";
 
 function init() {
     // Load game config from page
@@ -13,6 +14,12 @@ function init() {
         document.getElementById("gameConfigData").textContent,
     );
     maxLevel = gameConfig.levels || 7;
+
+    // Get player name if available
+    const playerNameInput = document.getElementById("playerName");
+    if (playerNameInput) {
+        playerName = playerNameInput.value.trim();
+    }
 
     if (gameConfig.colors && gameConfig.colors.length > 0) {
         availableColors = gameConfig.colors;
@@ -187,6 +194,9 @@ function guessColor(color) {
                     gameId: getGameIdFromUrl(),
                     gameType: "colorseq",
                     score: currentLevel - 1,
+                    playerName: playerName,
+                    colors: availableColors.join(", "),
+                    maxLevel: maxLevel,
                 }),
             );
         } else {

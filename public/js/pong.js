@@ -6,6 +6,7 @@ let ctx;
 let playerScore = 0;
 let aiScore = 0;
 let gameActive = false;
+let playerName = "";
 
 // Game constants
 const PADDLE_HEIGHT = 100;
@@ -36,6 +37,12 @@ function init() {
         console.error("Could not parse gameConfigData:", e);
         gameConfig = {};
         winScore = 10;
+    }
+
+    // Get player name if available
+    const playerNameInput = document.getElementById("playerName");
+    if (playerNameInput) {
+        playerName = playerNameInput.value.trim();
     }
 
     canvas = document.getElementById("pongCanvas");
@@ -409,7 +416,8 @@ function sendCompletionData() {
         gameId: gameId,
         gameType: "pong",
         score: playerScore,
-        aiScore: aiScore, // Send AI score too, if desired
+        aiScore: aiScore,
+        playerName: playerName,
     };
 
     try {

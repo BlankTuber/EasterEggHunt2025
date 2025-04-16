@@ -4,6 +4,7 @@ let score = 0;
 let tracks = [];
 let usedTracks = new Set();
 let audioPlayer;
+let playerName = "";
 
 function init() {
     // Load game config from page
@@ -12,6 +13,12 @@ function init() {
     );
     tracks = gameConfig.tracks || [];
     audioPlayer = document.getElementById("musicPlayer");
+
+    // Get player name if available
+    const playerNameInput = document.getElementById("playerName");
+    if (playerNameInput) {
+        playerName = playerNameInput.value.trim();
+    }
 
     // Set up play button
     document
@@ -38,6 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
 function getGameIdFromUrl() {
     const pathParts = window.location.pathname.split("/");
     return pathParts[pathParts.length - 1];
+}
+
+function getConfigTypeFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("config") || "unknown";
 }
 
 function getNextTrack() {
@@ -181,6 +193,8 @@ function selectOption(option) {
                     gameId: getGameIdFromUrl(),
                     gameType: "music",
                     score: score,
+                    configType: gameConfig.configType || getConfigTypeFromUrl(),
+                    playerName: playerName,
                 }),
             );
         } else {

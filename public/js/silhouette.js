@@ -3,6 +3,7 @@ let currentImageIndex = 0;
 let score = 0;
 let images = [];
 let usedImages = new Set();
+let playerName = "";
 
 function init() {
     // Load game config from page
@@ -10,6 +11,12 @@ function init() {
         document.getElementById("gameConfigData").textContent,
     );
     images = gameConfig.images || [];
+
+    // Get player name if available
+    const playerNameInput = document.getElementById("playerName");
+    if (playerNameInput) {
+        playerName = playerNameInput.value.trim();
+    }
 
     // Listen for guesses
     document
@@ -109,6 +116,8 @@ function submitGuess(e) {
                     gameId: getGameIdFromUrl(),
                     gameType: "silhouette",
                     score: score,
+                    configType: gameConfig.configType || getConfigTypeFromUrl(),
+                    playerName: playerName,
                 }),
             );
         } else {
@@ -121,6 +130,11 @@ function submitGuess(e) {
         // Show error message
         showFeedback("Feil gjetning. Prøv igjen!", "error");
     }
+}
+
+function getConfigTypeFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("config") || "unknown";
 }
 
 function getGameIdFromUrl() {

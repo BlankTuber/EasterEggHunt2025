@@ -194,8 +194,9 @@ function handleGameCompleted(data) {
         console.log("Completion data sent to server");
     };
 
-    // Get gameId from URL path
+    // Get gameId from URL path and trivia type from config
     const triviaType = gameConfig.triviaType || "common";
+    const configType = gameConfig.type || "commonknowledge";
 
     xhr.send(
         JSON.stringify({
@@ -203,6 +204,9 @@ function handleGameCompleted(data) {
             gameType: "trivia",
             score: 1,
             triviaType: triviaType,
+            configType: configType,
+            playerName: playerName,
+            players: getPlayerNames(),
         }),
     );
 
@@ -261,6 +265,15 @@ function handleGameCompleted(data) {
     setTimeout(() => {
         document.body.removeChild(completionOverlay);
     }, 7000);
+}
+
+function getPlayerNames() {
+    const playerItems = document.querySelectorAll("#playersList li");
+    const names = [];
+    playerItems.forEach((item) => {
+        names.push(item.textContent);
+    });
+    return names.join(", ");
 }
 
 function handleGameReset(data) {

@@ -9,6 +9,7 @@ let currentSequence = [];
 let cellSize = 25;
 let inWaitingList = false;
 let simulationRunning = false;
+let players = [];
 
 function adjustGridForScreen() {
     if (!grid.length) return;
@@ -160,6 +161,9 @@ function handlePlayerJoined(data) {
     const { player, playerCount, requiredPlayers, waitingCount } = data;
     document.getElementById("playerCount").textContent = playerCount;
 
+    // Add player to the internal players list
+    players.push(player);
+
     const playersList = document.getElementById("playersList");
     const playerItem = document.createElement("li");
     playerItem.textContent = player.name;
@@ -179,6 +183,9 @@ function handlePlayerJoined(data) {
 function handlePlayerLeft(data) {
     const { playerId, playerCount } = data;
     document.getElementById("playerCount").textContent = playerCount;
+
+    // Remove player from internal list
+    players = players.filter((p) => p.id !== playerId);
 
     const playerItem = document.querySelector(
         `#playersList li[data-id="${playerId}"]`,
@@ -265,6 +272,20 @@ function handleSequenceResult(data) {
         if (success) {
             document.getElementById("gameStatus").textContent =
                 "Fullført! Venter på neste spill...";
+
+            // Send game completion notification to server
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/complete-game");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(
+                JSON.stringify({
+                    gameId: gameId,
+                    gameType: "sequence",
+                    score: 1,
+                    playerName: playerName,
+                    players: getPlayerNames(),
+                }),
+            );
         } else {
             // Add 1 second delay before resetting to see the end state
             setTimeout(() => {
@@ -277,6 +298,10 @@ function handleSequenceResult(data) {
             }, 1000);
         }
     });
+}
+
+function getPlayerNames() {
+    return players.map((p) => p.name).join(", ");
 }
 
 function handleWaitingList(data) {

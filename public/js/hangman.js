@@ -4,6 +4,7 @@ let guessedLetters = [];
 let phrase = "";
 let displayPhrase = "";
 let maxWrong = 6;
+let playerName = "";
 
 function init() {
     // Load game config from page
@@ -12,6 +13,12 @@ function init() {
     );
     phrase = gameConfig.phrase || "Dette er en norsk eksempelsetning";
     maxWrong = gameConfig.maxWrong || 6;
+
+    // Get player name if available
+    const playerNameInput = document.getElementById("playerName");
+    if (playerNameInput) {
+        playerName = playerNameInput.value.trim();
+    }
 
     // Create keyboard
     createKeyboard();
@@ -171,6 +178,9 @@ function checkGameState() {
                 gameId: getGameIdFromUrl(),
                 gameType: "hangman",
                 score: 1,
+                playerName: playerName,
+                phrase:
+                    phrase.substring(0, 20) + (phrase.length > 20 ? "..." : ""), // Include a preview of the phrase
             }),
         );
     }

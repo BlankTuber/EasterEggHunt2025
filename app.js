@@ -4,6 +4,7 @@ const path = require("path");
 const { Server } = require("socket.io");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
+const fetch = require("node-fetch");
 
 const app = express();
 const server = http.createServer(app);
@@ -17,6 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 const gameRooms = new Map();
+
+// Discord webhook URL
+const DISCORD_WEBHOOK_URL =
+    "https://discord.com/api/webhooks/1362033930781331507/7AkRuH0o1zcHs3EGeGL5kh_KwXwVFAMFv2BFW8Dir0AXw1v1lZFUyGhRMMMZaz-jgrCx";
 
 // Global game IDs
 const GLOBAL_SEQUENCE_ID = "global-sequence";
@@ -135,6 +140,7 @@ app.get("/game/silhouette", (req, res) => {
             requiredPoints: 10,
             winMessage:
                 "Gratulerer! Du klarte å identifisere alle silhuettene!",
+            configType,
         };
     } catch (error) {
         return res.render("error", {
@@ -160,6 +166,7 @@ app.get("/game/music", (req, res) => {
             tracks,
             requiredPoints: 10,
             winMessage: "Gratulerer! Du klarte å identifisere all musikken!",
+            configType,
         };
     } catch (error) {
         return res.render("error", {
@@ -296,9 +303,101 @@ app.get("/game/sequence", (req, res) => {
     });
 });
 
+// Send notification to Discord webhook
+async function sendDiscordNotification(data) {
+    try {
+        if (DISCORD_WEBHOOK_URL === "your_discord_webhook_here") {
+            console.log(
+                "Discord webhook not configured. Skipping notification.",
+            );
+            console.log("Completion data:", data);
+            return;
+        }
+
+        const payload = {
+            content: `**Game Completion**`,
+            embeds: [
+                {
+                    title: "Game Completed",
+                    color: 5814783,
+                    fields: [
+                        {
+                            name: "Game Type",
+                            value: data.gameType,
+                            inline: true,
+                        },
+                        {
+                            name: "Score",
+                            value: data.score.toString(),
+                            inline: true,
+                        },
+                    ],
+                    timestamp: new Date().toISOString(),
+                },
+            ],
+        };
+
+        // Add configuration info if available
+        if (data.configType) {
+            payload.embeds[0].fields.push({
+                name: "Config Type",
+                value: data.configType,
+                inline: true,
+            });
+        }
+
+        // Add specific game details
+        if (data.triviaType) {
+            payload.embeds[0].fields.push({
+                name: "Trivia Type",
+                value: data.triviaType,
+                inline: true,
+            });
+        }
+
+        // Add player name if available
+        if (data.playerName) {
+            payload.embeds[0].fields.push({
+                name: "Player",
+                value: data.playerName,
+                inline: true,
+            });
+        }
+
+        payload.embeds[0].fields.push({
+            name: "Ping",
+            value: "<@382546326786801675>",
+            inline: true,
+        });
+
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            console.error(
+                "Error sending Discord notification:",
+                await response.text(),
+            );
+        }
+    } catch (error) {
+        console.error("Failed to send Discord notification:", error);
+    }
+}
+
 app.post("/complete-game", (req, res) => {
-    const { gameId, gameType, score } = req.body;
-    console.log(`Player completed ${gameType} game with score: ${score}`);
+    const completionData = req.body;
+    console.log(
+        `Player completed ${completionData.gameType} game with score: ${completionData.score}`,
+    );
+
+    // Send notification to Discord
+    sendDiscordNotification(completionData);
+
     res.status(200).json({ success: true });
 });
 

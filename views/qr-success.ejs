@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Aktivitet Fullført!</title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <style>
+            .success-container {
+                text-align: center;
+                padding: 40px 20px;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .success-icon {
+                font-size: 72px;
+                color: #2ecc40;
+                margin-bottom: 20px;
+            }
+
+            .success-title {
+                font-size: 28px;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+            .success-message {
+                font-size: 18px;
+                margin-bottom: 30px;
+                color: #666;
+            }
+
+            .completion-details {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: left;
+            }
+
+            .completion-details p {
+                margin: 8px 0;
+            }
+
+            .home-link {
+                display: inline-block;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="success-container">
+                <div class="success-icon">✅</div>
+                <h1 class="success-title">Aktivitet Fullført!</h1>
+                <p class="success-message">
+                    Gratulerer! Du har fullført denne aktiviteten.
+                </p>
+
+                <div class="completion-details">
+                    <p><strong>Aktivitet:</strong> <%= activity %></p>
+                    <p><strong>Deltager:</strong> <%= player %></p>
+                    <p><strong>Tidspunkt:</strong> <%= timestamp %></p>
+                </div>
+
+                <a href="/" class="btn home-link">Tilbake til hovedsiden</a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -114,6 +114,71 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
+app.get("/qr-complete/:token", (req, res) => {
+    const token = req.params.token;
+    const activityName = req.query.activity || "Unknown Activity";
+    const playerName = req.query.player || "Unknown Player";
+
+    // Validate token (you can implement a more secure validation method)
+    // This simple check ensures the token is at least 8 characters
+    if (!token || token.length < 8) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid token",
+        });
+    }
+
+    console.log(
+        `QR code completion: ${activityName} by ${playerName} with token ${token}`,
+    );
+
+    // Send notification to Discord
+    sendDiscordNotification({
+        gameType: "qr_completion",
+        activity: activityName,
+        score: 1,
+        playerName: playerName,
+        token: token,
+        timestamp: new Date().toISOString(),
+    });
+
+    // Return a success page
+    res.render("qr-success", {
+        activity: activityName,
+        player: playerName,
+        timestamp: new Date().toLocaleString(),
+    });
+});
+
+app.get("/admin/qr-generator", (req, res) => {
+    res.render("qr-generator");
+});
+
+// Add a route to generate a new QR code token
+app.post("/admin/generate-qr", (req, res) => {
+    const activity = req.body.activity || "Unknown Activity";
+    const prefix = req.body.prefix || "";
+
+    // Generate a random token
+    const crypto = require("crypto");
+    const token = crypto.randomBytes(16).toString("hex");
+
+    // Create URL
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const encodedActivity = encodeURIComponent(activity);
+    const qrUrl = `${baseUrl}/qr-complete/${token}?activity=${encodedActivity}`;
+
+    // You could save this to a database if needed
+
+    res.json({
+        success: true,
+        token: token,
+        activity: activity,
+        url: qrUrl,
+        urlWithPlayerExample: `${qrUrl}&player=${prefix}PlayerName`,
+    });
+});
+
 app.get("/game/pong", (req, res) => {
     const gameConfig = {
         winScore: 10,

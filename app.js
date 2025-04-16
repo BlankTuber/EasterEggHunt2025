@@ -110,10 +110,6 @@ function initializeGlobalTriviaGame(gameId, configType, requiredPlayers) {
 initializeGlobalSequenceGame();
 initializeGlobalTriviaGames();
 
-app.get("/", (req, res) => {
-    res.render("index");
-});
-
 app.get("/qr-complete/:token", (req, res) => {
     const token = req.params.token;
     const activityName = req.query.activity || "Unknown Activity";

@@ -4,57 +4,46 @@ let score = 0;
 let images = [];
 let usedImages = new Set();
 let playerName = "";
+let wrongGuessCount = 0;
 
 function init() {
-    // Load game config from page
     gameConfig = JSON.parse(
         document.getElementById("gameConfigData").textContent,
     );
     images = gameConfig.images || [];
 
-    // Get player name if available
     const playerNameInput = document.getElementById("playerName");
     if (playerNameInput) {
         playerName = playerNameInput.value.trim();
     }
 
-    // Listen for guesses
     document
         .getElementById("guessForm")
         .addEventListener("submit", submitGuess);
 
-    // Display first image if available
     if (images.length > 0) {
         displayImage(getNextImage());
     }
 }
 
-// Auto-start the game immediately
 document.addEventListener("DOMContentLoaded", function () {
-    // Show game area immediately
     document.querySelector(".game-area").style.display = "block";
-    // Hide player entry form if present
     const playerForm = document.querySelector(".player-form");
     if (playerForm) playerForm.style.display = "none";
-    // Initialize the game
     init();
 });
 
 function getNextImage() {
-    // If all images have been used, reset
     if (usedImages.size >= images.length) {
         usedImages.clear();
     }
 
-    // Find an unused image
     let availableImages = images.filter((img) => !usedImages.has(img.id));
 
-    // If no unused images, get a random one
     if (availableImages.length === 0) {
         return images[Math.floor(Math.random() * images.length)];
     }
 
-    // Get random available image
     const image =
         availableImages[Math.floor(Math.random() * availableImages.length)];
     usedImages.add(image.id);
@@ -69,12 +58,12 @@ function displayImage(image) {
     imgElement.src = image.imageUrl;
     imgElement.style.filter = "brightness(0)"; // Make image a silhouette
 
-    // Store current image for guessing
     currentImageIndex = images.findIndex((img) => img.id === image.id);
 
-    // Reset guess field
     document.getElementById("guessInput").value = "";
     hideFeedback();
+
+    wrongGuessCount = 0;
 }
 
 function submitGuess(e) {
@@ -85,21 +74,26 @@ function submitGuess(e) {
 
     const currentImage = images[currentImageIndex];
 
-    // Check if guess is correct
-    if (guess.toLowerCase() === currentImage.answer.toLowerCase()) {
-        // Update score
+    const currentAnswer = currentImage.answer.toLowerCase();
+    const userGuess = guess.toLowerCase();
+
+    const answerWords = currentAnswer.split(/\s+/);
+
+    const isCorrect =
+        currentAnswer === userGuess ||
+        answerWords.includes(userGuess) ||
+        (userGuess.length >= 3 && currentAnswer.includes(userGuess)) ||
+        (currentAnswer.length >= 3 && userGuess.includes(currentAnswer));
+
+    if (isCorrect) {
         score++;
         document.getElementById("score").textContent = score;
 
-        // Show success message
         showFeedback("Riktig! Godt jobbet!", "success");
 
-        // Remove filter to show actual image
         document.getElementById("silhouetteImage").style.filter = "none";
 
-        // Check win condition
         if (score >= gameConfig.requiredPoints) {
-            // Send completion data to server
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/complete-game");
             xhr.setRequestHeader("Content-Type", "application/json");
@@ -121,25 +115,42 @@ function submitGuess(e) {
                 }),
             );
         } else {
-            // After 2 seconds, show new image
             setTimeout(() => {
                 displayImage(getNextImage());
             }, 2000);
         }
     } else {
-        // Show error message
-        showFeedback("Feil gjetning. Prøv igjen!", "error");
-    }
-}
+        wrongGuessCount++;
 
-function getConfigTypeFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("config") || "unknown";
+        if (wrongGuessCount >= 3) {
+            score = 0;
+            document.getElementById("score").textContent = score;
+
+            showFeedback(
+                "3 feil gjetninger! Spillet blir nullstilt. Start på nytt!",
+                "error",
+            );
+
+            setTimeout(() => {
+                displayImage(getNextImage());
+            }, 2000);
+        } else {
+            showFeedback(
+                `Feil gjetning. Du har ${3 - wrongGuessCount} forsøk igjen.`,
+                "error",
+            );
+        }
+    }
 }
 
 function getGameIdFromUrl() {
     const pathParts = window.location.pathname.split("/");
     return pathParts[pathParts.length - 1];
+}
+
+function getConfigTypeFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("config") || "unknown";
 }
 
 function showFeedback(message, type) {

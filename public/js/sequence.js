@@ -10,6 +10,7 @@ let cellSize = 25;
 let inWaitingList = false;
 let simulationRunning = false;
 let players = [];
+let animationCompleted = false; // Flag to track animation completion
 
 function adjustGridForScreen() {
     if (!grid.length) return;
@@ -214,6 +215,7 @@ function handleSequenceInit(data) {
     startPosition = newStartPos;
     targetPosition = newTargetPos;
     playerIndex = newPlayerIndex;
+    animationCompleted = false; // Reset animation state on new game
 
     createGrid();
     adjustGridForScreen();
@@ -260,6 +262,7 @@ function handleSequenceResult(data) {
     showFeedback(message, success ? "success" : "error");
 
     simulationRunning = true;
+    animationCompleted = false; // Reset animation state
     document.getElementById("gameStatus").textContent = "Spiller av sekvens...";
     enableControls(false);
 
@@ -268,6 +271,7 @@ function handleSequenceResult(data) {
 
     animateMovements(movements, collisionAt, wallCollisions, () => {
         simulationRunning = false;
+        animationCompleted = true; // Mark animation as completed
 
         if (success) {
             document.getElementById("gameStatus").textContent =
@@ -350,6 +354,15 @@ function handleJoinedFromWaiting(data) {
 }
 
 function handleMovedToWaiting(data) {
+    // If we're still in the middle of an animation, delay this transition
+    if (simulationRunning && !animationCompleted) {
+        console.log(
+            "Delaying transition to waiting list until animation completes",
+        );
+        setTimeout(() => handleMovedToWaiting(data), 1000);
+        return;
+    }
+
     const { message } = data;
     inWaitingList = true;
 
@@ -363,6 +376,12 @@ function handleMovedToWaiting(data) {
 }
 
 function handleRoomReset(data) {
+    // If we're still in the middle of an animation, ignore the reset
+    if (simulationRunning && !animationCompleted) {
+        console.log("Ignoring room reset until animation completes");
+        return;
+    }
+
     const { message, waitingCount } = data;
 
     if (waitingCount !== undefined) {
@@ -375,6 +394,12 @@ function handleRoomReset(data) {
 }
 
 function handleGameReset(data) {
+    // If we're still in the middle of an animation, ignore the reset
+    if (simulationRunning && !animationCompleted) {
+        console.log("Ignoring game reset until animation completes");
+        return;
+    }
+
     if (!inWaitingList) {
         document.getElementById("waitingRoom").style.display = "block";
         document.getElementById("gameArea").style.display = "none";
@@ -649,6 +674,13 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
     }
 
     function nextStep() {
+        // Safety check - if the grid is gone (reset), stop the animation
+        if (!document.querySelector(".sequence-grid")) {
+            console.log("Animation aborted - grid no longer exists");
+            onComplete();
+            return;
+        }
+
         if (step >= maxSteps) {
             onComplete();
             return;

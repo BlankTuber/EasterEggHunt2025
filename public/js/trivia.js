@@ -3,6 +3,8 @@ let playerName = "";
 let gameConfig;
 let myOptions = [];
 let hasAnswered = false;
+let currentStreak = 0;
+let requiredStreak = 7;
 
 document.addEventListener("DOMContentLoaded", function () {
     try {
@@ -25,6 +27,17 @@ document.addEventListener("DOMContentLoaded", function () {
             this.textContent = "Kopier";
         }, 2000);
     });
+
+    // Create streak counter element if it doesn't exist
+    if (!document.getElementById("streakCounter")) {
+        const gameHeader = document.querySelector(".game-header");
+        if (gameHeader) {
+            const streakDisplay = document.createElement("div");
+            streakDisplay.className = "game-score";
+            streakDisplay.innerHTML = `<span>Streak: <span id="streakCount">0</span>/<span id="requiredStreak">${requiredStreak}</span></span>`;
+            gameHeader.appendChild(streakDisplay);
+        }
+    }
 });
 
 function startGame(name) {
@@ -83,7 +96,13 @@ function handlePlayerLeft(data) {
 }
 
 function handleTriviaQuestion(data) {
-    const { question, currentQuestion, totalQuestions } = data;
+    const {
+        question,
+        currentQuestion,
+        totalQuestions,
+        streak,
+        requiredStreak,
+    } = data;
 
     hasAnswered = false;
     myOptions = [];
@@ -92,10 +111,24 @@ function handleTriviaQuestion(data) {
     document.getElementById("questionNumber").textContent = currentQuestion;
     document.getElementById("totalQuestions").textContent = totalQuestions;
 
-    const optionsContainer = document.getElementById("optionsContainer");
-    optionsContainer.innerHTML = "";
+    // Update streak counter if provided
+    if (streak !== undefined) {
+        currentStreak = streak;
+        const streakCount = document.getElementById("streakCount");
+        if (streakCount) {
+            streakCount.textContent = streak;
+        }
+    }
 
-    // Update the instruction text with our collaboration message
+    // Update required streak if provided
+    if (requiredStreak !== undefined) {
+        const requiredStreakElement = document.getElementById("requiredStreak");
+        if (requiredStreakElement) {
+            requiredStreakElement.textContent = requiredStreak;
+        }
+    }
+
+    // Update the instruction text with streak information
     updateInstructionText();
 
     const feedbackMessage = document.getElementById("feedbackMessage");
@@ -108,9 +141,11 @@ function updateInstructionText() {
     const instructionText = document.querySelector(".instruction-text");
     if (instructionText) {
         instructionText.innerHTML = `
-            <strong>Viktig:</strong> Kun én spiller har det riktige svaret blant sine alternativer.
-            Diskuter med de andre spillerne for å finne ut hvem som har det riktige svaret, og la kun denne
-            spilleren klikke på sitt svar. Det første svaret som gis blir gruppens endelige svar!
+            <strong>Viktig:</strong> Svar riktig på 7 spørsmål på rad for å vinne! 
+            Feil svar nullstiller streaken. 
+            Kun én spiller har det riktige svaret blant sine alternativer.
+            Diskuter med de andre spillerne for å finne ut hvem som har det riktige svaret.
+            Nåværende streak: <strong>${currentStreak}</strong> av <strong>${requiredStreak}</strong> riktige.
         `;
         instructionText.style.backgroundColor = "#e8f4fd";
         instructionText.style.color = "#0d6efd";
@@ -175,7 +210,19 @@ function handlePlayerAnswered(data) {
 }
 
 function handleAnswerResult(data) {
-    const { correct, message } = data;
+    const { correct, message, streak } = data;
+
+    // Update streak counter if provided
+    if (streak !== undefined) {
+        currentStreak = streak;
+        const streakCount = document.getElementById("streakCount");
+        if (streakCount) {
+            streakCount.textContent = streak;
+        }
+
+        // Also update the instruction text with current streak
+        updateInstructionText();
+    }
 
     showFeedback(message, correct ? "success" : "error");
 }
@@ -202,7 +249,7 @@ function handleGameCompleted(data) {
         JSON.stringify({
             gameId: getGameIdFromUrl(),
             gameType: "trivia",
-            score: 1,
+            score: requiredStreak, // Use the required streak as score
             triviaType: triviaType,
             configType: configType,
             playerName: playerName,
@@ -261,6 +308,16 @@ function handleGameCompleted(data) {
     // Regular feedback message
     showFeedback(data.message, "success");
 
+    // Reset streak counter for visual feedback
+    currentStreak = 0;
+    const streakCount = document.getElementById("streakCount");
+    if (streakCount) {
+        streakCount.textContent = "0";
+    }
+
+    // Update instruction text one last time
+    updateInstructionText();
+
     // Remove the overlay after some time
     setTimeout(() => {
         document.body.removeChild(completionOverlay);
@@ -279,6 +336,13 @@ function getPlayerNames() {
 function handleGameReset(data) {
     document.getElementById("waitingRoom").style.display = "block";
     document.getElementById("gameArea").style.display = "none";
+
+    // Reset streak counter
+    currentStreak = 0;
+    const streakCount = document.getElementById("streakCount");
+    if (streakCount) {
+        streakCount.textContent = "0";
+    }
 
     showFeedback(data.message, "info");
 }

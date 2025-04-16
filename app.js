@@ -101,6 +101,8 @@ function initializeGlobalTriviaGame(gameId, configType, requiredPlayers) {
         waitingPlayers: [],
         gameActive: false,
         configType,
+        consecutiveCorrect: 0, // Add streak counter
+        requiredStreak: 7, // Number of consecutive correct answers required to win
     });
 }
 
@@ -747,9 +749,10 @@ function startGame(gameId, room) {
 function startTriviaRound(gameId, room) {
     room.playerAnswers.clear();
 
-    if (room.currentQuestion >= room.questions.length) {
+    // Wrapped condition: continue indefinitely until 7 consecutive correct answers
+    if (room.consecutiveCorrect >= room.requiredStreak) {
         io.to(gameId).emit("game-completed", {
-            message: "Gratulerer! Dere fullførte alle spørsmålene!",
+            message: `Gratulerer! Dere fullførte ${room.requiredStreak} spørsmål på rad!`,
         });
 
         // Delay the reset to give players time to see the completion message
@@ -818,6 +821,8 @@ function startTriviaRound(gameId, room) {
         question: question.text,
         currentQuestion: room.currentQuestion + 1,
         totalQuestions: room.questions.length,
+        streak: room.consecutiveCorrect, // Send current streak to clients
+        requiredStreak: room.requiredStreak, // Send required streak to clients
     });
 
     room.players.forEach((player) => {
@@ -839,17 +844,54 @@ function checkTriviaAnswer(gameId, room) {
     const correct = answerId === correctOptionId;
 
     if (correct) {
+        // Increment streak counter
+        room.consecutiveCorrect++;
         room.currentQuestion++;
+
+        // Check if we've reached the required streak
+        if (room.consecutiveCorrect >= room.requiredStreak) {
+            io.to(gameId).emit("answer-result", {
+                correct: true,
+                message: `Riktig svar! Dere har ${room.requiredStreak} riktige på rad og har vunnet!`,
+                streak: room.consecutiveCorrect,
+            });
+
+            // Game completed
+            setTimeout(() => {
+                io.to(gameId).emit("game-completed", {
+                    message: `Gratulerer! Dere har svart riktig på ${room.requiredStreak} spørsmål på rad!`,
+                });
+
+                // Delay the reset to give players time to see the completion message
+                setTimeout(() => {
+                    resetTriviaGame(gameId, room);
+                }, 8000);
+            }, 3000);
+
+            return;
+        }
+
         io.to(gameId).emit("answer-result", {
             correct: true,
-            message: "Riktig svar! Går videre til neste spørsmål...",
+            message: `Riktig svar! Går videre til neste spørsmål... (${room.consecutiveCorrect} riktige på rad)`,
+            streak: room.consecutiveCorrect,
         });
     } else {
+        // Reset streak counter on wrong answer
+        room.consecutiveCorrect = 0;
+        room.currentQuestion++;
+
         io.to(gameId).emit("answer-result", {
             correct: false,
-            message: "Feil svar! Prøv igjen med et nytt spørsmål...",
+            message:
+                "Feil svar! Streaken din er tilbakestilt. Prøv igjen med et nytt spørsmål...",
+            streak: 0,
         });
-        room.currentQuestion++;
+    }
+
+    // If we've gone through all questions, wrap back to the beginning
+    if (room.currentQuestion >= room.questions.length) {
+        room.currentQuestion = 0;
     }
 
     // Go to next question after a delay
@@ -863,6 +905,7 @@ function resetTriviaGame(gameId, room) {
     room.gameActive = false;
     room.currentQuestion = 0;
     room.playerAnswers.clear();
+    room.consecutiveCorrect = 0; // Reset streak counter
 
     // Move current players to waiting list
     for (let i = room.players.length - 1; i >= 0; i--) {

@@ -706,7 +706,7 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
         }
 
         step++;
-        setTimeout(nextStep, 500);
+        setTimeout(nextStep, 250);
     }
 
     setTimeout(nextStep, 1000);

@@ -4,7 +4,7 @@ const path = require("path");
 const { Server } = require("socket.io");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
-const fetch = require("node-fetch");
+const axios = require("axios");
 
 const app = express();
 const server = http.createServer(app);
@@ -27,8 +27,7 @@ const DISCORD_WEBHOOK_URL =
 const GLOBAL_SEQUENCE_ID = "global-sequence";
 const GLOBAL_TRIVIA_COMMON_ID = "global-trivia-common";
 const GLOBAL_TRIVIA_TECH_ID = "global-trivia-tech";
-const GLOBAL_TRIVIA_ADVANCED_ID = "global-trivia-advanced";
-const GLOBAL_TRIVIA_MIXED_ID = "global-trivia-mixed";
+const GLOBAL_TRIVIA_VIDEOGAMES_ID = "global-trivia-videogames";
 
 let sequenceGameActive = false;
 
@@ -62,11 +61,8 @@ function initializeGlobalTriviaGames() {
     // Tech trivia (2 players)
     initializeGlobalTriviaGame(GLOBAL_TRIVIA_TECH_ID, "tech", 2);
 
-    // Advanced trivia (3 players) - using commonknowledge questions but different ID
-    initializeGlobalTriviaGame(GLOBAL_TRIVIA_ADVANCED_ID, "commonknowledge", 3);
-
-    // Mixed trivia (2 players) - using tech questions but different ID
-    initializeGlobalTriviaGame(GLOBAL_TRIVIA_MIXED_ID, "tech", 2);
+    // Videogames trivia (2 players)
+    initializeGlobalTriviaGame(GLOBAL_TRIVIA_VIDEOGAMES_ID, "videogames", 2);
 
     console.log("Global trivia games initialized");
 }
@@ -210,18 +206,34 @@ app.get("/game/wordle", (req, res) => {
 });
 
 app.get("/game/hangman", (req, res) => {
-    const phrases = [
-        "Dette er en norsk setning",
-        "Velkommen til påskeeggjakten",
-        "Programmering er gøy",
-        "Samarbeid er nøkkelen til suksess",
-        "Norge er et vakkert land",
-    ];
+    let phrases = [];
+    try {
+        // Try to load phrases from the config file
+        const phrasesData = fs.readFileSync(
+            path.join(__dirname, "configs/hangman-phrases.json"),
+            "utf8",
+        );
+        phrases = JSON.parse(phrasesData);
+    } catch (error) {
+        console.error("Error loading hangman phrases:", error);
+        // Fallback phrases if file can't be loaded
+        phrases = [
+            "Vann og rør trenger vedlikehold jevnlig",
+            "Rørleggeren fikser slanger og rør i huset ditt",
+            "Vi må sjekke ventiler og rør i kjelleren snart",
+            "Kobber og rør brukes til vannforsyning i bygninger",
+            "Han jobber med stål og rør på den nye fabrikken",
+        ];
+    }
+
+    // Select a random phrase from the list
+    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
 
     const gameConfig = {
-        phrase: phrases[Math.floor(Math.random() * phrases.length)],
+        phrase: phrase,
         maxWrong: 6,
-        winMessage: "Gratulerer! Du løste hangman-utfordringen!",
+        winMessage:
+            'Gratulerer! Du løste hangman-utfordringen! Husk "og rør" for senere ;)',
     };
     res.render("hangman", { gameConfig });
 });
@@ -240,14 +252,9 @@ app.get("/game/trivia", (req, res) => {
             configType = "tech";
             requiredPlayers = 2;
             break;
-        case "advanced":
-            gameId = GLOBAL_TRIVIA_ADVANCED_ID;
-            configType = "commonknowledge";
-            requiredPlayers = 3;
-            break;
-        case "mixed":
-            gameId = GLOBAL_TRIVIA_MIXED_ID;
-            configType = "tech";
+        case "videogames":
+            gameId = GLOBAL_TRIVIA_VIDEOGAMES_ID;
+            configType = "videogames";
             requiredPlayers = 2;
             break;
         case "common":
@@ -303,7 +310,6 @@ app.get("/game/sequence", (req, res) => {
     });
 });
 
-// Send notification to Discord webhook
 async function sendDiscordNotification(data) {
     try {
         if (DISCORD_WEBHOOK_URL === "your_discord_webhook_here") {
@@ -315,7 +321,7 @@ async function sendDiscordNotification(data) {
         }
 
         const payload = {
-            content: `**Game Completion**`,
+            content: `**Game Completion!** (<@382546326786801675>)`,
             embeds: [
                 {
                     title: "Game Completed",
@@ -364,25 +370,11 @@ async function sendDiscordNotification(data) {
             });
         }
 
-        payload.embeds[0].fields.push({
-            name: "Ping",
-            value: "<@382546326786801675>",
-            inline: true,
-        });
+        // Use axios instead of fetch
+        const response = await axios.post(DISCORD_WEBHOOK_URL, payload);
 
-        const response = await fetch(DISCORD_WEBHOOK_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-            console.error(
-                "Error sending Discord notification:",
-                await response.text(),
-            );
+        if (response.status !== 200) {
+            console.error("Error sending Discord notification:", response.data);
         }
     } catch (error) {
         console.error("Failed to send Discord notification:", error);
@@ -417,8 +409,7 @@ io.on("connection", (socket) => {
         } else if (
             gameId === GLOBAL_TRIVIA_COMMON_ID ||
             gameId === GLOBAL_TRIVIA_TECH_ID ||
-            gameId === GLOBAL_TRIVIA_ADVANCED_ID ||
-            gameId === GLOBAL_TRIVIA_MIXED_ID
+            gameId === GLOBAL_TRIVIA_VIDEOGAMES_ID
         ) {
             handleTriviaJoin(socket, room, playerName, gameId);
             return;
@@ -519,8 +510,7 @@ io.on("connection", (socket) => {
                         if (
                             gameId === GLOBAL_TRIVIA_COMMON_ID ||
                             gameId === GLOBAL_TRIVIA_TECH_ID ||
-                            gameId === GLOBAL_TRIVIA_ADVANCED_ID ||
-                            gameId === GLOBAL_TRIVIA_MIXED_ID
+                            gameId === GLOBAL_TRIVIA_VIDEOGAMES_ID
                         ) {
                             checkTriviaWaitingList(room);
                         }
@@ -539,8 +529,7 @@ io.on("connection", (socket) => {
                     gameId !== GLOBAL_SEQUENCE_ID &&
                     gameId !== GLOBAL_TRIVIA_COMMON_ID &&
                     gameId !== GLOBAL_TRIVIA_TECH_ID &&
-                    gameId !== GLOBAL_TRIVIA_ADVANCED_ID &&
-                    gameId !== GLOBAL_TRIVIA_MIXED_ID
+                    gameId !== GLOBAL_TRIVIA_VIDEOGAMES_ID
                 ) {
                     gameRooms.delete(gameId);
                 }
@@ -553,8 +542,7 @@ io.on("connection", (socket) => {
                 (gameId === GLOBAL_SEQUENCE_ID ||
                     gameId === GLOBAL_TRIVIA_COMMON_ID ||
                     gameId === GLOBAL_TRIVIA_TECH_ID ||
-                    gameId === GLOBAL_TRIVIA_ADVANCED_ID ||
-                    gameId === GLOBAL_TRIVIA_MIXED_ID) &&
+                    gameId === GLOBAL_TRIVIA_VIDEOGAMES_ID) &&
                 room.waitingPlayers &&
                 room.waitingPlayers.some((p) => p.id === socket.id)
             ) {

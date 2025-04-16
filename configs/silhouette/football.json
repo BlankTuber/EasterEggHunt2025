@@ -1,0 +1,77 @@
+[
+    {
+        "id": "barcelona",
+        "answer": "FC Barcelona",
+        "imageUrl": "/images/silhouette/football/barcelona.png"
+    },
+    {
+        "id": "realmadrid",
+        "answer": "Real Madrid",
+        "imageUrl": "/images/silhouette/football/realmadrid.png"
+    },
+    {
+        "id": "juventus",
+        "answer": "Juventus",
+        "imageUrl": "/images/silhouette/football/juventus.png"
+    },
+    {
+        "id": "bayern",
+        "answer": "Bayern München",
+        "imageUrl": "/images/silhouette/football/bayern.png"
+    },
+    {
+        "id": "liverpool",
+        "answer": "Liverpool",
+        "imageUrl": "/images/silhouette/football/liverpool.png"
+    },
+    {
+        "id": "manchester",
+        "answer": "Manchester United",
+        "imageUrl": "/images/silhouette/football/manchester.png"
+    },
+    {
+        "id": "chelsea",
+        "answer": "Chelsea",
+        "imageUrl": "/images/silhouette/football/chelsea.png"
+    },
+    {
+        "id": "arsenal",
+        "answer": "Arsenal",
+        "imageUrl": "/images/silhouette/football/arsenal.png"
+    },
+    {
+        "id": "psg",
+        "answer": "Paris Saint-Germain",
+        "imageUrl": "/images/silhouette/football/psg.png"
+    },
+    {
+        "id": "city",
+        "answer": "Manchester City",
+        "imageUrl": "/images/silhouette/football/city.png"
+    },
+    {
+        "id": "acmilan",
+        "answer": "AC Milan",
+        "imageUrl": "/images/silhouette/football/acmilan.png"
+    },
+    {
+        "id": "atletico",
+        "answer": "Atlético Madrid",
+        "imageUrl": "/images/silhouette/football/atletico.png"
+    },
+    {
+        "id": "dortmund",
+        "answer": "Borussia Dortmund",
+        "imageUrl": "/images/silhouette/football/dortmund.png"
+    },
+    {
+        "id": "inter",
+        "answer": "Inter Milan",
+        "imageUrl": "/images/silhouette/football/inter.png"
+    },
+    {
+        "id": "rosenborg",
+        "answer": "Rosenborg BK",
+        "imageUrl": "/images/silhouette/football/rosenborg.png"
+    }
+]

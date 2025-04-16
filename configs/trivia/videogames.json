@@ -1,0 +1,214 @@
+[
+    {
+        "text": "Hvilket spill introduserte karakteren Mario for første gang?",
+        "options": [
+            { "id": "a1", "text": "Super Mario Bros.", "correct": false },
+            { "id": "a2", "text": "Donkey Kong", "correct": true },
+            { "id": "a3", "text": "Mario Bros.", "correct": false },
+            { "id": "a4", "text": "Super Mario World", "correct": false },
+            { "id": "a5", "text": "Mario Kart", "correct": false },
+            { "id": "a6", "text": "Mario Tennis", "correct": false },
+            { "id": "a7", "text": "Dr. Mario", "correct": false },
+            { "id": "a8", "text": "Mario Party", "correct": false },
+            { "id": "a9", "text": "Mario Golf", "correct": false },
+            { "id": "a10", "text": "Paper Mario", "correct": false },
+            { "id": "a11", "text": "Luigi's Mansion", "correct": false },
+            { "id": "a12", "text": "Super Mario 64", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket selskap utviklet Minecraft?",
+        "options": [
+            { "id": "b1", "text": "Blizzard", "correct": false },
+            { "id": "b2", "text": "Mojang", "correct": true },
+            { "id": "b3", "text": "Ubisoft", "correct": false },
+            { "id": "b4", "text": "Epic Games", "correct": false },
+            { "id": "b5", "text": "Valve", "correct": false },
+            { "id": "b6", "text": "EA", "correct": false },
+            { "id": "b7", "text": "Activision", "correct": false },
+            { "id": "b8", "text": "Bethesda", "correct": false },
+            { "id": "b9", "text": "Rockstar Games", "correct": false },
+            { "id": "b10", "text": "Nintendo", "correct": false },
+            { "id": "b11", "text": "Sony", "correct": false },
+            { "id": "b12", "text": "CD Projekt Red", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvem er hovedpersonen i The Legend of Zelda-spillene?",
+        "options": [
+            { "id": "c1", "text": "Zelda", "correct": false },
+            { "id": "c2", "text": "Link", "correct": true },
+            { "id": "c3", "text": "Ganon", "correct": false },
+            { "id": "c4", "text": "Impa", "correct": false },
+            { "id": "c5", "text": "Navi", "correct": false },
+            { "id": "c6", "text": "Midna", "correct": false },
+            { "id": "c7", "text": "Sheik", "correct": false },
+            { "id": "c8", "text": "Tingle", "correct": false },
+            { "id": "c9", "text": "Groose", "correct": false },
+            { "id": "c10", "text": "Zant", "correct": false },
+            { "id": "c11", "text": "Vaati", "correct": false },
+            { "id": "c12", "text": "Sidon", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket år ble PlayStation 2 lansert?",
+        "options": [
+            { "id": "d1", "text": "1998", "correct": false },
+            { "id": "d2", "text": "2000", "correct": true },
+            { "id": "d3", "text": "2001", "correct": false },
+            { "id": "d4", "text": "2002", "correct": false },
+            { "id": "d5", "text": "1999", "correct": false },
+            { "id": "d6", "text": "2003", "correct": false },
+            { "id": "d7", "text": "1997", "correct": false },
+            { "id": "d8", "text": "2004", "correct": false },
+            { "id": "d9", "text": "1996", "correct": false },
+            { "id": "d10", "text": "2005", "correct": false },
+            { "id": "d11", "text": "1995", "correct": false },
+            { "id": "d12", "text": "2006", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket spill introduserte Battle Royale-sjangeren til mainstream gaming?",
+        "options": [
+            { "id": "e1", "text": "Apex Legends", "correct": false },
+            {
+                "id": "e2",
+                "text": "PlayerUnknown's Battlegrounds (PUBG)",
+                "correct": true
+            },
+            { "id": "e3", "text": "Fortnite", "correct": false },
+            { "id": "e4", "text": "H1Z1", "correct": false },
+            { "id": "e5", "text": "Call of Duty: Warzone", "correct": false },
+            { "id": "e6", "text": "Counter-Strike", "correct": false },
+            { "id": "e7", "text": "Minecraft Hunger Games", "correct": false },
+            { "id": "e8", "text": "DayZ", "correct": false },
+            { "id": "e9", "text": "ARK: Survival Evolved", "correct": false },
+            { "id": "e10", "text": "Rust", "correct": false },
+            { "id": "e11", "text": "Arma 3", "correct": false },
+            { "id": "e12", "text": "Valorant", "correct": false }
+        ]
+    },
+    {
+        "text": "Hva heter hovedpersonen i Witcher-spillene?",
+        "options": [
+            { "id": "f1", "text": "Gandalf", "correct": false },
+            { "id": "f2", "text": "Geralt of Rivia", "correct": true },
+            { "id": "f3", "text": "Gollum", "correct": false },
+            { "id": "f4", "text": "Gimli", "correct": false },
+            { "id": "f5", "text": "Gaunter O'Dimm", "correct": false },
+            { "id": "f6", "text": "Garrus", "correct": false },
+            { "id": "f7", "text": "Gordon Freeman", "correct": false },
+            { "id": "f8", "text": "Garen", "correct": false },
+            { "id": "f9", "text": "Godric", "correct": false },
+            { "id": "f10", "text": "Gideon", "correct": false },
+            { "id": "f11", "text": "Gabriel", "correct": false },
+            { "id": "f12", "text": "Gehrman", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket norsk spillselskap står bak 'Conan Exiles'?",
+        "options": [
+            { "id": "g1", "text": "Krillbite Studio", "correct": false },
+            { "id": "g2", "text": "Funcom", "correct": true },
+            { "id": "g3", "text": "Dirtybit", "correct": false },
+            { "id": "g4", "text": "Red Thread Games", "correct": false },
+            { "id": "g5", "text": "Snowcastle Games", "correct": false },
+            { "id": "g6", "text": "Hyper Games", "correct": false },
+            { "id": "g7", "text": "Rain Games", "correct": false },
+            { "id": "g8", "text": "Artplant", "correct": false },
+            { "id": "g9", "text": "Antagonist", "correct": false },
+            { "id": "g10", "text": "Rock Pocket Games", "correct": false },
+            { "id": "g11", "text": "Megapop", "correct": false },
+            { "id": "g12", "text": "Agens", "correct": false }
+        ]
+    },
+    {
+        "text": "I hvilket spill er 'Gordon Freeman' hovedpersonen?",
+        "options": [
+            { "id": "h1", "text": "Call of Duty", "correct": false },
+            { "id": "h2", "text": "Half-Life", "correct": true },
+            { "id": "h3", "text": "DOOM", "correct": false },
+            { "id": "h4", "text": "BioShock", "correct": false },
+            { "id": "h5", "text": "Quake", "correct": false },
+            { "id": "h6", "text": "Portal", "correct": false },
+            { "id": "h7", "text": "Team Fortress", "correct": false },
+            { "id": "h8", "text": "Crysis", "correct": false },
+            { "id": "h9", "text": "Battlefield", "correct": false },
+            { "id": "h10", "text": "Titanfall", "correct": false },
+            { "id": "h11", "text": "Apex Legends", "correct": false },
+            { "id": "h12", "text": "Left 4 Dead", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilken av disse spillene ble utgitt først?",
+        "options": [
+            { "id": "i1", "text": "The Last of Us", "correct": false },
+            { "id": "i2", "text": "Tetris", "correct": true },
+            { "id": "i3", "text": "Grand Theft Auto V", "correct": false },
+            { "id": "i4", "text": "World of Warcraft", "correct": false },
+            { "id": "i5", "text": "Counter-Strike", "correct": false },
+            { "id": "i6", "text": "Minecraft", "correct": false },
+            { "id": "i7", "text": "Call of Duty", "correct": false },
+            { "id": "i8", "text": "League of Legends", "correct": false },
+            { "id": "i9", "text": "DOTA 2", "correct": false },
+            { "id": "i10", "text": "Fortnite", "correct": false },
+            { "id": "i11", "text": "Red Dead Redemption", "correct": false },
+            { "id": "i12", "text": "Skyrim", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket spill ble kåret til 'Game of the Year' i 2022?",
+        "options": [
+            { "id": "j1", "text": "God of War Ragnarök", "correct": false },
+            { "id": "j2", "text": "Elden Ring", "correct": true },
+            { "id": "j3", "text": "Horizon Forbidden West", "correct": false },
+            { "id": "j4", "text": "Stray", "correct": false },
+            {
+                "id": "j5",
+                "text": "Call of Duty: Modern Warfare II",
+                "correct": false
+            },
+            { "id": "j6", "text": "A Plague Tale: Requiem", "correct": false },
+            { "id": "j7", "text": "Sifu", "correct": false },
+            { "id": "j8", "text": "Xenoblade Chronicles 3", "correct": false },
+            { "id": "j9", "text": "Pokémon Legends: Arceus", "correct": false },
+            { "id": "j10", "text": "The Callisto Protocol", "correct": false },
+            { "id": "j11", "text": "Dying Light 2", "correct": false },
+            { "id": "j12", "text": "Tunic", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket selskap står bak spillkonsollen Xbox?",
+        "options": [
+            { "id": "k1", "text": "Sony", "correct": false },
+            { "id": "k2", "text": "Microsoft", "correct": true },
+            { "id": "k3", "text": "Nintendo", "correct": false },
+            { "id": "k4", "text": "Sega", "correct": false },
+            { "id": "k5", "text": "Valve", "correct": false },
+            { "id": "k6", "text": "Atari", "correct": false },
+            { "id": "k7", "text": "Epic Games", "correct": false },
+            { "id": "k8", "text": "Electronic Arts", "correct": false },
+            { "id": "k9", "text": "Ubisoft", "correct": false },
+            { "id": "k10", "text": "Activision Blizzard", "correct": false },
+            { "id": "k11", "text": "Google", "correct": false },
+            { "id": "k12", "text": "Amazon", "correct": false }
+        ]
+    },
+    {
+        "text": "Hvilket spill introduserte karakteren Solid Snake?",
+        "options": [
+            { "id": "l1", "text": "Final Fantasy VII", "correct": false },
+            { "id": "l2", "text": "Metal Gear", "correct": true },
+            { "id": "l3", "text": "Resident Evil", "correct": false },
+            { "id": "l4", "text": "Silent Hill", "correct": false },
+            { "id": "l5", "text": "Splinter Cell", "correct": false },
+            { "id": "l6", "text": "Hitman", "correct": false },
+            { "id": "l7", "text": "Deus Ex", "correct": false },
+            { "id": "l8", "text": "Max Payne", "correct": false },
+            { "id": "l9", "text": "Call of Duty", "correct": false },
+            { "id": "l10", "text": "BioShock", "correct": false },
+            { "id": "l11", "text": "Devil May Cry", "correct": false },
+            { "id": "l12", "text": "Ghost Recon", "correct": false }
+        ]
+    }
+]

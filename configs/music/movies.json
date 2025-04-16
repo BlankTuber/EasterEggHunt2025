@@ -1,0 +1,124 @@
+[
+    {
+        "id": "frozen",
+        "answer": "Frozen - Let It Go",
+        "audioUrl": "/audio/music/movies/frozen_let_it_go.mp3",
+        "options": [
+            "Frozen - Let It Go",
+            "Moana - How Far I'll Go",
+            "Tangled - When Will My Life Begin",
+            "The Little Mermaid - Part of Your World"
+        ]
+    },
+    {
+        "id": "lionking",
+        "answer": "The Lion King - Circle of Life",
+        "audioUrl": "/audio/music/movies/lion_king_circle.mp3",
+        "options": [
+            "The Lion King - Circle of Life",
+            "The Lion King - Hakuna Matata",
+            "The Jungle Book - Bare Necessities",
+            "Tarzan - You'll Be in My Heart"
+        ]
+    },
+    {
+        "id": "pirates",
+        "answer": "Pirates of the Caribbean",
+        "audioUrl": "/audio/music/movies/pirates.mp3",
+        "options": [
+            "Pirates of the Caribbean",
+            "The Lord of the Rings",
+            "Indiana Jones",
+            "Star Wars"
+        ]
+    },
+    {
+        "id": "hp",
+        "answer": "Harry Potter",
+        "audioUrl": "/audio/music/movies/harry_potter.mp3",
+        "options": [
+            "Harry Potter",
+            "Fantastic Beasts",
+            "Chronicles of Narnia",
+            "Percy Jackson"
+        ]
+    },
+    {
+        "id": "moana",
+        "answer": "Moana - How Far I'll Go",
+        "audioUrl": "/audio/music/movies/moana.mp3",
+        "options": [
+            "Moana - How Far I'll Go",
+            "Brave - Touch the Sky",
+            "Mulan - Reflection",
+            "Pocahontas - Colors of the Wind"
+        ]
+    },
+    {
+        "id": "avengers",
+        "answer": "The Avengers",
+        "audioUrl": "/audio/music/movies/avengers.mp3",
+        "options": [
+            "The Avengers",
+            "Justice League",
+            "Wonder Woman",
+            "Captain America"
+        ]
+    },
+    {
+        "id": "jurassic",
+        "answer": "Jurassic Park",
+        "audioUrl": "/audio/music/movies/jurassic_park.mp3",
+        "options": ["Jurassic Park", "Godzilla", "King Kong", "The Lost World"]
+    },
+    {
+        "id": "interstellar",
+        "answer": "Interstellar",
+        "audioUrl": "/audio/music/movies/interstellar.mp3",
+        "options": ["Interstellar", "Gravity", "The Martian", "Inception"]
+    },
+    {
+        "id": "beauty",
+        "answer": "Beauty and the Beast",
+        "audioUrl": "/audio/music/movies/beauty_beast.mp3",
+        "options": [
+            "Beauty and the Beast",
+            "Cinderella",
+            "Sleeping Beauty",
+            "Aladdin"
+        ]
+    },
+    {
+        "id": "coco",
+        "answer": "Coco - Remember Me",
+        "audioUrl": "/audio/music/movies/coco.mp3",
+        "options": [
+            "Coco - Remember Me",
+            "Encanto - We Don't Talk About Bruno",
+            "Soul - It's All Right",
+            "Up - Married Life"
+        ]
+    },
+    {
+        "id": "starwars",
+        "answer": "Star Wars",
+        "audioUrl": "/audio/music/movies/star_wars.mp3",
+        "options": [
+            "Star Wars",
+            "Star Trek",
+            "Battlestar Galactica",
+            "Guardians of the Galaxy"
+        ]
+    },
+    {
+        "id": "titanic",
+        "answer": "Titanic - My Heart Will Go On",
+        "audioUrl": "/audio/music/movies/titanic.mp3",
+        "options": [
+            "Titanic - My Heart Will Go On",
+            "The Notebook",
+            "Moulin Rouge",
+            "Romeo + Juliet"
+        ]
+    }
+]

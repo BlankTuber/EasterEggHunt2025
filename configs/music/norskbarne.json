@@ -1,0 +1,129 @@
+[
+    {
+        "id": "blime",
+        "answer": "BlimE!",
+        "audioUrl": "/audio/music/norskbarne/blime.mp3",
+        "options": ["BlimE!", "Fantorangen", "Kaptein Sabeltann", "MGP Jr"]
+    },
+    {
+        "id": "kaptein",
+        "answer": "Kaptein Sabeltann - Sjørøverne kommer",
+        "audioUrl": "/audio/music/norskbarne/kaptein_sabeltann.mp3",
+        "options": [
+            "Kaptein Sabeltann - Sjørøverne kommer",
+            "Kaptein Sabeltann - Kongen på havet",
+            "Knutsen & Ludvigsen - Grevling i taket",
+            "Kurt blir grusom"
+        ]
+    },
+    {
+        "id": "mgpjr2004",
+        "answer": "MGP Jr 2004 - Shake Shake Shake",
+        "audioUrl": "/audio/music/norskbarne/shake_shake_shake.mp3",
+        "options": [
+            "MGP Jr 2004 - Shake Shake Shake",
+            "MGP Jr 2005 - Sommer og skolefri",
+            "MGP Jr 2003 - Bæstevænna",
+            "MGP Jr 2006 - Det er helg"
+        ]
+    },
+    {
+        "id": "mgpjr2010",
+        "answer": "MGP Jr 2010 - Superkul",
+        "audioUrl": "/audio/music/norskbarne/superkul.mp3",
+        "options": [
+            "MGP Jr 2010 - Superkul",
+            "MGP Jr 2009 - Til månen",
+            "MGP Jr 2011 - Respekt",
+            "MGP Jr 2008 - En venn som meg"
+        ]
+    },
+    {
+        "id": "fantorangen",
+        "answer": "Fantorangen - Fantorangensangen",
+        "audioUrl": "/audio/music/norskbarne/fantorangen.mp3",
+        "options": [
+            "Fantorangen - Fantorangensangen",
+            "Thorbjørn Egner - Dyrene i Hakkebakkeskogen",
+            "Knutsen & Ludvigsen - Indiaenerene",
+            "Barnas Supershow - Helt perfekt"
+        ]
+    },
+    {
+        "id": "brillebjorn",
+        "answer": "Brillebjørn - Brillebjørnsangen",
+        "audioUrl": "/audio/music/norskbarne/brillebjorn.mp3",
+        "options": [
+            "Brillebjørn - Brillebjørnsangen",
+            "Karsten og Petra - Vennskap",
+            "Blåfjell - Blåfjellsangen",
+            "Jul i Blåfjell - Vinterdag"
+        ]
+    },
+    {
+        "id": "barneshow",
+        "answer": "Barnas Supershow - Helt perfekt",
+        "audioUrl": "/audio/music/norskbarne/barneshow.mp3",
+        "options": [
+            "Barnas Supershow - Helt perfekt",
+            "Barnas Supershow - Kan du gå i bakken",
+            "NRK Super - Det er gøy å være super",
+            "Linus i Svingen - Venner for alltid"
+        ]
+    },
+    {
+        "id": "blaafjell",
+        "answer": "Jul i Blåfjell - Blåfjellsangen",
+        "audioUrl": "/audio/music/norskbarne/blaafjell.mp3",
+        "options": [
+            "Jul i Blåfjell - Blåfjellsangen",
+            "Jul i Blåfjell - Nissene i bingen",
+            "Jul på Månetoppen - Tusmørke",
+            "Putti Plutti Pott - På leting etter julenissen"
+        ]
+    },
+    {
+        "id": "mgpjr2006",
+        "answer": "MGP Jr 2006 - Det er helg",
+        "audioUrl": "/audio/music/norskbarne/det_er_helg.mp3",
+        "options": [
+            "MGP Jr 2006 - Det er helg",
+            "MGP Jr 2007 - Bæstevænner",
+            "MGP Jr 2005 - Karusell",
+            "MGP Jr 2008 - Bolla og Lillebror"
+        ]
+    },
+    {
+        "id": "reddbart",
+        "answer": "Redd Barna - Stopp! Ikke mobb!",
+        "audioUrl": "/audio/music/norskbarne/stopp_ikke_mobb.mp3",
+        "options": [
+            "Redd Barna - Stopp! Ikke mobb!",
+            "NRK Super - Vennskap",
+            "BlimE! - Mot til å være",
+            "MGP Jr 2011 - Respekt"
+        ]
+    },
+    {
+        "id": "knutsen",
+        "answer": "Knutsen & Ludvigsen - Grevling i taket",
+        "audioUrl": "/audio/music/norskbarne/grevling_i_taket.mp3",
+        "options": [
+            "Knutsen & Ludvigsen - Grevling i taket",
+            "Knutsen & Ludvigsen - Indiaenerene",
+            "Alf Prøysen - Musevisa",
+            "Thorbjørn Egner - Annerledes enn alle andre"
+        ]
+    },
+    {
+        "id": "lillebjorn",
+        "answer": "Lillebjørn Nilsen - Ballongvisa",
+        "audioUrl": "/audio/music/norskbarne/ballongvisa.mp3",
+        "options": [
+            "Lillebjørn Nilsen - Ballongvisa",
+            "Lillebjørn Nilsen - Barn av regnbuen",
+            "Lillebjørn Nilsen - God natt Oslo",
+            "Odd Nordstoga - Kveldssong for deg og meg"
+        ]
+    }
+]

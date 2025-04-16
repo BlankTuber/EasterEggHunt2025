@@ -1,0 +1,77 @@
+[
+    {
+        "id": "starbucks",
+        "answer": "Starbucks",
+        "imageUrl": "/images/silhouette/brands/starbucks.png"
+    },
+    {
+        "id": "mcdonalds",
+        "answer": "McDonald's",
+        "imageUrl": "/images/silhouette/brands/mcdonalds.png"
+    },
+    {
+        "id": "apple",
+        "answer": "Apple",
+        "imageUrl": "/images/silhouette/brands/apple.png"
+    },
+    {
+        "id": "nike",
+        "answer": "Nike",
+        "imageUrl": "/images/silhouette/brands/nike.png"
+    },
+    {
+        "id": "adidas",
+        "answer": "Adidas",
+        "imageUrl": "/images/silhouette/brands/adidas.png"
+    },
+    {
+        "id": "twitter",
+        "answer": "Twitter",
+        "imageUrl": "/images/silhouette/brands/twitter.png"
+    },
+    {
+        "id": "microsoft",
+        "answer": "Microsoft",
+        "imageUrl": "/images/silhouette/brands/microsoft.png"
+    },
+    {
+        "id": "amazon",
+        "answer": "Amazon",
+        "imageUrl": "/images/silhouette/brands/amazon.png"
+    },
+    {
+        "id": "netflix",
+        "answer": "Netflix",
+        "imageUrl": "/images/silhouette/brands/netflix.png"
+    },
+    {
+        "id": "wendys",
+        "answer": "Wendy's",
+        "imageUrl": "/images/silhouette/brands/wendys.png"
+    },
+    {
+        "id": "shell",
+        "answer": "Shell",
+        "imageUrl": "/images/silhouette/brands/shell.png"
+    },
+    {
+        "id": "pepsi",
+        "answer": "Pepsi",
+        "imageUrl": "/images/silhouette/brands/pepsi.png"
+    },
+    {
+        "id": "toyota",
+        "answer": "Toyota",
+        "imageUrl": "/images/silhouette/brands/toyota.png"
+    },
+    {
+        "id": "mercedes",
+        "answer": "Mercedes-Benz",
+        "imageUrl": "/images/silhouette/brands/mercedes.png"
+    },
+    {
+        "id": "puma",
+        "answer": "Puma",
+        "imageUrl": "/images/silhouette/brands/puma.png"
+    }
+]

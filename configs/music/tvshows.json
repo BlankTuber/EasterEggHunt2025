@@ -1,0 +1,104 @@
+[
+    {
+        "id": "friends",
+        "answer": "Friends",
+        "audioUrl": "/audio/music/tv/friends_theme.mp3",
+        "options": [
+            "Friends",
+            "How I Met Your Mother",
+            "The Big Bang Theory",
+            "Seinfeld"
+        ]
+    },
+    {
+        "id": "gameofthrones",
+        "answer": "Game of Thrones",
+        "audioUrl": "/audio/music/tv/got_theme.mp3",
+        "options": [
+            "Game of Thrones",
+            "The Witcher",
+            "Lord of the Rings",
+            "House of the Dragon"
+        ]
+    },
+    {
+        "id": "strangerthings",
+        "answer": "Stranger Things",
+        "audioUrl": "/audio/music/tv/stranger_things.mp3",
+        "options": ["Stranger Things", "Dark", "Black Mirror", "The X-Files"]
+    },
+    {
+        "id": "breakingbad",
+        "answer": "Breaking Bad",
+        "audioUrl": "/audio/music/tv/breaking_bad.mp3",
+        "options": ["Breaking Bad", "Better Call Saul", "Ozark", "Narcos"]
+    },
+    {
+        "id": "simpsons",
+        "answer": "The Simpsons",
+        "audioUrl": "/audio/music/tv/simpsons.mp3",
+        "options": ["The Simpsons", "Family Guy", "South Park", "American Dad"]
+    },
+    {
+        "id": "office",
+        "answer": "The Office",
+        "audioUrl": "/audio/music/tv/office.mp3",
+        "options": [
+            "The Office",
+            "Parks and Recreation",
+            "Brooklyn Nine-Nine",
+            "30 Rock"
+        ]
+    },
+    {
+        "id": "westworld",
+        "answer": "Westworld",
+        "audioUrl": "/audio/music/tv/westworld.mp3",
+        "options": [
+            "Westworld",
+            "The Mandalorian",
+            "Succession",
+            "True Detective"
+        ]
+    },
+    {
+        "id": "twin_peaks",
+        "answer": "Twin Peaks",
+        "audioUrl": "/audio/music/tv/twin_peaks.mp3",
+        "options": [
+            "Twin Peaks",
+            "The Twilight Zone",
+            "Northern Exposure",
+            "Fargo"
+        ]
+    },
+    {
+        "id": "sherlock",
+        "answer": "Sherlock",
+        "audioUrl": "/audio/music/tv/sherlock.mp3",
+        "options": ["Sherlock", "Luther", "Elementary", "Broadchurch"]
+    },
+    {
+        "id": "mandalorian",
+        "answer": "The Mandalorian",
+        "audioUrl": "/audio/music/tv/mandalorian.mp3",
+        "options": [
+            "The Mandalorian",
+            "Star Wars: Andor",
+            "The Book of Boba Fett",
+            "Obi-Wan Kenobi"
+        ]
+    },
+    {
+        "id": "succession",
+        "answer": "Succession",
+        "audioUrl": "/audio/music/tv/succession.mp3",
+        "options": ["Succession", "Billions", "Industry", "Suits"]
+    },
+    {
+        "id": "skam",
+        "answer": "SKAM",
+        "audioUrl": "/audio/music/tv/skam.mp3",
+        "options": ["SKAM", "Young Royals", "Euphoria", "Elite"]
+    }
+]

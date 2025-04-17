@@ -24,7 +24,7 @@ let ballX;
 let ballY;
 let ballSpeedX;
 let ballSpeedY;
-let winScore = 1;
+let winScore = 10;
 
 // --- Initialization ---
 function init() {

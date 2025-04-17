@@ -86,19 +86,24 @@
 }
 
 .sequence-cell.trail-0 {
-    background-color: rgba(255, 65, 54, 0.2);
+    background-color: rgba(255, 65, 54, 0.4);
+    border: 1px dashed #ff4136;
 }
 .sequence-cell.trail-1 {
-    background-color: rgba(0, 116, 217, 0.2);
+    background-color: rgba(0, 116, 217, 0.4);
+    border: 1px dashed #0074d9;
 }
 .sequence-cell.trail-2 {
-    background-color: rgba(46, 204, 64, 0.2);
+    background-color: rgba(46, 204, 64, 0.4);
+    border: 1px dashed #2ecc40;
 }
 .sequence-cell.trail-3 {
-    background-color: rgba(255, 220, 0, 0.2);
+    background-color: rgba(255, 220, 0, 0.4);
+    border: 1px dashed #ffdc00;
 }
 .sequence-cell.trail-4 {
-    background-color: rgba(177, 13, 201, 0.2);
+    background-color: rgba(177, 13, 201, 0.4);
+    border: 1px dashed #b10dc9;
 }
 
 .game-container {
@@ -310,6 +315,9 @@
 
 .wall-collision {
     animation: wallCollision 0.5s 2;
+    background-color: rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 8px 2px orangered;
+    border: 2px solid white;
 }
 
 @keyframes wallCollision {

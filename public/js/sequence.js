@@ -10,7 +10,7 @@ let cellSize = 25;
 let inWaitingList = false;
 let simulationRunning = false;
 let players = [];
-let animationCompleted = false; // Flag to track animation completion
+let animationCompleted = false;
 
 function adjustGridForScreen() {
     if (!grid.length) return;
@@ -71,9 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Add keyboard controls
     document.addEventListener("keydown", function (event) {
-        // Only process if game area is visible and controls are enabled
         if (
             document.getElementById("gameArea").style.display === "none" ||
             document.querySelector(".direction-btn").disabled
@@ -81,7 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Prevent default behavior for arrow keys to avoid page scrolling
         if (
             ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
                 event.key,
@@ -103,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
             case "ArrowRight":
                 addMove("right");
                 break;
-            case " ": // Space bar
+            case " ":
                 addMove("stop");
                 break;
         }
@@ -162,7 +159,6 @@ function handlePlayerJoined(data) {
     const { player, playerCount, requiredPlayers, waitingCount } = data;
     document.getElementById("playerCount").textContent = playerCount;
 
-    // Add player to the internal players list
     players.push(player);
 
     const playersList = document.getElementById("playersList");
@@ -185,7 +181,6 @@ function handlePlayerLeft(data) {
     const { playerId, playerCount } = data;
     document.getElementById("playerCount").textContent = playerCount;
 
-    // Remove player from internal list
     players = players.filter((p) => p.id !== playerId);
 
     const playerItem = document.querySelector(
@@ -215,7 +210,7 @@ function handleSequenceInit(data) {
     startPosition = newStartPos;
     targetPosition = newTargetPos;
     playerIndex = newPlayerIndex;
-    animationCompleted = false; // Reset animation state on new game
+    animationCompleted = false;
 
     createGrid();
     adjustGridForScreen();
@@ -258,24 +253,46 @@ function handlePlayerReady(data) {
 }
 
 function handleSequenceResult(data) {
-    const { success, movements, collisionAt, message, wallCollisions } = data;
+    const {
+        success,
+        movements,
+        collisionAt,
+        message,
+        wallCollisions,
+        targetPositions,
+    } = data;
     showFeedback(message, success ? "success" : "error");
 
     simulationRunning = true;
-    animationCompleted = false; // Reset animation state
+    animationCompleted = false;
     document.getElementById("gameStatus").textContent = "Spiller av sekvens...";
     enableControls(false);
 
-    // Clear any existing trails
     clearTrails();
+
+    // If target positions are provided, show them for all players
+    if (targetPositions) {
+        for (let i = 0; i < targetPositions.length; i++) {
+            const targetPos = targetPositions[i];
+            const targetCell = document.querySelector(
+                `.sequence-cell[data-x="${targetPos.x}"][data-y="${targetPos.y}"]`,
+            );
+
+            if (targetCell) {
+                targetCell.classList.add(`target-${i}`);
+                targetCell.innerHTML = `<strong>T${i + 1}</strong>`;
+                targetCell.style.border = `3px dashed ${getPlayerColor(i)}`;
+            }
+        }
+    }
 
     animateMovements(movements, collisionAt, wallCollisions, () => {
         simulationRunning = false;
-        animationCompleted = true; // Mark animation as completed
+        animationCompleted = true;
 
         if (success) {
             document.getElementById("gameStatus").textContent =
-                "Fullført! Venter på neste spill...";
+                "Fullført! Alle spillere nådde målet!";
 
             // Send game completion notification to server
             const xhr = new XMLHttpRequest();
@@ -290,8 +307,10 @@ function handleSequenceResult(data) {
                     players: getPlayerNames(),
                 }),
             );
+
+            // Do NOT clear the board or reset when successful
+            // Let players see the completed state
         } else {
-            // Add 1 second delay before resetting to see the end state
             setTimeout(() => {
                 document.getElementById("gameStatus").textContent =
                     "Planlegg din reise";
@@ -354,7 +373,6 @@ function handleJoinedFromWaiting(data) {
 }
 
 function handleMovedToWaiting(data) {
-    // If we're still in the middle of an animation, delay this transition
     if (simulationRunning && !animationCompleted) {
         setTimeout(() => handleMovedToWaiting(data), 1000);
         return;
@@ -373,7 +391,6 @@ function handleMovedToWaiting(data) {
 }
 
 function handleRoomReset(data) {
-    // If we're still in the middle of an animation, ignore the reset
     if (simulationRunning && !animationCompleted) {
         return;
     }
@@ -390,7 +407,6 @@ function handleRoomReset(data) {
 }
 
 function handleGameReset(data) {
-    // If we're still in the middle of an animation, ignore the reset
     if (simulationRunning && !animationCompleted) {
         return;
     }
@@ -437,7 +453,8 @@ function createGrid() {
 
             if (x === targetPosition.x && y === targetPosition.y) {
                 cell.classList.add(`target-${playerIndex}`);
-                cell.textContent = "T";
+                cell.innerHTML = `<strong>T${playerIndex + 1}</strong>`;
+                cell.style.border = `3px dashed ${getPlayerColor(playerIndex)}`;
             }
 
             gridContainer.appendChild(cell);
@@ -570,6 +587,12 @@ function clearTrails() {
             .forEach((cell) => {
                 cell.classList.remove(`trail-${i}`);
             });
+
+        document
+            .querySelectorAll(`.path-marker.player-${i}`)
+            .forEach((marker) => {
+                marker.remove();
+            });
     }
 }
 
@@ -653,45 +676,8 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
     const maxSteps = collisionAt ? collisionAt.step + 1 : movements.length;
     const trailHistory = {};
 
-    // Initialize trail history for each player
     for (let i = 0; i < 5; i++) {
         trailHistory[i] = [];
-    }
-
-    // Show the full path for each player with decreasing opacity
-    if (movements.length > 0) {
-        movements.forEach((stepMovements, stepIndex) => {
-            stepMovements.forEach((move) => {
-                const cell = document.querySelector(
-                    `.sequence-cell[data-x="${move.to.x}"][data-y="${move.to.y}"]`,
-                );
-                if (cell) {
-                    // Add a path marker with decreasing opacity based on step
-                    const opacity = 0.7 - (stepIndex / movements.length) * 0.5;
-
-                    // Instead of adding a class, we'll add a path marker element for better visibility
-                    const pathMarker = document.createElement("div");
-                    pathMarker.className = `path-marker player-${move.player}`;
-                    pathMarker.style.backgroundColor = getPlayerColor(
-                        move.player,
-                    );
-                    pathMarker.style.opacity = opacity.toFixed(2);
-                    pathMarker.textContent = stepIndex + 1;
-                    pathMarker.style.fontSize = "9px";
-                    pathMarker.style.zIndex = 2;
-
-                    // Only add if no existing marker with same player and step
-                    if (
-                        !cell.querySelector(
-                            `.path-marker.player-${move.player}[data-step="${stepIndex}"]`,
-                        )
-                    ) {
-                        pathMarker.dataset.step = stepIndex;
-                        cell.appendChild(pathMarker);
-                    }
-                }
-            });
-        });
     }
 
     const startingPositions = {};
@@ -699,13 +685,11 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
         movements[0].forEach((move) => {
             startingPositions[move.player] = move.from;
             addPlayerMarker(move.from.x, move.from.y, move.player);
-            // Add starting position to trail history
-            trailHistory[move.player].push(move.from);
+            trailHistory[move.player] = [move.from];
         });
     }
 
     function nextStep() {
-        // Safety check - if the grid is gone (reset), stop the animation
         if (!document.querySelector(".sequence-grid")) {
             console.log("Animation aborted - grid no longer exists");
             onComplete();
@@ -718,10 +702,15 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
         }
 
         clearPlayerMarkers();
+        clearTrails(); // Clear all trails before redrawing
 
-        // Add trails for previous positions
+        // Draw current trails (max 3 steps)
         for (let playerIdx in trailHistory) {
-            trailHistory[playerIdx].forEach((pos) => {
+            const playerTrail = trailHistory[playerIdx];
+            // Only display the last 3 positions at most
+            const trailToShow = playerTrail.slice(-3);
+
+            trailToShow.forEach((pos) => {
                 const trailCell = document.querySelector(
                     `.sequence-cell[data-x="${pos.x}"][data-y="${pos.y}"]`,
                 );
@@ -734,12 +723,12 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
         if (movements[step]) {
             movements[step].forEach((move) => {
                 // Add current position to trail history
-                trailHistory[move.player].push(move.to);
+                trailHistory[move.player].push({ ...move.to });
 
-                // Display player markers at current position
+                // Add player marker at current position
                 addPlayerMarker(move.to.x, move.to.y, move.player);
 
-                // Check for collision with another player
+                // Check for player collisions
                 if (
                     collisionAt &&
                     step === collisionAt.step &&
@@ -748,7 +737,7 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
                     markCollision(move.to.x, move.to.y);
                 }
 
-                // Check for wall collision
+                // Check for wall collisions
                 if (
                     wallCollisions &&
                     wallCollisions[step] &&
@@ -819,7 +808,6 @@ function markWallCollision(x, y, direction) {
         cell.classList.add("wall-collision");
     }
 
-    // Show feedback about wall collision
     showFeedback(
         `En spiller forsøkte å gå gjennom en vegg (${getDirectionText(
             direction,

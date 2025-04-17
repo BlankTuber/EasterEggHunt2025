@@ -1049,7 +1049,7 @@ function executeSequences(gameId, room) {
             // Calculate new position
             const newPos = calculateNewPosition(currentPos, action, room.grid);
 
-            // Check for wall collision - simplified detection
+            // Check for wall collision
             if (isWallBlocking(currentPos, action, room.grid)) {
                 stepWallCollisions.push({
                     player: i,
@@ -1068,7 +1068,7 @@ function executeSequences(gameId, room) {
             positions[i] = newPos;
         }
 
-        // Store wall collisions for this step
+        // Record wall collisions
         if (stepWallCollisions.length > 0) {
             wallCollisions[step] = stepWallCollisions;
         }
@@ -1089,10 +1089,18 @@ function executeSequences(gameId, room) {
         }
 
         movements.push(stepMovements);
+
+        // If there was a player collision, stop simulation
         if (!success) break;
+
+        // If there was a wall collision, stop simulation after recording this step
+        if (stepWallCollisions.length > 0) {
+            success = false;
+            break;
+        }
     }
 
-    // Check if all players reached their targets
+    // If no collisions occurred, check if all players reached their targets
     if (success) {
         for (let i = 0; i < playerCount; i++) {
             if (
@@ -1105,12 +1113,13 @@ function executeSequences(gameId, room) {
         }
     }
 
-    // Send the result to all players
+    // Send results to clients, including all players' target positions
     io.to(gameId).emit("sequence-result", {
         success,
         movements,
         collisionAt,
         wallCollisions,
+        targetPositions: room.targetPositions,
         message: success
             ? "Gratulerer! Alle nådde sine mål!"
             : Object.keys(wallCollisions).length > 0
@@ -1120,48 +1129,36 @@ function executeSequences(gameId, room) {
             : "En eller flere spillere nådde ikke målet. Prøv igjen!",
     });
 
-    // If successful, prepare for next game after a much longer delay to give time for animation
     if (success) {
-        setTimeout(() => {
-            resetSequenceGame(room);
-        }, 8000); // Increased from 5000 to 8000 ms to allow complete animation viewing
+        // If successful, notify about completion but DON'T reset
+        const data = {
+            gameId: gameId,
+            gameType: "sequence",
+            score: 1,
+            players: room.players.map((p) => p.name).join(", "),
+        };
+
+        const http = require("http");
+        const options = {
+            hostname: "localhost",
+            port: process.env.PORT || 3000,
+            path: "/complete-game",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const req = http.request(options);
+        req.write(JSON.stringify(data));
+        req.end();
     } else {
-        // Reset for next attempt but keep all players in their positions
+        // If failed, reset player sequences and ready players for another attempt
         room.playerSequences.clear();
         room.readyPlayers.clear();
     }
 }
 
-function resetSequenceGame(room) {
-    room.started = false;
-    room.gameActive = false;
-
-    room.playerSequences.clear();
-    room.readyPlayers.clear();
-
-    for (let i = room.players.length - 1; i >= 0; i--) {
-        const player = room.players[i];
-        room.waitingPlayers.unshift(player);
-
-        const socket = io.sockets.sockets.get(player.id);
-        if (socket) {
-            socket.emit("moved-to-waiting", {
-                message: "Spillet er fullført. Du er nå i ventelisten.",
-            });
-        }
-    }
-
-    room.players = [];
-
-    checkSequenceWaitingList(room);
-
-    io.to(GLOBAL_SEQUENCE_ID).emit("sequence-room-reset", {
-        message: "Et nytt spill starter snart...",
-        waitingCount: room.waitingPlayers.length,
-    });
-}
-
-// Simplified wall collision check
 function isWallBlocking(pos, direction, grid) {
     switch (direction) {
         case "left":

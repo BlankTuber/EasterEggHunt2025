@@ -178,7 +178,8 @@ app.post("/admin/generate-qr", (req, res) => {
 app.get("/game/pong", (req, res) => {
     const gameConfig = {
         winScore: 10,
-        winMessage: "Gratulerer! Du vant Pong!",
+        winMessage:
+            'Gratulerer! Du vant Pong! Fant ikke ut noen god måte å gi deg denne på: "og tanker får flyte", prøv å huske dette ;)',
     };
     res.render("pong", { gameConfig });
 });
@@ -1119,14 +1120,13 @@ function executeSequences(gameId, room) {
             : "En eller flere spillere nådde ikke målet. Prøv igjen!",
     });
 
-    // If successful, prepare for next game
+    // If successful, prepare for next game after a much longer delay to give time for animation
     if (success) {
-        // Reset the room for a new game after a longer delay to see the completion
         setTimeout(() => {
             resetSequenceGame(room);
-        }, 5000);
+        }, 8000); // Increased from 5000 to 8000 ms to allow complete animation viewing
     } else {
-        // Reset for next attempt
+        // Reset for next attempt but keep all players in their positions
         room.playerSequences.clear();
         room.readyPlayers.clear();
     }

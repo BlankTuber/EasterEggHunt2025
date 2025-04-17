@@ -356,9 +356,6 @@ function handleJoinedFromWaiting(data) {
 function handleMovedToWaiting(data) {
     // If we're still in the middle of an animation, delay this transition
     if (simulationRunning && !animationCompleted) {
-        console.log(
-            "Delaying transition to waiting list until animation completes",
-        );
         setTimeout(() => handleMovedToWaiting(data), 1000);
         return;
     }
@@ -378,7 +375,6 @@ function handleMovedToWaiting(data) {
 function handleRoomReset(data) {
     // If we're still in the middle of an animation, ignore the reset
     if (simulationRunning && !animationCompleted) {
-        console.log("Ignoring room reset until animation completes");
         return;
     }
 
@@ -396,7 +392,6 @@ function handleRoomReset(data) {
 function handleGameReset(data) {
     // If we're still in the middle of an animation, ignore the reset
     if (simulationRunning && !animationCompleted) {
-        console.log("Ignoring game reset until animation completes");
         return;
     }
 
@@ -661,6 +656,42 @@ function animateMovements(movements, collisionAt, wallCollisions, onComplete) {
     // Initialize trail history for each player
     for (let i = 0; i < 5; i++) {
         trailHistory[i] = [];
+    }
+
+    // Show the full path for each player with decreasing opacity
+    if (movements.length > 0) {
+        movements.forEach((stepMovements, stepIndex) => {
+            stepMovements.forEach((move) => {
+                const cell = document.querySelector(
+                    `.sequence-cell[data-x="${move.to.x}"][data-y="${move.to.y}"]`,
+                );
+                if (cell) {
+                    // Add a path marker with decreasing opacity based on step
+                    const opacity = 0.7 - (stepIndex / movements.length) * 0.5;
+
+                    // Instead of adding a class, we'll add a path marker element for better visibility
+                    const pathMarker = document.createElement("div");
+                    pathMarker.className = `path-marker player-${move.player}`;
+                    pathMarker.style.backgroundColor = getPlayerColor(
+                        move.player,
+                    );
+                    pathMarker.style.opacity = opacity.toFixed(2);
+                    pathMarker.textContent = stepIndex + 1;
+                    pathMarker.style.fontSize = "9px";
+                    pathMarker.style.zIndex = 2;
+
+                    // Only add if no existing marker with same player and step
+                    if (
+                        !cell.querySelector(
+                            `.path-marker.player-${move.player}[data-step="${stepIndex}"]`,
+                        )
+                    ) {
+                        pathMarker.dataset.step = stepIndex;
+                        cell.appendChild(pathMarker);
+                    }
+                }
+            });
+        });
     }
 
     const startingPositions = {};

@@ -14,7 +14,7 @@ const PADDLE_WIDTH = 10;
 const BALL_RADIUS = 10;
 const INITIAL_BALL_SPEED = 5; // Pixels per frame
 const PADDLE_SPEED_INCREASE_FACTOR = 1.2; // Speed increase factor on hit (reduced slightly)
-const AI_PADDLE_SPEED = 7; // AI speed (slightly increased)
+const AI_PADDLE_SPEED = 12; // AI speed (slightly increased)
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // ~60 degrees
 
 // Game state variables
@@ -24,7 +24,7 @@ let ballX;
 let ballY;
 let ballSpeedX;
 let ballSpeedY;
-let winScore = 10;
+let winScore = 1;
 
 // --- Initialization ---
 function init() {
@@ -363,7 +363,7 @@ function checkForWin() {
         winner = "Player";
         message =
             gameConfig?.winMessage ||
-            `Gratulerer! Du vant ${playerScore}-${aiScore}!`;
+            `Gratulerer! Du vant ${playerScore}-${aiScore}! og tanker får flyte`;
         gameActive = false;
         sendCompletionData(); // Send data only if player wins
         // Use the existing modal function from the HTML

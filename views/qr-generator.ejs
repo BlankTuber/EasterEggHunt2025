@@ -107,7 +107,6 @@
                 font-size: 14px;
             }
         </style>
-        <!-- Include QRCode.js library -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     </head>
     <body>
@@ -130,23 +129,21 @@
                     <div class="suggestion-list">
                         <span class="suggestion">Egg Hunt - Garden Clue</span>
                         <span class="suggestion">Egg Hunt - Kitchen Clue</span>
-                        <span class="suggestion"
-                            >Egg Hunt - Living Room Clue</span
-                        >
+                        <span class="suggestion">Egg Hunt - Living Room Clue</span>
                         <span class="suggestion">Egg Hunt - Final Egg</span>
                         <span class="suggestion">Outdoor Challenge</span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="prefixInput"
-                        >Spillernavn prefiks (valgfritt):</label
-                    >
+                    <label for="playerNameParam">Spillernavn parameternavn (valgfritt):</label>
                     <input
                         type="text"
-                        id="prefixInput"
-                        placeholder="F.eks. 'Team1-'"
+                        id="playerNameParam"
+                        placeholder="F.eks. 'player'"
+                        value="player"
                     />
+                    <p class="form-help">Dette er parameternavnet i URL, ikke spillernavnet selv.</p>
                 </div>
 
                 <button id="generateBtn" class="btn">Generer QR kode</button>
@@ -171,7 +168,7 @@
                             <span id="tokenDisplay"></span>
                         </p>
                         <p>
-                            <strong>URL:</strong>
+                            <strong>URL uten spillernavn:</strong>
                             <span id="urlDisplay"></span>
                             <button
                                 class="btn btn-copy"
@@ -181,7 +178,7 @@
                             </button>
                         </p>
                         <p>
-                            <strong>URL med spillernavn:</strong>
+                            <strong>URL med spillernavn-eksempel:</strong>
                             <span id="urlPlayerDisplay"></span>
                             <button
                                 class="btn btn-copy"
@@ -196,7 +193,6 @@
                 <div class="history-container">
                     <h3>Nylig genererte QR koder</h3>
                     <div id="historyList">
-                        <!-- Generated history items will appear here -->
                     </div>
                 </div>
             </div>
@@ -204,29 +200,22 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // Get DOM elements
                 const activityInput = document.getElementById("activityInput");
-                const prefixInput = document.getElementById("prefixInput");
+                const playerNameParam = document.getElementById("playerNameParam");
                 const generateBtn = document.getElementById("generateBtn");
-                const generatedContainer =
-                    document.getElementById("generatedContainer");
+                const generatedContainer = document.getElementById("generatedContainer");
                 const qrcodeContainer = document.getElementById("qrcode");
                 const downloadBtn = document.getElementById("downloadBtn");
                 const historyList = document.getElementById("historyList");
 
-                // Handle suggestion clicks
-                document
-                    .querySelectorAll(".suggestion")
-                    .forEach((suggestion) => {
-                        suggestion.addEventListener("click", function () {
-                            activityInput.value = this.textContent;
-                        });
+                document.querySelectorAll(".suggestion").forEach((suggestion) => {
+                    suggestion.addEventListener("click", function () {
+                        activityInput.value = this.textContent;
                     });
+                });
 
-                // Load history from localStorage
                 loadHistory();
 
-                // Generate QR code
                 generateBtn.addEventListener("click", function () {
                     const activity = activityInput.value.trim();
                     if (!activity) {
@@ -234,9 +223,8 @@
                         return;
                     }
 
-                    const prefix = prefixInput.value.trim();
+                    const paramName = playerNameParam.value.trim() || "player";
 
-                    // Send request to server
                     fetch("/admin/generate-qr", {
                         method: "POST",
                         headers: {
@@ -244,7 +232,7 @@
                         },
                         body: JSON.stringify({
                             activity: activity,
-                            prefix: prefix,
+                            playerParamName: paramName,
                         }),
                     })
                         .then((response) => response.json())
@@ -258,34 +246,24 @@
                         })
                         .catch((error) => {
                             console.error("Error:", error);
-                            alert(
-                                "Feil ved generering av QR kode. Sjekk konsollen for detaljer.",
-                            );
+                            alert("Feil ved generering av QR kode. Sjekk konsollen for detaljer.");
                         });
                 });
 
-                // Download QR code
                 downloadBtn.addEventListener("click", function () {
                     const canvas = document.querySelector("#qrcode canvas");
                     if (canvas) {
-                        const activity =
-                            document.getElementById(
-                                "activityDisplay",
-                            ).textContent;
+                        const activity = document.getElementById("activityDisplay").textContent;
                         const link = document.createElement("a");
-                        link.download = `qrcode-${activity
-                            .replace(/[^a-z0-9]/gi, "-")
-                            .toLowerCase()}.png`;
+                        link.download = `qrcode-${activity.replace(/[^a-z0-9]/gi, "-").toLowerCase()}.png`;
                         link.href = canvas.toDataURL("image/png");
                         link.click();
                     }
                 });
 
                 function displayQrCode(data) {
-                    // Clear previous QR code
                     qrcodeContainer.innerHTML = "";
 
-                    // Create new QR code
                     new QRCode(qrcodeContainer, {
                         text: data.url,
                         width: 256,
@@ -295,64 +273,43 @@
                         correctLevel: QRCode.CorrectLevel.H,
                     });
 
-                    // Update info display
-                    document.getElementById("activityDisplay").textContent =
-                        data.activity;
-                    document.getElementById("tokenDisplay").textContent =
-                        data.token;
-                    document.getElementById("urlDisplay").textContent =
-                        data.url;
-                    document.getElementById("urlPlayerDisplay").textContent =
-                        data.urlWithPlayerExample;
+                    document.getElementById("activityDisplay").textContent = data.activity;
+                    document.getElementById("tokenDisplay").textContent = data.token;
+                    document.getElementById("urlDisplay").textContent = data.url;
+                    document.getElementById("urlPlayerDisplay").textContent = data.urlWithPlayerExample;
 
-                    // Show the generated container
                     generatedContainer.style.display = "block";
                 }
 
                 function saveToHistory(data) {
-                    // Get existing history or initialize empty array
-                    let history = JSON.parse(
-                        localStorage.getItem("qrCodeHistory") || "[]",
-                    );
+                    let history = JSON.parse(localStorage.getItem("qrCodeHistory") || "[]");
 
-                    // Add new item to the beginning
                     history.unshift({
                         activity: data.activity,
                         token: data.token,
                         url: data.url,
                         urlWithPlayerExample: data.urlWithPlayerExample,
+                        playerParamName: data.playerParamName,
                         timestamp: new Date().toISOString(),
                     });
 
-                    // Keep only the last 10 items
                     history = history.slice(0, 10);
 
-                    // Save back to localStorage
-                    localStorage.setItem(
-                        "qrCodeHistory",
-                        JSON.stringify(history),
-                    );
+                    localStorage.setItem("qrCodeHistory", JSON.stringify(history));
 
-                    // Update display
                     loadHistory();
                 }
 
                 function loadHistory() {
-                    // Get history from localStorage
-                    const history = JSON.parse(
-                        localStorage.getItem("qrCodeHistory") || "[]",
-                    );
+                    const history = JSON.parse(localStorage.getItem("qrCodeHistory") || "[]");
 
-                    // Clear history list
                     historyList.innerHTML = "";
 
                     if (history.length === 0) {
-                        historyList.innerHTML =
-                            "<p>Ingen QR koder generert ennå.</p>";
+                        historyList.innerHTML = "<p>Ingen QR koder generert ennå.</p>";
                         return;
                     }
 
-                    // Add each history item
                     history.forEach((item, index) => {
                         const historyItem = document.createElement("div");
                         historyItem.className = "history-item";
@@ -377,26 +334,20 @@
                     });
                 }
 
-                // Make regenerateQr available globally
                 window.regenerateQr = function (index) {
-                    const history = JSON.parse(
-                        localStorage.getItem("qrCodeHistory") || "[]",
-                    );
+                    const history = JSON.parse(localStorage.getItem("qrCodeHistory") || "[]");
                     if (history[index]) {
                         displayQrCode(history[index]);
                     }
                 };
             });
 
-            // Copy to clipboard function
             function copyToClipboard(elementId) {
                 const element = document.getElementById(elementId);
                 const text = element.textContent;
 
-                navigator.clipboard
-                    .writeText(text)
+                navigator.clipboard.writeText(text)
                     .then(() => {
-                        // Temporarily change button text to indicate success
                         const button = element.nextElementSibling;
                         const originalText = button.textContent;
                         button.textContent = "Kopiert!";

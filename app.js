@@ -113,10 +113,9 @@ initializeGlobalTriviaGames();
 app.get("/qr-complete/:token", (req, res) => {
     const token = req.params.token;
     const activityName = req.query.activity || "Unknown Activity";
-    const playerName = req.query.player || "Unknown Player";
+    const playerName = req.query.player || "";
 
-    // Validate token (you can implement a more secure validation method)
-    // This simple check ensures the token is at least 8 characters
+    // Validate token (ensure it's at least 8 characters)
     if (!token || token.length < 8) {
         return res.status(400).json({
             success: false,
@@ -125,15 +124,15 @@ app.get("/qr-complete/:token", (req, res) => {
     }
 
     console.log(
-        `QR code completion: ${activityName} by ${playerName} with token ${token}`,
+        `QR code completion: ${activityName} by ${playerName || 'Anonymous'} with token ${token}`
     );
 
-    // Send notification to Discord
+    // Send notification to Discord with improved details
     sendDiscordNotification({
         gameType: "qr_completion",
         activity: activityName,
         score: 1,
-        playerName: playerName,
+        playerName: playerName || "Anonymous",
         token: token,
         timestamp: new Date().toISOString(),
     });
@@ -141,7 +140,7 @@ app.get("/qr-complete/:token", (req, res) => {
     // Return a success page
     res.render("qr-success", {
         activity: activityName,
-        player: playerName,
+        player: playerName || "Anonymous",
         timestamp: new Date().toLocaleString(),
     });
 });
@@ -150,10 +149,9 @@ app.get("/admin/qr-generator", (req, res) => {
     res.render("qr-generator");
 });
 
-// Add a route to generate a new QR code token
 app.post("/admin/generate-qr", (req, res) => {
     const activity = req.body.activity || "Unknown Activity";
-    const prefix = req.body.prefix || "";
+    const playerParamName = req.body.playerParamName || "player";
 
     // Generate a random token
     const crypto = require("crypto");
@@ -164,14 +162,13 @@ app.post("/admin/generate-qr", (req, res) => {
     const encodedActivity = encodeURIComponent(activity);
     const qrUrl = `${baseUrl}/qr-complete/${token}?activity=${encodedActivity}`;
 
-    // You could save this to a database if needed
-
     res.json({
         success: true,
         token: token,
         activity: activity,
+        playerParamName: playerParamName,
         url: qrUrl,
-        urlWithPlayerExample: `${qrUrl}&player=${prefix}PlayerName`,
+        urlWithPlayerExample: `${qrUrl}&${playerParamName}=ExampleName`,
     });
 });
 
@@ -378,7 +375,7 @@ async function sendDiscordNotification(data) {
     try {
         if (DISCORD_WEBHOOK_URL === "your_discord_webhook_here") {
             console.log(
-                "Discord webhook not configured. Skipping notification.",
+                "Discord webhook not configured. Skipping notification."
             );
             console.log("Completion data:", data);
             return;
@@ -407,6 +404,15 @@ async function sendDiscordNotification(data) {
             ],
         };
 
+        // Add activity info for QR completions
+        if (data.gameType === "qr_completion" && data.activity) {
+            payload.embeds[0].fields.push({
+                name: "Activity",
+                value: data.activity,
+                inline: true,
+            });
+        }
+
         // Add configuration info if available
         if (data.configType) {
             payload.embeds[0].fields.push({
@@ -430,6 +436,15 @@ async function sendDiscordNotification(data) {
             payload.embeds[0].fields.push({
                 name: "Player",
                 value: data.playerName,
+                inline: true,
+            });
+        }
+
+        // Add token for QR completions
+        if (data.gameType === "qr_completion" && data.token) {
+            payload.embeds[0].fields.push({
+                name: "Token",
+                value: data.token,
                 inline: true,
             });
         }

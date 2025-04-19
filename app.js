@@ -21,7 +21,7 @@ const gameRooms = new Map();
 
 // Discord webhook URL
 const DISCORD_WEBHOOK_URL =
-    "https://discord.com/api/webhooks/1362033930781331507/7AkRuH0o1zcHs3EGeGL5kh_KwXwVFAMFv2BFW8Dir0AXw1v1lZFUyGhRMMMZaz-jgrCx";
+    "https://discord.com/api/webhooks/1363163978766876984/E4g3_tDZXpevM7W6WsBm-fksv7ObaPtyiGt9Zz38raztOH98ouVkL-LX7lSuFqZfrHbo";
 
 // Global game IDs
 const GLOBAL_SEQUENCE_ID = "global-sequence";

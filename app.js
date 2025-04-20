@@ -20,8 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const gameRooms = new Map();
 
 // Discord webhook URL
-const DISCORD_WEBHOOK_URL =
-    "https://discord.com/api/webhooks/1363163978766876984/E4g3_tDZXpevM7W6WsBm-fksv7ObaPtyiGt9Zz38raztOH98ouVkL-LX7lSuFqZfrHbo";
+const DISCORD_WEBHOOK_URL = "coolHook";
 
 // Global game IDs
 const GLOBAL_SEQUENCE_ID = "global-sequence";
@@ -124,7 +123,9 @@ app.get("/qr-complete/:token", (req, res) => {
     }
 
     console.log(
-        `QR code completion: ${activityName} by ${playerName || 'Anonymous'} with token ${token}`
+        `QR code completion: ${activityName} by ${
+            playerName || "Anonymous"
+        } with token ${token}`,
     );
 
     // Send notification to Discord with improved details
@@ -375,7 +376,7 @@ async function sendDiscordNotification(data) {
     try {
         if (DISCORD_WEBHOOK_URL === "your_discord_webhook_here") {
             console.log(
-                "Discord webhook not configured. Skipping notification."
+                "Discord webhook not configured. Skipping notification.",
             );
             console.log("Completion data:", data);
             return;
